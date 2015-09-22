@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ReporteSumi" language="groovy" pageWidth="1080" pageHeight="555" orientation="Landscape" columnWidth="1080" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="9ab4bf4d-8fd5-4c28-b802-3f5457e5b5c9">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="75"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Data_Simbal" uuid="26322b00-563f-4727-a1e1-ab8ab308ee87"/>
+	<parameter name="periodo" class="java.lang.String"/>
+	<parameter name="logoEca" class="java.lang.String">
+		<defaultValueExpression><![CDATA["C:\\Users\\larry\\Documents\\Dllos\\SBBT\\src\\java\\com\\ag\\reportesindex_r1_c1__.jpg"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="logoGN" class="java.lang.String">
+		<defaultValueExpression><![CDATA["C:\\Users\\larry\\Documents\\Dllos\\SBBT\\src\\java\\com\\ag\\images.jpg"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="delegacion" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select a.contrato nic, C.ID_CLIENTE NiS, c.nombre direccion, c.direccion nombre, a.serie num_medidor, m.CONSUMO_FACTURADO, c2.nombre codigo_trafo, cm.nombre placa_mt
+from componente c, atr_componente a, medida m, rel_componente r, componente c2, rel_componente_medida rm, componente_medida cm,
+     rel_componente_ubicacion ru, zona_geografica circu, zona_geografica areamt, zona_geografica delega
+where c.id_tipo_componente=9
+and   c.id_componente= a.id_componente
+and   c.id_componente= m.id_componente
+and   c2.id_componente = rm.id_componente
+and   rm.id_componente_medida = cm.id_componente_medida
+and   m.periodo=$P{periodo}
+and   m.id_tipo_componente=c.id_tipo_componente
+and   c.id_componente=r.ID_COMPONENTE_HIJO
+and   c2.id_componente=r.id_Componente
+and   c2.id_tipo_componente=8
+and   r.PERIODO_FIN>=$P{periodo}
+and   r.periodo_ini <=$P{periodo}
+and   rm.PERIODO_FIN >=$P{periodo}
+and   rm.periodo_ini <=$P{periodo}
+and   ru.periodo_ini <=$P{periodo}
+and   ru.periodo_fin >=$P{periodo}
+and   ru.id_componente = c2.id_componente
+and   ru.id_zona = circu.id_zona
+and   circu.id_padre = areamt.id_zona
+and   areamt.id_padre = delega.id_zona
+and   delega.id_zona= $P{delegacion}
+ORDER BY cm.nombre]]>
+	</queryString>
+	<field name="NIC" class="java.math.BigDecimal"/>
+	<field name="NIS" class="java.lang.String"/>
+	<field name="DIRECCION" class="java.lang.String"/>
+	<field name="NOMBRE" class="java.lang.String"/>
+	<field name="NUM_MEDIDOR" class="java.lang.String"/>
+	<field name="CONSUMO_FACTURADO" class="java.math.BigDecimal"/>
+	<field name="CODIGO_TRAFO" class="java.lang.String"/>
+	<field name="PLACA_MT" class="java.lang.String"/>
+	<title>
+		<band height="101" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="d257cdea-331b-4630-89b7-456525e4d46a" x="257" y="35" width="317" height="31"/>
+				<textElement textAlignment="Center">
+					<font size="20"/>
+				</textElement>
+				<text><![CDATA[REPORTE SUMINISTROS]]></text>
+			</staticText>
+			<image>
+				<reportElement uuid="d759d20e-027e-4969-a9d7-b936375fcca2" x="32" y="17" width="209" height="61"/>
+				<imageExpression><![CDATA[$P{logoEca}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement uuid="78beda72-7014-407a-9105-608eaeac4000" x="678" y="8" width="250" height="70"/>
+				<imageExpression><![CDATA[$P{logoGN}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement uuid="7583dddc-0885-46a4-8360-78a2b0ad4b9e" x="892" y="81" width="80" height="20"/>
+				<box leftPadding="0">
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[CODIGO TRAFO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="66b3de86-bfe2-4c8d-aa62-67fd7d1648cd" x="400" y="81" width="260" height="20"/>
+				<box leftPadding="0">
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[NOMBRE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="07636358-6542-4443-a532-a4d2ca331e93" x="792" y="81" width="100" height="20"/>
+				<box leftPadding="0">
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[CONSUMO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="e34fa190-a39c-44cc-8ae8-4ad0912c0332" x="20" y="81" width="100" height="20"/>
+				<box leftPadding="0">
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[NIC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="7583dddc-0885-46a4-8360-78a2b0ad4b9e" x="972" y="81" width="100" height="20"/>
+				<box leftPadding="0">
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[PLACA_MT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a145a03c-b97f-46ad-90ef-afb2152d909d" x="120" y="81" width="100" height="20"/>
+				<box leftPadding="0">
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[NIS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="68a79acc-357b-4e2a-8b35-7f23f54f6bfb" x="660" y="81" width="132" height="20"/>
+				<box leftPadding="0">
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[MEDIDOR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="fb37cd21-7971-44ba-bd48-f5c9bf94221b" x="220" y="81" width="180" height="20"/>
+				<box leftPadding="0">
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[DIRECCION]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement uuid="aa0ca291-c552-4e56-9891-85a5d23dedf0" x="20" y="0" width="100" height="20"/>
+				<box leftPadding="0">
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{NIC}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="fc5572ea-c43f-46db-8f1b-86d8fb8fd942" x="120" y="0" width="100" height="20"/>
+				<box leftPadding="0">
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{NIS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="5de143aa-dcec-471b-ac58-00d7e7dd35b4" x="220" y="0" width="180" height="20"/>
+				<box leftPadding="0">
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{DIRECCION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="76af538b-366c-48e0-8453-3fce4967c300" x="400" y="0" width="260" height="20"/>
+				<box leftPadding="0">
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{NOMBRE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="3466935c-f4ad-4c7f-8e70-6666a6ad8438" x="660" y="0" width="132" height="20"/>
+				<box leftPadding="0">
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{NUM_MEDIDOR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8577193a-b4d3-48a7-bc95-bcb460c1abf9" x="792" y="0" width="100" height="20"/>
+				<box leftPadding="0">
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{CONSUMO_FACTURADO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="c613f37f-dc74-48fa-8f64-a4b704e4b5e1" x="892" y="0" width="80" height="20"/>
+				<box leftPadding="0">
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{CODIGO_TRAFO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="c613f37f-dc74-48fa-8f64-a4b704e4b5e1" x="972" y="0" width="100" height="20"/>
+				<box leftPadding="0">
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{PLACA_MT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

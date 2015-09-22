@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f ="http://java.sun.com/jsf/core">
+  <h:head>
+    <f:facet name="first">
+      <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+      <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+      <title>ECA - SBBT</title>
+    </f:facet>
+
+    <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/default.css" />
+    <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/syntaxhighlighter/syntaxhighlighter.css" />
+
+    <style type="text/css">
+      .ui-layout-north {
+        z-index:20 !important;
+        overflow:visible !important;;
+      }
+
+      .ui-layout-north .ui-layout-unit-content {
+        overflow:visible !important;
+      }
+    </style>
+    <h:form id="validarSession">
+      <h:inputHidden  rendered="#{login.validarSession}" value="#{login.validateSession()}" />
+    </h:form>
+  </h:head>
+
+  <link href="../Styles/estilos.css" rel="stylesheet" type="text/css" />
+  <ui:include src="../sessionTimeOut.xhtml" />
+
+  <h:body>
+    <h:form id="form">
+      <p:growl id="messages1" showDetail="true" />
+      <div id="cuerpo" align="center">
+        <!--<div id="index_r1_c2" ></div>-->
+        <div id="linea"><div align="center" style="position:relative; top:6px; background-image:url(Images/mensaje2.png); background-repeat:no-repeat; background-position:center; height:38px"></div></div>
+        <div id="linea2" align="left" >
+          <p:menubar model ="#{templateView.model}" style="font-size: 12px" />
+        </div>
+
+        <div id="pagina">
+
+          <div id="superior">     
+          </div>
+          <div id="medio">      
+            <p:panel header="Calcular balance" style="font-size: 13px; width: 500px"> 
+
+              <p:messages id="messages"  showDetail="true" autoUpdate="true" escape="true" />  
+              <h:panelGrid columns="3" cellpadding="10">
+                <h:outputLabel/>
+                <h:outputText id="msjValidaPer" value="#{ejecutarInterfaz.msjValidaPeriodo}" style="color: red;"/>
+                <h:outputLabel/>
+                <h:outputText value="Periodo" />
+                <p:inputText id="per" value="#{ejecutarInterfaz.periodo}" disabled="#{treeEventsView.todoORSecuencial=='SECUENCIAL'?true:false}"  placeholder="YYYYmm" >
+                  <p:ajax update=":form:msjValidaPer, :form:calculateBalance, :form:pnProcedures" event="blur" listener="#{ejecutarInterfaz.validarPeriodo}"/>  
+                  <p:ajax update="@this" event="blur" listener="#{treeEventsView.asigarPeriodo(ejecutarInterfaz.periodo)}"/>
+                </p:inputText>
+                <p:ajaxStatus style="width: 20px; height: 20px;">
+                  <f:facet name="start">
+                    <img src= "#{request.contextPath}/resources/images/wait20.gif"/>
+                  </f:facet>
+                </p:ajaxStatus>
+
+                <p:outputLabel for="exec" value="Ejecutar" />
+                <p:selectOneRadio id="exec" value="#{treeEventsView.todoORSecuencial}">
+                  <f:selectItem itemLabel="Todo" itemValue="TODO" />
+                  <f:selectItem itemLabel="Secuencial" itemValue="SECUENCIAL" />
+                  <p:ajax update="@this,:form:calculateBalance,:form:viewTree,:form:per" event="change" />
+                </p:selectOneRadio>
+              </h:panelGrid>
+
+              <p:commandButton id="calculateBalance" update=":form:messages1,:form" value="Calcular" action="#{ejecutarInterfaz.calcularBalance}" 
+                               disabled="#{treeEventsView.todoORSecuencial=='SECUENCIAL'?true:false || ejecutarInterfaz.periodoValido == 'noValido'}" 
+                               onstart="wait.show()" oncomplete="wait.hide()" />
+
+            </p:panel>  
+
+            <p:panel id="pnProcedures" header="Árbol" style="font-size: 13px; width: 500px"
+                     visible="#{ejecutarInterfaz.periodoValido == 'valido'}"> 
+
+              <p:tree id="viewTree" value="#{treeEventsView.root}"  var="doc" selectionMode="single" selection="#{treeEventsView.selectedNode}" orientation="horizontal">
+                <p:ajax event="expand" update=":form:messages1" listener="#{treeEventsView.onNodeExpand}" />
+                <p:ajax event="collapse" update=":form:messages1" listener="#{treeEventsView.onNodeCollapse}"/>
+                <p:ajax event="select" update=":form:messages1" listener="#{treeEventsView.onNodeSelect}" onstart="wait.show()" oncomplete="wait.hide()"/>
+                <p:ajax event="unselect" update=":form:messages1" listener="#{treeEventsView.onNodeUnselect}" />
+
+                <p:treeNode expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
+                  <h:outputText value="#{doc.name}"/>
+                </p:treeNode>
+                <p:treeNode type="document" icon="ui-icon-document">
+                  <h:outputText value="#{doc.name}" />
+                </p:treeNode>
+                <p:treeNode type="picture" icon="ui-icon-image">
+                  <h:outputText value="#{doc.name}" />
+                </p:treeNode>
+                <p:treeNode type="mp3" icon="ui-icon-video">
+                  <h:outputText value="#{doc.name}" />
+                </p:treeNode>
+              </p:tree>
+
+            </p:panel>  
+          </div>
+
+          <div id="inferior"></div>
+          <div id="piepagina" align="center">
+          </div>
+
+        </div></div>
+
+      <p:dialog widgetVar="wait" closable="false" resizable="false" draggable="false" position="center" modal="true" showHeader="false">
+        <p:ajaxStatus>
+          <f:facet name="start">
+            <p:graphicImage value="../resources/images/espera.gif" />
+          </f:facet>
+          <f:facet name="complete">
+            <h:outputText value="" />
+          </f:facet>
+        </p:ajaxStatus>
+      </p:dialog> 
+
+    </h:form>
+
+    <p:dialog header="Versión del SBBT" widgetVar="dlgVersion" modal="true" 
+              resizable="false" height="50" closeOnEscape="true" showEffect="explode" hideEffect="bounce" draggable="false">
+      <h:outputText value="#{eventMenuBean.VERSION}" />
+    </p:dialog>
+
+  </h:body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f ="http://java.sun.com/jsf/core">
+<h:head>
+    <f:facet name="first">
+        <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+        <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+        <title>ECA - SBBT</title>
+    </f:facet>
+
+    <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/default.css" />
+    <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/syntaxhighlighter/syntaxhighlighter.css" />
+
+    <style type="text/css">
+        .ui-layout-north {
+            z-index:20 !important;
+            overflow:visible !important;;
+        }
+
+        .ui-layout-north .ui-layout-unit-content {
+            overflow:visible !important;
+        }       
+       
+    </style>
+   <h:form id="validarSession">
+   <h:inputHidden  rendered="#{login.validarSession}" value="#{login.validateSession()}" />
+   </h:form>
+</h:head>    
+
+<link href="../Styles/estilos.css" rel="stylesheet" type="text/css" />
+<ui:include src="../sessionTimeOut.xhtml" />
+
+<h:body>
+ <h:form id="formCarga" enctype="multipart/form-data"> 
+     
+<div id="cuerpo" align="center">
+<!--<div id="index_r1_c2" ></div>-->
+<div id="linea"><div align="center" style="position:relative; top:6px; background-image:url(Images/mensaje2.png); background-repeat:no-repeat; background-position:center; height:38px"></div></div>
+<div id="linea2" align="left" >
+    <p:menubar  model ="#{templateView.model}" style="font-size: 12px" />
+</div>
+
+<div id="pagina">
+
+  <div id="superior">     
+  </div>
+  <div id="medio"> 
+      
+      <p:panel header="Creación masiva de macromedidores" style="font-size: 13px; width: 500px"> 
+          
+            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+            <h:panelGrid id="pnlCarga" rendered="#{adminArchivo.estado =='Carga'}" > 
+                 
+            <p:row>
+                <p:column colspan="1"><p:fileUpload value="#{adminArchivo.file}" mode="simple" update=":formCarga:pnlLog,:formCarga:pnlCarga"/>  </p:column>
+                <p:column  colspan="1"><h:commandButton value="Cargar" action="#{adminArchivo.upload()}"  />   </p:column>
+            </p:row>    
+            
+            </h:panelGrid>
+            <h:panelGrid id="pnlLog" rendered="#{adminArchivo.estado !='Carga'}"> 
+                 <f:facet name="header">
+                    <p:row>
+                        <p:column colspan="8">Log. de Resultados </p:column>
+                    </p:row>
+                </f:facet>
+            <p:row>
+                <p:column  colspan="1">
+                <p:editor id="editor" value="#{adminArchivo.mensaje}" width="600" disabled="true"  controls="" /> 
+                </p:column>
+            </p:row> 
+             <p:row>
+                <p:column  colspan="1"><h:commandButton value="Volver" action="#{adminArchivo.volver()}"/>   </p:column>
+            </p:row>    
+            </h:panelGrid>
+            
+          
+            <h2>Estructura del Archivo a Cargar</h2>
+            <p>Esta funcionalidad permite al ususario realizar la carga masiva en el simbal de los macromedidores asociándolo a un trafo.</p>
+            <p>El archivo debe tener la siguiente estructura:</p>
+            <p>IDCOMERCIAL;IDMACRO;TIPOMEDIDOR</p>
+            <p>El campo ‘TIPOMEDIDOR’ se refiere al tipo de medidor asociado al nuevo macromedidor:</p>
+            <ul>
+                <li>Macromedidor residencial . TIPOMEDIDOR = TTM001</li>
+                <li>Medidor - Activa y Reactiva. TIPOMEDIDOR = TTM002</li>
+                <li>Sin definir. TIPOMEDIDOR = TTM999</li>
+            </ul>
+            
+            <h3>Ejemplo:</h3>
+            <p>456123;789632;TTM001</p>
+
+            
+          </p:panel>
+        
+  </div>
+    
+  <div id="inferior"></div>
+  <div id="piepagina" align="center">
+</div>
+
+</div></div>
+     
+  </h:form>
+    
+</h:body>
+</html>

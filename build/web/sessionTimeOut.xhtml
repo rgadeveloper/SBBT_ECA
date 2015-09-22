@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f ="http://java.sun.com/jsf/core">
+    <ui:composition>
+        <p:idleMonitor onactive="sessionTimeOutDialog.show();" timeout="1740000" />
+
+        <p:dialog header="Sesión caducada" widgetVar="sessionTimeOutDialog" resizable="false"
+                  modal="true" closable="false" width="400" visible="false">
+            <h:panelGrid columns="1">
+                <h:outputText value="Su sesión esta inactiva vuelva a loguearse." />
+                <input id="confirmBackToLogin" type="button" value="Ir al login"
+                       onclick="window.location='#{facesContext.externalContext.requestContextPath}/login.xhtml';" />
+            </h:panelGrid>    
+        </p:dialog>   
+        
+        <p:dialog header="SIMBAL" widgetVar="aboutDialog" resizable="false"
+                  modal="true" width="200" visible="false">
+            <h:panelGrid columns="1">
+               <h:outputText value="Version 1.0.4 - 2015" />               
+            </h:panelGrid>    
+        </p:dialog>   
+    </ui:composition>
+</html>

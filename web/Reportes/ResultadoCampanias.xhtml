@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f ="http://java.sun.com/jsf/core">
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+            <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+            <title>ECA - SBBT</title>
+        </f:facet>
+
+        <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/default.css" />
+        <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/syntaxhighlighter/syntaxhighlighter.css" />
+
+        <style type="text/css">
+            .ui-layout-north {
+                z-index:20 !important;
+                overflow:visible !important;;
+            }
+
+            .ui-layout-north .ui-layout-unit-content {
+                overflow:visible !important;
+            }
+        </style>
+        <h:form id="validarSession">
+            <h:inputHidden  rendered="#{login.validarSession}" value="#{login.validateSession()}" />
+        </h:form>
+    </h:head>
+
+    <script type="text/javascript" src="../resources/js/espaniol.js" />
+    <link href="../Styles/estilos.css" rel="stylesheet" type="text/css" />
+    <ui:include src="../sessionTimeOut.xhtml" />
+
+    <h:body>
+        <h:form><h:inputHidden value="#{reportesOperativo.clearCampos()}"/></h:form>            
+
+        <h:form id="form" enctype="multipart/form-data" style="font-family: inherit; font-size: 12px;">
+            <p:growl id="msgs" showDetail="true"/>   
+
+            <div id="cuerpo" align="center">
+                <!--<div id="index_r1_c2" ></div>-->
+                <div id="linea"><div align="center" style="position:relative; top:6px; background-image:url(Images/mensaje2.png); background-repeat:no-repeat; background-position:center; height:38px"></div></div>
+                <div id="linea2" align="left" >
+                    <p:menubar  model ="#{templateView.model}" style="font-size: 12px" />
+                </div>
+
+                <div id="pagina">
+
+                    <div id="superior">     
+                    </div>
+                    <div id="medio">      
+                        <p:panel id="display" header="Reporte operativo - resultado de campañas" style="width:500px;margin-bottom:10px;">  
+                            <h:panelGrid columns="2" cellpadding="5">                                                
+
+                                <h:outputText value="Actividad" />
+                                <p:selectOneMenu value="#{reportesOperativo.actividadSelected}" required="false">
+                                    <f:selectItem itemLabel="Seleccione uno" itemValue="" noSelectionOption="true" />
+                                    <f:selectItems value="#{reportesOperativo.actividades}" var="actividadItem"
+                                                   itemLabel="#{actividadItem.nombre}" itemValue="#{actividadItem.tipo}"/>                                                                  
+                                    <p:ajax update="form:dateFin,form:dateIni,form:idCampanias" listener="#{reportesOperativo.clearChangeActividad()}"   />
+                                </p:selectOneMenu> 
+
+
+                                <h:outputLabel value="Fecha inicial:" />
+                                <p:calendar locale="es" id="dateIni" value="#{reportesOperativo.fechaIni}" 
+                                            mode="popup" size="5" >
+                                    <p:ajax update="form:dateFin,form:idCampanias"  
+                                            event="dateSelect" listener="#{reportesOperativo.clearFechaFinal}" />
+
+                                </p:calendar>
+
+                                <h:outputLabel value="Fecha final:" />                                            
+                                <p:calendar locale="es" id="dateFin" value="#{reportesOperativo.fechaFin}" 
+                                            mode="popup" size="5" >
+                                    <p:ajax update="form:idCampanias,:form:msgs"  
+                                            event="dateSelect" listener="#{reportesOperativo.actualizarComboCampanias}" />
+                                </p:calendar> 
+
+
+
+                                <h:outputText value="Id campañas" />
+                                <p:selectOneMenu id="idCampanias" value="#{reportesOperativo.campaniaSelected}">
+                                    <f:selectItem itemLabel="Seleccione uno" itemValue="" noSelectionOption="true" />
+                                    <f:selectItem itemLabel="todo" itemValue="todo"/>
+                                    <f:selectItems value="#{reportesOperativo.campanias}" var="campaniaItem"
+                                                   itemLabel="#{campaniaItem.idCampania}-#{campaniaItem.descripcion}" itemValue="#{campaniaItem.idCampania}"/>                                                                  
+                                </p:selectOneMenu> 
+
+
+                            </h:panelGrid>  
+
+                            <p:separator />  
+
+                            <h:commandButton value="Buscar" action="#{reportesOperativo.llenarTableResultadoCampanias}" />  
+
+                        </p:panel>
+
+                        <p:dataTable rendered="#{reportesOperativo.mostrarTablaClientes}" id="campaniasClientes" var="resulCampania" value="#{reportesOperativo.resultCampanias}"
+                                     paginator="true" rows="10" tableStyle="width:auto"
+                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                     style="font-size: 12px">
+
+                            <f:facet name="header">
+                                Resultados campañas por clientes
+                            </f:facet>
+
+                            <p:column headerText="ID campaña" >
+                                <f:facet name="header">  
+                                    <h:outputText value="ID campaña" />  
+                                </f:facet>  
+                                <h:outputText value="#{resulCampania.idCampania}" />
+                            </p:column> 
+
+                            <p:column>  
+                                <f:facet name="header">  
+                                    <h:outputText value="Nombre campaña" />  
+                                </f:facet>  
+                                <h:outputText value="#{resulCampania.nombre}" /> 
+                            </p:column>
+
+                            <p:column>  
+                                <f:facet name="header">  
+                                    <h:outputText value="Total" />  
+                                </f:facet>  
+                                <h:outputText value="#{resulCampania.cantClientes}" /> 
+                            </p:column>
+
+                            <p:column>  
+                                <f:facet name="header">  
+                                    <h:outputText value="Normales" />  
+                                </f:facet>  
+                                <h:outputText value="#{resulCampania.cantClientesNormales}" /> 
+                            </p:column>
+
+                            <p:column>  
+                                <f:facet name="header">  
+                                    <h:outputText value="Irregulares" />  
+                                </f:facet>  
+                                <h:outputText value="#{resulCampania.cantClientesIrregularidad}" /> 
+                            </p:column>
+
+                            <p:column>  
+                                <f:facet name="header">  
+                                    <h:outputText value="Normalizados" />  
+                                </f:facet>  
+                                <h:outputText value="#{resulCampania.cantClientesNormalizados}" /> 
+                            </p:column>
+
+                            <p:column>  
+                                <f:facet name="header">  
+                                    <h:outputText value="Revisados" />  
+                                </f:facet>  
+                                <h:outputText value="#{resulCampania.cantClientesRevisados}" /> 
+                            </p:column>
+
+                            <p:column>  
+                                <f:facet name="header">  
+                                    <h:outputText value="% Efectividad" />  
+                                </f:facet>  
+                                <h:outputText value="#{resulCampania.porcEfectividadClientes}" /> 
+                            </p:column>
+
+                        </p:dataTable>     
+
+                        <p:dataTable rendered="#{reportesOperativo.mostrarTablaMacros}" id="campaniasMacros" var="resulCampania" value="#{reportesOperativo.resultCampanias}"
+
+                                     tableStyle="width:auto" style="font-size: 12px">
+
+                            <f:facet name="header">
+                                Resultados Campañas por Macros
+                            </f:facet>
+
+                            <p:column headerText="ID campaña" >
+                                <f:facet name="header">  
+                                    <h:outputText value="ID campaña" />  
+                                </f:facet>  
+                                <h:outputText value="#{resulCampania.idCampania}" />
+                            </p:column> 
+
+                            <p:column>  
+                                <f:facet name="header">  
+                                    <h:outputText value="Nombre campaña" />  
+                                </f:facet>  
+                                <h:outputText value="#{resulCampania.nombre}" /> 
+                            </p:column>
+
+                            <p:column>  
+                                <f:facet name="header">  
+                                    <h:outputText value="Total" />  
+                                </f:facet>  
+                                <h:outputText value="#{resulCampania.cantMacrosTotal}" /> 
+                            </p:column>
+
+                            <p:column>  
+                                <f:facet name="header">  
+                                    <h:outputText value="Normales" />  
+                                </f:facet>  
+                                <h:outputText value="#{resulCampania.cantMacrosNormales}" /> 
+                            </p:column>
+
+                            <p:column>  
+                                <f:facet name="header">  
+                                    <h:outputText value="Irregulares" />  
+                                </f:facet>  
+                                <h:outputText value="#{resulCampania.cantMacrosIrregularidad}" /> 
+                            </p:column>
+
+                            <p:column>  
+                                <f:facet name="header">  
+                                    <h:outputText value="Normalizados" />  
+                                </f:facet>  
+                                <h:outputText value="#{resulCampania.cantMacrosNormalizados}" /> 
+                            </p:column>
+
+                            <p:column>  
+                                <f:facet name="header">  
+                                    <h:outputText value="Revisados" />  
+                                </f:facet>  
+                                <h:outputText value="#{resulCampania.cantMacrosRevisados}" /> 
+                            </p:column>
+
+                            <p:column>  
+                                <f:facet name="header">  
+                                    <h:outputText value="% Efectividad" />  
+                                </f:facet>  
+                                <h:outputText value="#{resulCampania.porcEfectividadMacros}" /> 
+                            </p:column>
+
+                        </p:dataTable> 
+
+
+                        <h:commandLink rendered="#{reportesOperativo.mostrarTablaClientes}" >  
+                            <p:graphicImage value="../resources/images/excel.png" style="padding-top: 10px;" />  
+                            <p:dataExporter type="xls" target="campaniasClientes" fileName="Operativo Informativo por Clientes"/>  
+                        </h:commandLink> 
+
+                        <h:commandButton rendered="#{reportesOperativo.mostrarTablaClientes}" image="../resources/images/pdf.png" actionListener="#{reportesOperativo.exportar('Operativo Informativo por Clientes','pdf')}" /> 
+
+                        <h:commandLink rendered="#{reportesOperativo.mostrarTablaMacros}" >  
+                            <p:graphicImage value="../resources/images/excel.png" style="padding-top: 10px;" />  
+                            <p:dataExporter type="xls" target="campaniasMacros" fileName="Operativo Informativo por Macros"/>  
+                        </h:commandLink> 
+
+                        <h:commandButton rendered="#{reportesOperativo.mostrarTablaMacros}" image="../resources/images/pdf.png" actionListener="#{reportesOperativo.exportar('Operativo Informativo por Macros','pdf')}" />  
+
+                    </div>
+
+                    <div id="inferior"></div>
+                    <div id="piepagina" align="center">
+                    </div>
+
+                </div></div>
+
+        </h:form>
+
+    </h:body>
+</html>

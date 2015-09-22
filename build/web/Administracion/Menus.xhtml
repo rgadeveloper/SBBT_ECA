@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      >
+  <h:body>
+
+    <h1>Custom validator in JSF 2.0</h1>
+
+    <h:form>
+      <p:growl id="growl" showDetail="true" sticky="true" />
+
+      <h:panelGrid columns="3">	 
+
+        <h:outputLabel  value="Teléfono:" />
+        <h:inputText id="telefono" value="#{userView.tel}" size="10"
+                     required="false" label="tel" />  
+        <h:message for="Teléfono:" style="color:red" />
+
+        <h:outputLabel  value="Alfabético:" />
+        <h:inputText id="alfabetico" value="#{userView.nombre}" size="20"
+                     required="false" label="alfabetico"  >
+          <f:validator validatorId="passwordValidator" />
+        </h:inputText>  
+        <h:message for="alfabetico" style="color:red" />
+
+        <h:outputLabel  value="Correo:" />
+        <p:inputText id="email" value="#{userView.email}" 
+                     size="20" required="false" label="Correo">
+
+          <f:validator validatorId="emailValidator" />
+
+        </p:inputText>
+        <h:message for="email" style="color:red" />
+
+      </h:panelGrid>
+
+      <p:commandButton value="submit" />
+
+
+
+    </h:form>
+
+    <p:dialog header="Versión del SBBT" widgetVar="dlgVersion" modal="true" 
+              resizable="false" height="50" closeOnEscape="true" showEffect="explode" hideEffect="bounce" draggable="false">
+      <h:outputText value="#{eventMenuBean.VERSION}" />
+    </p:dialog>
+
+  </h:body>
+</html>

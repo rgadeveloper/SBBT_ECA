@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html">
+
+
+  <p:panel rendered="#{geograficaView.mostrarTorta}" style="border:none;padding:0;margin: 0;">
+    <p:pieChart  value="#{geograficaView.tortaTotal}" legendPosition="e" fill="true" shadow="false" showDataLabels="true"  
+                 title="Macros" style="width: 300px; height: 220px; margin: 0 auto;" sliceMargin="5" diameter="145" />
+
+    <h:panelGrid columns="2">
+      <p:pieChart  value="#{geograficaView.tortaFuncionan}" legendPosition="s" legendRows="1" fill="true" shadow="false" showDataLabels="true"  
+                   title="Macros funcionando" style="width:260px;height:260px" sliceMargin="5" diameter="145" />
+
+      <p:pieChart  value="#{geograficaView.tortaNoFuncionan}" legendPosition="s" legendRows="1" fill="true" shadow="false" showDataLabels="true"   
+                   title="Macros no funcionando" style="width:320px;height:260px" sliceMargin="5" diameter="145" />
+    </h:panelGrid>
+  </p:panel>   
+
+</html>

@@ -1,0 +1,133 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+
+  <p:panelGrid columns="2" id ="dtbalanceTrafo"   style="margin-top:15px; font-size: 12px ">
+
+    <f:facet name="header">
+      <p:row>
+        <p:column colspan="8">Información del transformador </p:column>
+      </p:row>
+    </f:facet>
+
+    <h:outputText style="font-weight: bold;" value="Matrícula del trafo" />
+    <h:outputText value="#{geograficaView.componenteMedida.nombre}" />
+
+    <h:outputText style="font-weight: bold;" value="Código BDI del trafo" />
+    <h:outputText value="#{geograficaView.componente.nombre}" />
+
+    <h:outputText style="font-weight: bold;" value="Coordenada X" />
+    <h:outputText value="#{geograficaView.componente.coordX}" />
+
+    <h:outputText style="font-weight: bold;" value="Coordenada Y" />
+    <h:outputText value="#{geograficaView.componente.coordY}" />
+
+    <h:outputText style="font-weight: bold;" value="Zona" />
+    <h:outputText value="#{geograficaView.nombreZona}" />
+
+    <h:outputText style="font-weight: bold;" value="Delegación" />
+    <h:outputText value="#{geograficaView.nombreDelegacion}" />
+
+    <h:outputText style="font-weight: bold;" value="Municipio" />
+    <h:outputText value="#{geograficaView.matriculaCircuito}" />
+
+    <h:outputText style="font-weight: bold;" value="Área energética" />
+    <h:outputText value="#{geograficaView.nombreAreaEnergetica}" />
+
+    <h:outputText style="font-weight: bold;" value="Capacidad (KVA)" />
+    <h:outputText value="#{geograficaView.atrComponente.cargaInstalada}" />
+
+    <h:outputText style="font-weight: bold;" value="Dirección" />
+    <h:outputText value="#{geograficaView.componente.direccion}" />
+
+    <h:outputText style="font-weight: bold;" value="Tipo de red" />
+    <h:outputText value="#{geograficaView.atrComponente.tbltipo5.nombre}" />
+
+    <h:outputText style="font-weight: bold;" value="Tipo de macromedidor" />
+    <h:outputText value="" />
+
+    <h:outputText style="font-weight: bold;" value="Factor multiplicador" />
+    <h:outputText value="" />
+
+    <h:outputText style="font-weight: bold;" value="Tipo de medidor" />
+    <h:outputText value="#{geograficaView.atrComponente.tbltipo6.nombre}" />
+
+    <h:outputText style="font-weight: bold;" value="Número de medidor" />
+    <h:outputText value="#{geograficaView.atrComponente.medidor}" /> 
+
+    <h:outputText style="font-weight: bold;" value="Lectura anterior" />
+    <h:outputText value="#{geograficaView.medida.lecturaAnterior}" />
+
+    <h:outputText style="font-weight: bold;" value="Lectura actual" />
+    <h:outputText value="#{geograficaView.medida.lecturaActual}" />
+
+    <h:outputText style="font-weight: bold;" value="Fecha lectura anterior" />
+    <h:outputText value="#{geograficaView.medida.fechaLecturaAnterior}" />
+
+    <h:outputText style="font-weight: bold;" value="Fecha lectura actual" />
+    <h:outputText value="#{geograficaView.medida.fechaLecturaActual}" />
+
+    <h:outputText style="font-weight: bold;" value="Ruta de lectura" />
+    <h:outputText value="#{geograficaView.atrComponente.ciclo.idCiclo}" />
+
+    <h:outputText style="font-weight: bold;" value="Itinerario" />
+    <h:outputText value="#{geograficaView.atrComponente.ruta}" />
+
+    <h:outputText style="font-weight: bold;" value="Aol" />
+    <h:outputText value="#{geograficaView.atrComponente.aolFin}" />
+
+    <h:outputText style="font-weight: bold;" value="Anomalía de lectura" />
+    <h:outputText value="#{geograficaView.medida.observacion}" />
+
+    <h:outputText style="font-weight: bold;" value="Cantidad de suministros (Und)" />
+    <h:outputText value="#{geograficaView.balance.cantSuministrosTotal}" >
+      <f:convertNumber type="number" locale="es_CO" groupingUsed="true" maxFractionDigits="0"/>
+    </h:outputText> 
+
+    <h:outputText style="font-weight: bold;" value="Rango de pérdidas" />
+    <h:outputText value="#{geograficaView.balance.rangoClasificacion.descripcion}" />
+
+    <h:outputText style="font-weight: bold;" value="Energía de entrada macro (kWh)" />
+    <h:outputText value="#{geograficaView.balance.consumoMacros}" >
+      <f:convertNumber type="number" locale="es_CO" groupingUsed="true" maxFractionDigits="0"/>
+    </h:outputText> 
+
+    <h:outputText style="font-weight: bold;" value="Energía de salida macro (kWh)" />
+    <h:outputText value="#{geograficaView.balance.consumoSuministro}" >
+      <f:convertNumber type="number" locale="es_CO" groupingUsed="true" maxFractionDigits="0"/>
+    </h:outputText> 
+
+    <h:outputText style="font-weight: bold;" value="Cargas extras macro (kWh)" />
+    <h:outputText value="#{geograficaView.balance.consumoAdicional}" >
+      <f:convertNumber type="number" locale="es_CO" groupingUsed="true" maxFractionDigits="0"/>
+    </h:outputText>  
+
+    <h:outputText style="font-weight: bold;" value="Energía pérdida macro (kWh)" />
+    <h:outputText value="#{geograficaView.balance.balEnergiaSum}" >
+      <f:convertNumber type="number" locale="es_CO" groupingUsed="true" maxFractionDigits="0"/>
+    </h:outputText> 
+
+    <h:outputText style="font-weight: bold;" value="Porcentaje de pérdidas macro (%)" />
+    <h:outputText value="#{geograficaView.balance.porcPerdidaMes}">
+      <f:convertNumber type="number" locale="es_CO" groupingUsed="true" minFractionDigits="2"/>
+    </h:outputText>
+
+  </p:panelGrid>
+
+  <p:dialog id="dgTipoUso" header="Cantidades suministro por tipo de uso" widgetVar="dlgTipoUso">  
+    <p:dataTable var="tu" value="#{geograficaView.listCantXTipoUso}">  
+      <p:column headerText="Tipo de Uso">  
+        <h:outputText value="#{tu.nombre}" />  
+      </p:column>  
+
+      <p:column headerText="Cantidad de suministros">  
+        <h:outputText value="#{tu.valor}" />  
+      </p:column>         
+    </p:dataTable> 
+  </p:dialog> 
+
+</html>

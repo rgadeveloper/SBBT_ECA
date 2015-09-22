@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f ="http://java.sun.com/jsf/core">
+    <p:panel header="Amarre/Desamarre de Macros Virtuales a Bar/Cir" style="font-size: 13px; width: 500px"> 
+
+        <p:messages globalOnly="true" rendered="#{macroVirtual.estadoMacroBarcir =='Cargado'}" id="messages" showDetail="true" autoUpdate="false" closable="true" />
+        <h:panelGrid id="pnlCarga" rendered="#{macroVirtual.estadoMacroBarcir =='Carga'}" > 
+
+            <p:row>
+                <p:column colspan="1"><p:fileUpload value="#{macroVirtual.file}" mode="simple" update=":formCarga:pnlLog,:formCarga:pnlCarga"/>  </p:column>
+                <p:column  colspan="1"><h:commandButton value="Cargar" action="#{macroVirtual.cargarArchivo('BarCir')}"  />   </p:column>
+            </p:row>    
+
+        </h:panelGrid>
+        <h:panelGrid id="pnlLog" rendered="#{macroVirtual.estadoMacroBarcir !='Carga'}"> 
+            <f:facet name="header">
+                <p:row>
+                    <p:column colspan="8">Log de Resultados </p:column>
+                </p:row>
+            </f:facet>
+            <p:row>
+                <p:column  colspan="1">
+                    <p:editor id="editor" value="#{macroVirtual.mensaje}" width="600" disabled="true"  controls="" /> 
+                </p:column>
+            </p:row> 
+            <p:row>
+                <p:column  colspan="1"><h:commandButton value="Volver" action="#{macroVirtual.volverMacroBarcir()}" />   </p:column>
+            </p:row>    
+        </h:panelGrid>
+
+
+        <h2>Estructura del archivo a cargar</h2>
+        <p>Esta funcionalidad permite al usuario realizar la carga masiva en el simbal de los amarres/desamarres de macros virtuales a barrio(s)/circuito(s).</p>
+        <p>El archivo debe tener la siguiente estructura:</p>
+        <p>IDMACROVIRTUAL;IDPADREAMARRE;PERIODO;TIPO</p>
+        <p>El campo ‘TIPO’ se refiere al tipo de zona a asociar:</p>
+        <ul>
+            <li>asociar a barrio. TIPO = B</li>
+            <li>asociar a circuito. TIPO = C</li>
+        </ul>
+
+        <h3>Ejemplo:</h3>
+        <p>MVE061212;1104;201208;C</p>
+        <p>MVG061212;95;201208;B</p>
+
+    </p:panel>
+
+</html>

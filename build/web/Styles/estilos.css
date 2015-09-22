@@ -1,0 +1,185 @@
+/* CSS Document */
+
+.textos{
+	color:#000000;
+	font-size:100%;
+	font:Calibri; font-size:16px; font-style:normal; color:#666666;
+}
+
+ body {
+            background-image:url(../resources/images/fondo.jpg);
+
+        }
+      #cuerpo {	
+            position: relative;
+            width:100%;
+            height:700px;
+        }
+        #index_r1_c2 {
+            top:-10px;	
+            background-image:url(../resources/images/index_r1_c2.png); background-repeat:no-repeat;
+            width: 990px;	
+            height: 155px;
+            position: relative;	
+        }
+        #linea{	
+            top:-50px;	
+            background-image:url(../resources/images/mensaje.png);
+            width:100%;	
+            height: 55px;
+            position: relative;	
+        }
+
+        #linea2{
+            top:-34px;
+            z-index:100;
+            width:90%;	
+            height: 15px;
+            position: relative;	
+        }
+        #pagina{
+            top:-34px;	
+            width:1300px;	
+            height: 15px;
+            position: relative;	
+        }
+        #piepagina{
+            width:990px;	
+            height:30px;
+            position: relative;	
+            top:50px;
+        }
+
+
+
+        #superior{
+            top:28px;
+
+            background-image:url(../resources/images/superior.png); background-repeat:no-repeat;
+            width: 1300px;
+
+            height: 18px;
+            position: relative;	
+        }
+        #medio{
+            top:22px;	
+            background-image:url(../resources/images/medio.png); background-repeat:repeat-y;
+            width: 1298px;	
+            
+            position: relative; padding:10px 0;
+        }
+        #inferior{
+            top:22px;	
+            background-image:url(../resources/images/inferior.png); background-repeat:no-repeat;
+            width: 1298px;	
+            height: 25px;
+            position: relative;	
+        }
+        
+        /******Para Texto solo informativo **/
+            #medio h2{
+            font-family: inherit;
+            }
+            #medio p, #medio h3,  #medio ul{
+                font-family: inherit;
+                text-align: justify;
+            } 
+        
+        /*********************************
+                PRIMEFACES
+        *********************************/
+
+        /*Letra de toda la aplicaciÃƒÂ³n*/
+        @font-face{
+                font-family: Calibri;
+               /*src: url(../resources/font/CANDARA.TTF);*/
+        }
+
+        /*Letra de toda la aplicaciÃƒÂ³n*/
+        .ui-widget, .ui-widget .ui-widget{
+                font-family: Calibri; 
+        }
+
+        /*Lista de selecciÃƒÂ³n*/
+        .ui-selectonemenu-label{
+                color: white !important;
+                background-color: #70B8D6 !important;
+        }
+
+        /*Items de la lista de selecciÃƒÂ³n*/
+        .ui-selectonemenu-items{
+                color: black !important;
+                background-color: #70B8D6 !important;
+        }
+
+        /*IluminaciÃƒÂ³n del item de la lista de selecciÃƒÂ³n*/
+        .ui-selectonemenu-item.ui-selectonemenu-list-item.ui-state-highlight {
+                /*color: white !important;*/
+                background: #70B8D6 !important;
+        }
+
+        /*Encabezado de algunas de las tablas sencillas*/
+        .ui-panelgrid .ui-widget-header{
+                border:1px solid #4297d7 !important; 
+                background:#2191c0 url("../resources/images/ui-bg_gloss-wave_75_2191c0_500x100.png.jsf?ln=primefaces-start") 50% 50% repeat-x !important; 
+                color:#eaf5f7 !important; 
+                font-weight:bold !important;
+        }
+
+        /*Encabezado de las tablas que contienes filtros y botones (complejas)*/
+        .ui-datatable-header{
+                border:1px solid #4297d7 !important; 
+                background:#2191c0 url("../resources/images/ui-bg_gloss-wave_75_2191c0_500x100.png.jsf?ln=primefaces-start") 50% 50% repeat-x !important; 
+                color:#eaf5f7 !important; 
+                font-weight:bold !important;
+        }
+
+        .ui-datatable-footer{
+                border:1px solid #4297d7 !important; 
+                background:#2191c0 url("../resources/images/ui-bg_gloss-wave_75_2191c0_500x100.png.jsf?ln=primefaces-start") 50% 50% repeat-x !important; 
+                color:#eaf5f7 !important; 
+                font-weight:bold !important;
+        }
+
+        .ui-panel .ui-widget-header{
+                border:1px solid #4297d7 !important; 
+                background:#2191c0 url("../resources/images/ui-bg_gloss-wave_75_2191c0_500x100.png.jsf?ln=primefaces-start") 50% 50% repeat-x !important; 
+                color:#eaf5f7 !important; 
+                font-weight:bold !important;
+        }
+
+        /*Botones (solo los componentes)*/
+        .ui-button {
+                /*border:1px solid #4297d7 !important; 
+                background:#2191c0 url("../Images/ui-bg_gloss-wave_75_2191c0_500x100.png.jsf?ln=primefaces-start") 50% 50% repeat-x !important; */
+                color:#333 !important; 
+                font-weight:bold !important;
+        }
+
+        /*Botones (solo los componentes)*/
+        .ui-button.ui-state-hover {
+                background-color: grey !important;
+                color:#FFF !important; 
+                font-weight:bold !important;
+        }
+
+        /*Arbol*/
+        .ui-tree{
+                background: #000000 !important; 
+        }
+
+        .ui-icon-triangle-1-s{
+                image: url("../resources/images/edit-icon.png") !important;
+        }
+
+        .ui-icon-editar { 
+                background-image: url("../resources/images/edit-icon.png") !important;
+        }
+
+        .ui-icon-calendario { 
+                background-image: url("../resources/images/calendar.png") !important;
+        }
+
+        .ui-icon-guardar { 
+                background-image: url("../resources/images/save.png") !important;
+        }	

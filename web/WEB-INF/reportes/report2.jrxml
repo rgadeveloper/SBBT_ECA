@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report2" language="groovy" pageWidth="802" pageHeight="135" orientation="Landscape" columnWidth="802" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="9cb6dadf-f2c7-44ce-9618-b45c8b074ab4">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<style name="table 2">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="New Dataset 1" uuid="769078db-defc-4437-ae30-06c38fdfb06d">
+		<parameter name="periodo" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[201403]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[select periodo, sum(nvl(consumo_macros,0)) entrada, sum(nvl(consumo_suministro,0))+ sum(nvl(consumo_adicional,0)) salida,
+sum(nvl(consumo_macros,0)) - (sum(nvl(consumo_suministro,0))+ sum(nvl(consumo_adicional,0))) perdidas
+from balances
+where id_tipo_componente = 8
+--and rango_balance <> 31
+and periodo <= $P{periodo}
+and periodo >= $P{periodo} -12
+group by periodo]]>
+		</queryString>
+		<field name="PERIODO" class="java.math.BigDecimal"/>
+		<field name="ENTRADA" class="java.math.BigDecimal"/>
+		<field name="SALIDA" class="java.math.BigDecimal"/>
+		<field name="PERDIDAS" class="java.math.BigDecimal"/>
+		<group name="PERIODO">
+			<groupExpression><![CDATA[$F{PERIODO}]]></groupExpression>
+		</group>
+		<group name="ENTRADA">
+			<groupExpression><![CDATA[$F{ENTRADA}]]></groupExpression>
+		</group>
+		<group name="SALIDA">
+			<groupExpression><![CDATA[$F{SALIDA}]]></groupExpression>
+		</group>
+		<group name="PERDIDAS">
+			<groupExpression><![CDATA[$F{PERDIDAS}]]></groupExpression>
+		</group>
+	</subDataset>
+	<parameter name="periodo" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[201403]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select periodo, sum(nvl(consumo_macros,0)) entrada, sum(nvl(consumo_suministro,0))+ sum(nvl(consumo_adicional,0)) salida,
+sum(nvl(consumo_macros,0)) - (sum(nvl(consumo_suministro,0))+ sum(nvl(consumo_adicional,0))) perdidas
+from balances
+where id_tipo_componente = 8
+--and rango_balance <> 31
+group by periodo]]>
+	</queryString>
+	<field name="PERIODO" class="java.math.BigDecimal"/>
+	<field name="ENTRADA" class="java.math.BigDecimal"/>
+	<field name="SALIDA" class="java.math.BigDecimal"/>
+	<field name="PERDIDAS" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="135" splitType="Stretch">
+			<lineChart>
+				<chart>
+					<reportElement uuid="35756e89-5476-4f73-b39a-d0e374947c48" x="1" y="0" width="801" height="135"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<dataset>
+						<datasetRun subDataset="New Dataset 1" uuid="dce68c89-8e60-4f77-8771-56780643168f">
+							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						</datasetRun>
+					</dataset>
+					<categorySeries>
+						<seriesExpression><![CDATA["Salida"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{PERIODO}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{SALIDA}]]></valueExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA["Perdidas"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{PERIODO}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{PERDIDAS}]]></valueExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA["Energia de Entrada PCIs MWh/Mes"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{PERIODO}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{ENTRADA}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<linePlot>
+					<plot/>
+				</linePlot>
+			</lineChart>
+		</band>
+	</columnHeader>
+</jasperReport>

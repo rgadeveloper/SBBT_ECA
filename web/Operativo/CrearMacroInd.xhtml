@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f ="http://java.sun.com/jsf/core">
+<h:head>
+    <f:facet name="first">
+        <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+        <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+        <title>ECA - SBBT</title>
+    </f:facet>
+
+    <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/default.css" />
+    <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/syntaxhighlighter/syntaxhighlighter.css" />
+
+    <style type="text/css">
+        .ui-layout-north {
+            z-index:20 !important;
+            overflow:visible !important;;
+        }
+
+        .ui-layout-north .ui-layout-unit-content {
+            overflow:visible !important;
+        }
+    </style>
+   <h:form id="validarSession">
+   <h:inputHidden  rendered="#{login.validarSession}" value="#{login.validateSession()}" />
+   </h:form>
+</h:head>    
+
+<link href="../Styles/estilos.css" rel="stylesheet" type="text/css" />
+<ui:include src="../sessionTimeOut.xhtml" />
+
+<h:body>
+ <h:form id="formCarga" enctype="multipart/form-data"> 
+     
+<div id="cuerpo" align="center">
+<!--<div id="index_r1_c2" ></div>-->
+<div id="linea"><div align="center" style="position:relative; top:6px; background-image:url(Images/mensaje2.png); background-repeat:no-repeat; background-position:center; height:38px"></div></div>
+<div id="linea2" align="left" >
+    <p:menubar  model ="#{templateView.model}" style="font-size: 12px" />
+</div>
+
+<div id="pagina">
+
+  <div id="superior">     
+  </div>
+  <div id="medio">      
+   
+            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+                                      
+            <p:panelGrid  style="font-size: 12px">
+                <f:facet name="header">
+                   <p:row>
+                        <p:column colspan="8">Creación Individual de Macromedidores </p:column>
+                    </p:row>
+                </f:facet>
+                <p:row>
+                    <p:column style="font-weight: bold;" >
+                        <h:outputText value="Macromedidor (Id comercial)"/>
+
+                    </p:column>
+                    <p:column style="font-weight: bold;" >
+                        <p:inputText  id="inputMacro"  value="#{adminArchivo.macromedidor}"/>
+                    </p:column>
+
+                </p:row>
+                <p:row>
+                    <p:column style="font-weight: bold;" colspan="1">
+                        <h:outputText value="Transformador (Id comercial)"/>
+
+                    </p:column>
+                    <p:column style="font-weight: bold;" colspan="1">
+                        <p:inputText  id="Trafo" value="#{adminArchivo.transformador}" />
+                    </p:column>
+
+                </p:row>
+                <p:row>
+                    <p:column style="font-weight: bold;" colspan="1">
+                        <h:outputText value="Tipo de macromedidor"/>
+
+                    </p:column>
+                    <p:column style="font-weight: bold;" colspan="1">
+                        <p:selectOneMenu value="#{adminArchivo.tipoMacroSel}" required="true" label="est" style="width:160px;" >
+                            <f:selectItems value="#{adminArchivo.tipoMacromedidores}" var="tipMacro" itemLabel="#{tipMacro.nombre}" itemValue="#{tipMacro.tipo}"/>
+                          </p:selectOneMenu>
+                    </p:column>
+
+                </p:row> 
+                <p:row>
+                    <p:column style="font-weight: bold;" colspan="2">
+                         <p:commandButton value="Guardar" update="messages"  action="#{adminArchivo.guardar()}"  />
+                    </p:column>
+
+                </p:row>
+            </p:panelGrid>            
+        
+  </div>
+    
+  <div id="inferior"></div>
+  <div id="piepagina" align="center">
+</div>
+
+</div></div>
+     
+  </h:form>
+    
+</h:body>
+</html>

@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+
+    <p:panelGrid columns="2" id ="dtbalanceTrafo"   style="margin-top:15px; font-size: 12px ">
+
+        <f:facet name="header">
+            <p:row>
+                <p:column colspan="8">Información del macro virtual </p:column>
+            </p:row>
+        </f:facet>
+
+        <h:outputText style="font-weight: bold;" value="IdComercial" />
+        <h:outputText value="#{electricaView.componente.idCliente}" /> 
+
+        <h:outputText style="font-weight: bold;" value="Nombre" />
+        <h:outputText value="#{electricaView.componente.nombre}" /> 
+
+        <h:outputText style="font-weight: bold;" value="Zona" />
+        <h:outputText value="#{electricaView.ubicacionMV.zona}" />
+
+        <h:outputText style="font-weight: bold;" value="Subestación" />
+        <h:outputText value="#{electricaView.ubicacionMV.munSub}" />
+
+        <h:outputText style="font-weight: bold;" value="Circuito" />
+        <h:outputText value="#{electricaView.ubicacionMV.barCir}" />   
+
+        <h:outputText style="font-weight: bold;" value="Cantidad trafos (Und)" />
+        <h:outputText value="#{electricaView.ubicacionMV.cantTrafosAso}" >
+            <f:convertNumber type="number" locale="es_CO" groupingUsed="true" minFractionDigits="2"/>
+        </h:outputText>   
+
+        <h:outputText style="font-weight: bold;" value="Energía macromedidor (Kwh)" />
+        <h:outputText value="#{electricaView.balance.consumoMacros}" >
+            <f:convertNumber type="number" locale="es_CO" groupingUsed="true" minFractionDigits="2"/>
+        </h:outputText>   
+
+        <h:outputText style="font-weight: bold;" value="Pérdida energía Mes (%)" />
+        <h:outputText value="#{electricaView.balance.porcPerdidaMes}" >
+            <f:convertNumber type="number" locale="es_CO" groupingUsed="true" minFractionDigits="2"/>
+        </h:outputText>      
+
+        <h:outputText style="font-weight: bold;" value="Pérdida energía Movil (%)" />
+        <h:outputText value="#{electricaView.balance.porcPerdidaMovil}" >
+            <f:convertNumber type="number" locale="es_CO" groupingUsed="true" minFractionDigits="2"/>
+        </h:outputText>                
+
+    </p:panelGrid>    
+
+</html>

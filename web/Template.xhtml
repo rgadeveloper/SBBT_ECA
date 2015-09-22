@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+            <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+            <title>SBBT</title>
+        </f:facet>
+
+        <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/default.css" />
+        <link href="#{request.contextPath}/resources/css/cssLayout.css" rel="stylesheet" type="text/css" />
+        <style type="text/css">
+            .ui-layout-north {
+                z-index:20 !important;
+                overflow:visible !important;;
+            }
+
+            .ui-layout-north .ui-layout-unit-content {
+                overflow:visible !important;
+            }
+        </style>
+    </h:head>
+
+    <h:body>
+        <f:view contentType="text/html"> 
+            <p:layout fullPage="true" >
+
+                    <p:layoutUnit id="top" position="north" size="50">
+                        <div id="top">
+                            <h:form>
+                                <p:menubar  model ="#{templateView.model}"/>
+                            </h:form>
+                                <ui:insert name="top">Top</ui:insert>
+                        </div>  
+                    </p:layoutUnit>
+                    <p>  Bienvenido : <h:outputText value="#{login.usuario}" /> </p>
+                    
+                <div>
+                    <div id="left">
+                        <p:layoutUnit id="left" position="west" size="300" resizable="true" closable="true" collapsible="true" header="Vista Geografica" minSize="200">
+
+                            <ui:insert name="left">Left</ui:insert>
+
+                        </p:layoutUnit>
+
+                    </div>
+                    <div id="content" class="left_content">
+                        <p:layoutUnit id="center" position="center">
+                            <ui:insert name="content">Content</ui:insert>
+                        </p:layoutUnit>
+
+                    </div>
+                </div>
+                <div id="bottom">
+                    <p:layoutUnit id="bottom" position="south" size="60">                           
+                        <p align ="left">
+                            Bienvenido : <h:outputText value="#{login.usuario}" />  </p>
+                        <br></br>
+                        <p align ="center"> ©2015 RGA Todos los derechos reservados </p>                           
+
+                    </p:layoutUnit>
+
+                    <ui:insert name="bottom"></ui:insert>
+                </div>
+            </p:layout>
+        </f:view>
+    </h:body>
+
+</html>

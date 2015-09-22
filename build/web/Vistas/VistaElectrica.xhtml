@@ -1,0 +1,746 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f ="http://java.sun.com/jsf/core">
+  <h:head>
+    <f:facet name="first">
+      <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+      <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+      <title>ECA - SBBT</title>
+    </f:facet>
+
+    <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/default.css" />
+    <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/syntaxhighlighter/syntaxhighlighter.css" />
+    <script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
+
+    <style type="text/css">
+      .ui-layout-north {
+        z-index:20 !important;
+        overflow:visible !important;
+      }
+
+      .ui-layout-north .ui-layout-unit-content {
+        overflow:visible !important;
+      }
+    </style>
+    <h:form id="validarSession">
+      <h:inputHidden  rendered="#{login.validarSession}" value="#{login.validateSession()}" />
+    </h:form>
+  </h:head>
+
+  <link href="../Styles/estilos.css" rel="stylesheet" type="text/css" />
+  <ui:include src="../sessionTimeOut.xhtml" />
+
+  <h:body>
+    <h:inputHidden value="#{electricaView.setTipoArbol('NIV100')}"/>
+    <h:form id="form">
+      <p:growl  id="growl" showDetail="true" sticky="true" life="3000"  /> 
+      <div id="cuerpo" align="center">
+        <!--<div id="index_r1_c2" ></div>-->
+        <div id="linea"><div align="center" style="position:relative; top:6px; background-image:url(Images/mensaje2.png); background-repeat:no-repeat; background-position:center; height:38px"></div></div>
+        <div id="linea2" align="left" >
+          <p:menubar model ="#{templateView.model}" style="font-size: 12px" />
+        </div>
+
+        <div id="pagina">
+
+          <div id="superior">     
+          </div>
+          <div id="medio" style="height:available">      
+            <p:layout fullPage="false" id ="layout" style="height: 760px; width: 1270px;margin: 0; padding: 0;"  >
+
+              <p:layoutUnit style="border: none;" id="top" position="north" size="40">
+                <p:toolbar id="barraHerramientas" style="font-size: 12px"> 
+                  <p:toolbarGroup align="left"> 
+                    <p:commandButton title="Buscar" icon="ui-icon-search" update=":formBus" action="#{electricaView.limpiarBuscarComponente}"  oncomplete="buscarComponente.show()" />
+                    <!--<p:commandButton title="Histórico de componente" id="butonHisto" icon="ui-icon-view" update=":formViewComp" action="#--><!--{electricaView.buscarComponenteHistorico()}"  oncomplete="historicoComponente.show()" disabled="#--><!--{!electricaView.historicoView}" />-->
+                  </p:toolbarGroup>
+
+                  <p:toolbarGroup align="right"> 
+                    <h:outputLabel value="Periodo: #{electricaView.periodo}" style="padding-right: 5px"/>
+                    <p:commandButton type="button"  title="Periodo"  icon="ui-icon-calendar" onclick="dPeriodo.show()"/> 
+                    <!--<p:commandButton  rendered="#--><!--{electricaView.mostrarBtnNovedades}" update=":formNovedades:displayNovedad" action="#--><!--{electricaView.mostrarNovedades}" oncomplete="popupNovedad.show()" value="Novedades" />-->
+                  </p:toolbarGroup>  
+                </p:toolbar>
+
+              </p:layoutUnit>
+
+
+              <p:layoutUnit style="border: none; width: 950px;" id="center" position="center">
+                <p:tabView id="tabView" dynamic="true" style="border:none; font-size: 12px">
+
+         <!--<p:ajax event="tabChange" listener="#{tabBean.onTabChange}" update=":form:growl"/>  -->
+                  <p:tab  title="Resumen numérico" id="numerico">
+                    <h:panelGrid id="data"> 
+                      <ui:include id="panelNum" src="#{electricaView.url}"/>
+                    </h:panelGrid>
+                    
+                  </p:tab>  
+
+                  <p:tab title="Gráfico" id="grafico">
+                    <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5"> 
+
+                      <h:outputText value="Opciones: " />  
+                      <p:selectOneButton value="#{electricaView.graficoVE}">  
+                        <f:selectItem itemLabel="Lineal" itemValue="VEpestanaGraficaLinea.xhtml" />  
+                        <f:selectItem itemLabel="Torta" itemValue="VEpestanaGraficaTorta.xhtml" />  
+                        <p:ajax  update="chart" />
+                      </p:selectOneButton>  
+                    </h:panelGrid>  
+
+                    <h:panelGrid id="chart" >                                              
+                      <ui:include id="panelGraf" src="#{electricaView.graficoVE}"  />                 
+                    </h:panelGrid>                                      
+
+                  </p:tab>          
+
+                  <p:tab title="Georreferenciado" >
+                    <h:panelGrid id="gmapT">
+                      <p:gmap center="#{electricaView.mapa.center}" zoom="#{electricaView.mapa.zoom}" type="ROADMAP"
+                              model="#{electricaView.mapa.advancedModel}"  style="width:1190px;height:618px">
+                        <p:ajax event="overlaySelect" listener="#{electricaView.mapa.onMarkerSelect}"/>
+
+                        <p:gmapInfoWindow>
+
+                          <p:outputPanel style="text-align:center;display:block;margin:auto;">
+                            <p:panelGrid> 
+
+                              <p:row>
+                                <p:column style="font-weight: bold;" colspan="1">
+                                  <h:inputHidden value="#{electricaView.obtenerNivel(electricaView.mapa.marker.title)}"/>
+                                  Nivel
+                                </p:column>
+                                <p:column style="font-weight: bold;" colspan="1">
+                                  <h:outputText value="#{electricaView.nodo.nombreTipo}" />
+                                </p:column>
+                              </p:row>
+
+                              <p:row rendered="#{electricaView.nodo.tipo =='9'}">
+                                <p:column style="font-weight: bold;" colspan="1">
+                                  NIS
+                                </p:column>
+                                <p:column style="font-weight: bold;" colspan="1">
+                                  <h:outputText value="#{electricaView.nodo.nombre}" />
+                                </p:column>
+                              </p:row>
+                          
+                              <p:row>
+                                <p:column style="font-weight: bold;" colspan="1">
+                                  Componente
+                                </p:column>
+                                <p:column style="font-weight: bold;" colspan="1">
+                                  <h:outputText value="#{electricaView.nodo.codigo}" />
+                                </p:column>
+                              </p:row>                           
+
+                              <p:row rendered="#{electricaView.nodo.tipo =='8'}">
+                                <p:column style="font-weight: bold;" colspan="1">
+                                  Número total de macromedidores
+                                </p:column>
+                                <p:column style="font-weight: bold;" colspan="1">
+                                  <h:outputText value="#{electricaView.nodo.numMacroTot}" />
+                                </p:column>
+                              </p:row>
+
+                              <p:row rendered="#{electricaView.nodo.tipo =='8'}">
+                                <p:column style="font-weight: bold;" colspan="1">
+                                  Número de suministros facturados
+                                </p:column>
+                                <p:column style="font-weight: bold;" colspan="1">
+                                  <h:outputText value="#{electricaView.nodo.numSuministrosFact}" />
+                                </p:column>
+                              </p:row> 
+
+                              <p:row rendered="#{electricaView.nodo.tipo =='8'}">
+                                <p:column style="font-weight: bold;" colspan="1">
+                                  % Pérdidas
+                                </p:column>
+                                <p:column style="font-weight: bold;" colspan="1">
+                                  <h:outputText value="#{electricaView.nodo.perdidas}" />
+                                </p:column>
+                              </p:row> 
+
+                              <p:row rendered="#{electricaView.nodo.tipo =='8' or electricaView.nodo.tipo =='9'}">
+                                <p:column style="font-weight: bold;" colspan="1">
+                                  Coordenadas
+                                </p:column>
+                                <p:column style="font-weight: bold;" colspan="1">
+                                  <h:outputText value="#{electricaView.nodo.coordenadaX} , #{electricaView.nodo.coordenadaY}" />
+                                </p:column>
+                              </p:row>
+
+                              <p:row rendered="#{electricaView.nodo.tipo =='9'}">                                                                
+                                <p:column style="font-weight: bold;" colspan="1">
+                                  Tarifa
+                                </p:column>
+                                <p:column style="font-weight: bold;" colspan="1">
+                                  <h:outputText value="#{electricaView.nodo.tipoUso}" />
+                                </p:column>
+                              </p:row>
+
+                              <p:row>
+                                <p:column style="font-weight: bold;" colspan="1">
+                                  Periodo
+                                </p:column>
+                                <p:column style="font-weight: bold;" colspan="1">
+                                  <h:outputText value="#{electricaView.periodo}" />
+                                </p:column>
+                              </p:row>
+                            </p:panelGrid> 
+                          </p:outputPanel>
+
+                        </p:gmapInfoWindow>
+                      </p:gmap>
+                    </h:panelGrid>
+
+                  </p:tab>
+
+                </p:tabView>             
+              </p:layoutUnit>
+
+              <p:layoutUnit id="left" position="west" size="300" resizable="true" closable="false" collapsible="true" header="Vista Eléctrica" minSize="200">
+
+                <p:tree style="border: none;" value="#{electricaView.root}" var="node" dynamic="true" cache="false"
+                        selectionMode="single"  selection="#{electricaView.selectedNode}" id="tree">
+
+                  <p:ajax event="select" listener="#{electricaView.onNodeSelect}" onstart="wait.show()" oncomplete="wait.hide()"
+                          update=":form:tree,:form:tabView:data,:form:tabView:chart,:form:tabView:gmapT,:form:tblTrafosN,:form:tblTrafosM,:form:tblTrafosC,:form:tblTrafosB,:form:tblTrafosI,:form:tblTrafosSB,:form:barraHerramientas"/>
+                  <p:ajax event="expand" listener="#{electricaView.onNodeExpanded}" />
+                  <p:ajax event="collapse" listener="#{electricaView.onNodeCollapse}" />
+
+                  <p:treeNode>  
+                    <h:outputText value="#{electricaView.nombreNodo(node)}" style="font-weight:500;#{electricaView.estiloColor(node)}"/>
+                  </p:treeNode>  
+                </p:tree>
+              </p:layoutUnit>
+
+            </p:layout>  
+          </div>
+
+          <div id="inferior"></div>
+          <div id="piepagina" align="center">
+          </div>
+
+        </div></div>
+
+      <p:dialog id="tn" header="Detalle" widgetVar="trafosNegativos" resizable="false" modal="true"> 
+        <p:dataTable id="tblTrafosN"  var="trafo" value="#{electricaView.trafosNegativos}" tableStyle="width:auto"
+                     paginator="true" rows="10" 
+                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                     style="font-size: 12px;">       
+
+
+          <f:facet name="header">
+            Negativo
+          </f:facet>
+
+          <p:column>  
+            <p:rowToggler />  
+          </p:column> 
+
+          <p:column headerText="Id trafo" sortBy="#{trafo.idComponente}" filterBy="#{trafo.idComponente}">
+            <h:outputText value="#{trafo.idComponente}" />
+          </p:column>
+
+          <p:column headerText="Nombre" sortBy="#{trafo.nombre}" filterBy="#{trafo.nombre}">
+            <h:outputText value="#{trafo.nombre}" />
+          </p:column>   
+
+          <p:rowExpansion>  
+            <h:panelGrid id="displayDetalle" columns="2" cellpadding="4" style="width:300px;"  
+                         styleClass=" ui-widget-content grid">  
+
+              <h:outputText value="Circuito" />  
+              <h:outputText value="#{electricaView.padreTrafo(trafo.idComponente,'3')}" />   
+
+              <h:outputText value="Barrio" />  
+              <h:outputText value="#{electricaView.padreTrafo(trafo.idComponente,'7')}" />   
+
+              <h:outputText value="%PE mes" />  
+              <h:outputText value="#{electricaView.perdidaTrafo(trafo.idComponente,'mes')}" />   
+
+              <h:outputText value="%PE móvil" />  
+              <h:outputText value="#{electricaView.perdidaTrafo(trafo.idComponente,'móvil')}" />   
+
+            </h:panelGrid>  
+
+          </p:rowExpansion>    
+
+        </p:dataTable>             
+      </p:dialog>
+
+      <p:dialog header="Detalle" widgetVar="trafosBajo" resizable="false" modal="true"> 
+        <p:dataTable id="tblTrafosB" var="trafo" value="#{electricaView.trafosBajo}" tableStyle="width:auto"
+                     paginator="true" rows="10" 
+                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                     style="font-size: 12px">
+          <f:facet name="header">
+            Bajo
+          </f:facet>
+
+          <p:column>  
+            <p:rowToggler />  
+          </p:column> 
+
+          <p:column headerText="Id trafo" sortBy="#{trafo.idComponente}" filterBy="#{trafo.idComponente}">
+            <h:outputText value="#{trafo.idComponente}" />
+          </p:column>
+
+          <p:column headerText="Nombre" sortBy="#{trafo.nombre}" filterBy="#{trafo.nombre}">
+            <h:outputText value="#{trafo.nombre}" />
+          </p:column>
+
+          <p:rowExpansion>  
+            <h:panelGrid id="displayDetalle" columns="2" cellpadding="4" style="width:300px;"  
+                         styleClass=" ui-widget-content grid">  
+
+              <h:outputText value="Circuito" />  
+              <h:outputText value="#{electricaView.padreTrafo(trafo.idComponente,'3')}" />   
+
+              <h:outputText value="Barrio" />  
+              <h:outputText value="#{electricaView.padreTrafo(trafo.idComponente,'7')}" />   
+
+              <h:outputText value="%PE mes" />  
+              <h:outputText value="#{electricaView.perdidaTrafo(trafo.idComponente,'mes')}" />   
+
+              <h:outputText value="%PE móvil" />  
+              <h:outputText value="#{electricaView.perdidaTrafo(trafo.idComponente,'móvil')}" />   
+
+            </h:panelGrid>  
+
+          </p:rowExpansion> 
+
+        </p:dataTable>
+      </p:dialog>
+
+      <p:dialog header="Detalle" widgetVar="trafosMedio" resizable="false" modal="true"> 
+        <p:dataTable id="tblTrafosM" var="trafo" value="#{electricaView.trafosMedio}" tableStyle="width:auto"
+                     paginator="true" rows="10" 
+                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                     style="font-size: 12px">
+          <f:facet name="header">
+            Medio
+          </f:facet>
+
+          <p:column>  
+            <p:rowToggler />  
+          </p:column>               
+
+          <p:column headerText="Id trafo" sortBy="#{trafo.idComponente}" filterBy="#{trafo.idComponente}">
+            <h:outputText value="#{trafo.idComponente}" />
+          </p:column>
+
+          <p:column headerText="Nombre" sortBy="#{trafo.nombre}" filterBy="#{trafo.nombre}">
+            <h:outputText value="#{trafo.nombre}" />
+          </p:column>
+
+          <p:rowExpansion>  
+            <h:panelGrid id="displayDetalle" columns="2" cellpadding="4" style="width:300px;"  
+                         styleClass=" ui-widget-content grid">  
+
+              <h:outputText value="Circuito" />  
+              <h:outputText value="#{electricaView.padreTrafo(trafo.idComponente,'3')}" />   
+
+              <h:outputText value="Barrio" />  
+              <h:outputText value="#{electricaView.padreTrafo(trafo.idComponente,'7')}" />   
+
+              <h:outputText value="%PE mes" />  
+              <h:outputText value="#{electricaView.perdidaTrafo(trafo.idComponente,'mes')}" />   
+
+              <h:outputText value="%PE móvil" />  
+              <h:outputText value="#{electricaView.perdidaTrafo(trafo.idComponente,'móvil')}" />   
+
+            </h:panelGrid>  
+
+          </p:rowExpansion> 
+
+        </p:dataTable>
+      </p:dialog>
+
+      <p:dialog header="Detalle" widgetVar="trafosCritico" resizable="false" modal="true"> 
+        <p:dataTable id="tblTrafosC" var="trafo" value="#{electricaView.trafosCritico}" tableStyle="width:auto"
+                     paginator="true" rows="10" 
+                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                     style="font-size: 12px">
+          <f:facet name="header">
+            Crítico
+          </f:facet>
+
+          <p:column>  
+            <p:rowToggler />  
+          </p:column> 
+
+          <p:column headerText="Id trafo" sortBy="#{trafo.idComponente}" filterBy="#{trafo.idComponente}">
+            <h:outputText value="#{trafo.idComponente}" />
+          </p:column>
+
+          <p:column headerText="Nombre" sortBy="#{trafo.nombre}" filterBy="#{trafo.nombre}">
+            <h:outputText value="#{trafo.nombre}" />
+          </p:column>
+
+          <p:rowExpansion>  
+            <h:panelGrid id="displayDetalle" columns="2" cellpadding="4" style="width:300px;"  
+                         styleClass=" ui-widget-content grid">  
+
+              <h:outputText value="Circuito" />  
+              <h:outputText value="#{electricaView.padreTrafo(trafo.idComponente,'3')}" />   
+
+              <h:outputText value="Barrio" />  
+              <h:outputText value="#{electricaView.padreTrafo(trafo.idComponente,'7')}" />   
+
+              <h:outputText value="%PE mes" />  
+              <h:outputText value="#{electricaView.perdidaTrafo(trafo.idComponente,'mes')}" />   
+
+              <h:outputText value="%PE móvil" />  
+              <h:outputText value="#{electricaView.perdidaTrafo(trafo.idComponente,'móvil')}" />   
+
+            </h:panelGrid>  
+
+          </p:rowExpansion> 
+
+        </p:dataTable>
+      </p:dialog>
+
+      <p:dialog header="Detalle" widgetVar="trafosInconsistentes" resizable="false" modal="true"> 
+        <p:dataTable id="tblTrafosI" var="trafo" value="#{electricaView.trafosInconsistentes}" tableStyle="width:auto"
+                     paginator="true" rows="10" 
+                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                     style="font-size: 12px">
+          <f:facet name="header">
+            Inconsistente
+          </f:facet>
+
+          <p:column>  
+            <p:rowToggler />  
+          </p:column> 
+
+          <p:column headerText="Id trafo" sortBy="#{trafo.idComponente}" filterBy="#{trafo.idComponente}">
+            <h:outputText value="#{trafo.idComponente}" />
+          </p:column>
+
+          <p:column headerText="Nombre" sortBy="#{trafo.nombre}" filterBy="#{trafo.nombre}">
+            <h:outputText value="#{trafo.nombre}" />
+          </p:column>
+
+          <p:rowExpansion>  
+            <h:panelGrid id="displayDetalle" columns="2" cellpadding="4" style="width:300px;"  
+                         styleClass=" ui-widget-content grid">  
+
+              <h:outputText value="Circuito" />  
+              <h:outputText value="#{electricaView.padreTrafo(trafo.idComponente,'3')}" />   
+
+              <h:outputText value="Barrio" />  
+              <h:outputText value="#{electricaView.padreTrafo(trafo.idComponente,'7')}" />   
+
+              <h:outputText value="%PE mes" />  
+              <h:outputText value="#{electricaView.perdidaTrafo(trafo.idComponente,'mes')}" />   
+
+              <h:outputText value="%PE móvil" />  
+              <h:outputText value="#{electricaView.perdidaTrafo(trafo.idComponente,'móvil')}" />   
+
+            </h:panelGrid>  
+
+          </p:rowExpansion> 
+
+        </p:dataTable>
+      </p:dialog>
+
+      <p:dialog header="Detalle" widgetVar="trafosSinBalances" resizable="false" modal="true"> 
+        <p:dataTable id="tblTrafosSB" var="trafo" value="#{electricaView.trafosSinBalances}" tableStyle="width:auto"
+                     paginator="true" rows="10" 
+                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                     style="font-size: 12px">
+          <f:facet name="header">
+            Sin balances
+          </f:facet>
+
+          <p:column>  
+            <p:rowToggler />  
+          </p:column> 
+
+          <p:column headerText="Id trafo" sortBy="#{trafo.idComponente}" filterBy="#{trafo.idComponente}">
+            <h:outputText value="#{trafo.idComponente}" />
+          </p:column>
+
+          <p:column headerText="Nombre" sortBy="#{trafo.nombre}" filterBy="#{trafo.nombre}">
+            <h:outputText value="#{trafo.nombre}" />
+          </p:column>
+
+          <p:rowExpansion>  
+            <h:panelGrid id="displayDetalle" columns="2" cellpadding="4" style="width:300px;"  
+                         styleClass=" ui-widget-content grid">  
+
+              <h:outputText value="Circuito" />  
+              <h:outputText value="#{electricaView.padreTrafo(trafo.idComponente,'3')}" />   
+
+              <h:outputText value="Barrio" />  
+              <h:outputText value="#{electricaView.padreTrafo(trafo.idComponente,'7')}" />   
+
+              <h:outputText value="%PE mes" />  
+              <h:outputText value="#{electricaView.perdidaTrafo(trafo.idComponente,'mes')}" />   
+
+              <h:outputText value="%PE móvil" />  
+              <h:outputText value="#{electricaView.perdidaTrafo(trafo.idComponente,'móvil')}" />   
+
+            </h:panelGrid>  
+
+          </p:rowExpansion> 
+
+        </p:dataTable>
+      </p:dialog>
+
+      <p:dialog widgetVar="wait" closable="false" resizable="false" draggable="false" position="center" modal="true" showHeader="false">
+        <p:ajaxStatus>
+          <f:facet name="start">
+            <p:graphicImage value="../resources/images/espera.gif" />
+          </f:facet>
+          <f:facet name="complete">
+            <h:outputText value="" />
+          </f:facet>
+        </p:ajaxStatus>
+      </p:dialog>
+
+    </h:form>
+
+    <h:form>
+      <p:dialog header="Establecer periodo" widgetVar="dPeriodo" resizable="false" modal="true">
+
+        <p:dataTable id="tblperiodo" var="per" value="#{electricaView.listPeriodos}" rowKey="#{per}"  selection="#{electricaView.periodo}" selectionMode="single" paginator="true" rows="6" >
+          <p:column>  
+            <f:facet name="header">  
+              <h:outputText value="Periodo" />  
+            </f:facet>   
+            <h:outputText value="#{per}" />  
+          </p:column>  
+        </p:dataTable>
+        <h:commandButton id="btnPeriodo" value="Establecer" action="#{electricaView.actualizarPeriodo()}" />  
+      </p:dialog>
+    </h:form>
+
+    <!--p:dialog header="Buscar Componente" widgetVar="buscarComponente" resizable="false" modal="false" width="500">
+        <h:form id="formBus"> 
+
+            <h:panelGrid id="displayBuscar" columns="2" cellpadding="5">
+
+                <h:outputText value="Tipo:" />  
+                <p:selectOneRadio required="true" requiredMessage="Escoja el Tipo" value="# {electricaView.tipoComponente}" style="padding-right: 30px">
+                    <f:selectItem itemLabel="Suministro" itemValue="Suministro" />
+                    <f:selectItem itemLabel="Transformador" itemValue="Trafo" />
+                </p:selectOneRadio>
+
+                <h:outputText value="Id Cliente:" /> 
+                <p:inputText value="# {electricaView.idClienteAbuscar}" required="true" requiredMessage="Ingrese el Id Cliente"/>
+
+                <p:commandButton value="Buscar" action="# {electricaView.buscarComponente()}" update="formBus"  />                 
+            </h:panelGrid>                               
+            <h:outputText style="font-weight: bold" value="# {electricaView.rutaComponente}" />
+        </h:form>
+    </p:dialog-->
+
+    <p:dialog header="Novedades" widgetVar="popupNovedad" resizable="false" modal="true"> 
+      <h:form id="formNovedades">  
+        <h:panelGrid id="displayNovedad" columns="1"  > 
+
+          <p:dataTable  var="novedad" value="#{electricaView.novedades}" tableStyle="width:auto"
+                        paginator="true" rows="10" rowKey="#{novedad.novedadesPK}"
+                        paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                        style="font-size: 12px"  selection="#{electricaView.novedadSelected}">   
+
+            <p:column selectionMode="single" style="width:18px" /> 
+
+            <p:column headerText="Periodo" sortBy="#{novedad.periodo}" filterBy="#{novedad.periodo}">
+              <h:outputText value="#{novedad.periodo}" />
+            </p:column>
+
+            <p:column headerText="Novedad aplicada" sortBy="#{novedad.tbltipo.nombre}" filterBy="#{novedad.tbltipo.nombre}">
+              <h:outputText value="#{novedad.tbltipo.nombre}" />
+            </p:column>                    
+
+            <p:column style="width:40px">
+              <h:panelGrid columns="3" styleClass="actions" cellpadding="2" >
+                <p:commandButton id="editBtnNovedad" update=":formEditNovedad:displayEditNovedad" oncomplete="novedadEdit.show()" icon="ui-icon-pencil" title="Editar">
+                  <f:setPropertyActionListener value="#{novedad}" target="#{electricaView.novedadSelected}"/>
+                </p:commandButton>
+              </h:panelGrid>
+            </p:column>  
+
+            <f:facet name="footer">
+              <p:commandButton value="Agregar" type="button" onclick="novedadAdd.show()" />                                    
+              <p:commandButton value="Eliminar" update=":formNovedades:displayNovedad"  action="#{electricaView.eliminarNovedad()}" />
+            </f:facet>  
+          </p:dataTable>  
+        </h:panelGrid>             
+      </h:form> 
+    </p:dialog>
+
+    <p:dialog header="Crear nueva novedad" widgetVar="novedadAdd" resizable="false" modal="true"> 
+      <h:form id="formNewNovedad">                
+        <h:panelGrid columns="2" cellpadding="6" >
+
+          <h:outputLabel  value="Tipo de novedad" />
+          <p:selectOneMenu value="#{electricaView.idTipoNovedad}" required="true">
+            <f:selectItems value="#{electricaView.tiposNovedades}" var="tipoNovedad"
+                           itemLabel="#{tipoNovedad.nombre}" itemValue="#{tipoNovedad.tipo}"/>
+          </p:selectOneMenu>
+
+          <f:facet name="footer">
+            <p:commandButton value="Agregar" actionListener="#{electricaView.crearNovedad(login.usuario, 'VistaElectrica.xhtml')}" oncomplete="novedadAdd.hide();" update=":formNovedades:displayNovedad"/>
+            <p:commandButton style="margin-left:30px;" value="Cancelar" type="button" onclick="novedadAdd.hide()" />
+          </f:facet>
+        </h:panelGrid>  
+      </h:form> 
+    </p:dialog>
+
+    <p:dialog header="Editar novedad" widgetVar="novedadEdit" resizable="false" modal="true"> 
+      <h:form id="formEditNovedad">                
+        <h:panelGrid id="displayEditNovedad" columns="2" cellpadding="6" >
+
+          <h:outputLabel  value="Tipo de novedad" />
+          <p:inplace label="#{electricaView.novedadSelected.tbltipo.nombre}" effectSpeed="fast" event="dblclick">
+            <p:selectOneMenu value="#{electricaView.idTipoNovedad}" required="true">
+              <f:selectItems value="#{electricaView.tiposNovedades}" var="tipoNovedad"
+                             itemLabel="#{tipoNovedad.nombre}" itemValue="#{tipoNovedad.tipo}"/>
+            </p:selectOneMenu>
+          </p:inplace>
+
+          <f:facet name="footer">
+            <p:commandButton value="Guardar" actionListener="#{electricaView.editarNovedad(login.usuario, 'VistaElectrica.xhtml')}" oncomplete="novedadEdit.hide();" update=":formNovedades:displayNovedad"/>
+            <p:commandButton style="margin-left:30px;" value="Cancelar" type="button" onclick="novedadEdit.hide()" />
+          </f:facet>
+        </h:panelGrid>  
+      </h:form> 
+    </p:dialog>
+
+    <p:dialog header="Gestión" widgetVar="gestionDialog" resizable="false" modal="true"> 
+      <h:form id="formGestion">                
+        <h:panelGrid columns="2" cellpadding="4" >  
+
+          <h:outputLabel value="Uso:" />
+          <p:selectOneMenu value="#{login.tipoUso}" >
+            <f:selectItem itemLabel="TODO" itemValue="NO" />
+            <f:selectItems value="#{tipoView.tiposByGrupo('TIU000')}" var="tipo"                             
+                           itemLabel="#{tipo.nombre}" itemValue="#{tipo.nombre}"/>                                                                  
+          </p:selectOneMenu>
+
+          <h:outputLabel value="Red:" />
+          <p:selectOneMenu value="#{login.tipoRed}" >
+            <f:selectItem itemLabel="TODO" itemValue="NO" />
+            <f:selectItems value="#{tipoView.tiposByGrupo('TRE000')}" var="tipo"                             
+                           itemLabel="#{tipo.nombre}" itemValue="#{tipo.tipo}"/>                                                                  
+          </p:selectOneMenu>
+
+          <h:outputLabel value="Rango:" />
+          <p:selectOneMenu value="#{login.rango}" >
+            <f:selectItem itemLabel="TODO" itemValue="NO" />
+            <f:selectItems value="#{tipoView.tiposDescripcion}" var="descripcion"                             
+                           itemLabel="#{descripcion.nombre}" itemValue="#{descripcion.nombre}"/>                                                                  
+          </p:selectOneMenu>
+
+          <f:facet name="footer">
+            <h:commandButton value="Aceptar" action="#{login.gestionarTrafos}" />                                     
+          </f:facet>  
+        </h:panelGrid>   
+      </h:form> 
+    </p:dialog>
+
+    <!--Histórico de costos - realizado por José... Para mostrar el historico de un componente. 24/07/2014: 11:13 pm  -->
+
+    <p:dialog header="Histórico componente" widgetVar="historicoComponente" resizable="false" modal="true" width="800" height="280" visible="false">
+      <h:form id="formViewComp"> 
+
+        <p:dataTable  var="buscarComponenteV" value="#{electricaView.buscarComponenteV}"
+                      paginator="true" rows="10"
+                      emptyMessage="No hay histórico"
+                      paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                      style="font-size: 12px; width: 100%;">   
+
+
+          <p:column headerText="Nombre" sortBy="#{buscarComponenteV.nombre}" >
+            <h:outputText value="#{buscarComponenteV.nombre}" />
+          </p:column>
+
+          <p:column headerText="Dirección" sortBy="#{buscarComponenteV.direccion}" >
+            <h:outputText value="#{buscarComponenteV.direccion}" />
+          </p:column>
+
+          <p:column headerText="Periodo inicial" sortBy="#{buscarComponenteV.pini}" >
+            <h:outputText value="#{buscarComponenteV.pini}" />
+          </p:column>
+
+          <p:column headerText="Periodo fin" sortBy="#{buscarComponenteV.pfin}" >
+            <h:outputText value="#{buscarComponenteV.pfin}" />
+          </p:column>
+
+          <p:column headerText="Estado" sortBy="#{buscarComponenteV.estado}" >
+            <h:outputText value="#{buscarComponenteV.estado}" />
+          </p:column>
+
+        </p:dataTable>                                
+      </h:form> 
+    </p:dialog>
+
+    <!--Nuevo dialogo para la busqueda de componente -->
+    <p:dialog header="Buscar componente" widgetVar="buscarComponente" resizable="false" modal="true" width="800">
+      <h:form id="formBus"> 
+        <p:fieldset legend="Buscar componente" style="text-align: justify;">
+          <h:panelGrid id="displayBuscar" columns="4" cellpadding="5">
+
+            <h:outputText value="Tipo:" />
+            <p:selectOneRadio required="true" requiredMessage="Escoja el Tipo" layout="grid" columns="1" 
+                              value="#{electricaView.tpComp}" style="padding-right: 30px;">
+              <f:selectItem itemLabel="Suministro" itemValue="Suministro"/>
+              <f:selectItem itemLabel="Transformador" itemValue="Trafo" />
+              <f:ajax render="txtNic txtBdi" />
+            </p:selectOneRadio>
+
+            <h:panelGroup>
+              <table>
+                <tr>
+                  <td>
+                    <h:outputLabel for="txtNic" value="NIS: " /> 
+                  </td>
+                  <td>
+                    <p:inputText id="txtNic" value="#{electricaView.idNis}" disabled="#{electricaView.tpComp == 'Trafo'}" 
+                                 required="#{electricaView.tpComp == 'Suministro'}" requiredMessage="Digite el NIS" 
+                                 placeholder="Digite el NIS" validatorMessage="Debe ingresar solo dígitos"/>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <h:outputLabel for="txtBdi" value="Cód. Trafo: " />
+                  </td>
+                  <td>
+                    <p:inputText id="txtBdi" value="#{electricaView.idPlaca}" disabled="#{electricaView.tpComp == 'Suministro'}" 
+                                 required="#{electricaView.tpComp == 'Trafo'}" requiredMessage="Digite el código del trafo" 
+                                 placeholder="Digite el código del trafo"/>
+                  </td>
+                </tr>
+              </table>
+            </h:panelGroup>
+
+          </h:panelGrid>
+        </p:fieldset>
+        <h:outputText style="font-weight: bold; color: #{electricaView.rutaComponente.length() >= 20 ? 'black' : 'red'};"
+                      value="#{electricaView.rutaComponente}"/> 
+        <br/>
+
+        <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+
+        <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+          <p:graphicImage name="/images/espera.gif" />
+        </p:dialog>
+        <p:commandButton value="Buscar" actionListener="#{electricaView.buscarComponente}" update=":formBus,:form"/>
+
+      </h:form>               
+    </p:dialog>
+
+    <p:dialog header="Versión del SBBT" widgetVar="dlgVersion" modal="true" 
+              resizable="false" height="50" closeOnEscape="true" showEffect="explode" hideEffect="bounce" draggable="false">
+      <h:outputText value="#{eventMenuBean.VERSION}" />
+    </p:dialog>
+
+  </h:body>
+</html>

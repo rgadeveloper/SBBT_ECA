@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f ="http://java.sun.com/jsf/core">
+  <h:head>
+    <f:facet name="first">
+      <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+      <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+      <title>ECA - SBBT</title>
+    </f:facet>
+
+    <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/default.css" />
+    <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/syntaxhighlighter/syntaxhighlighter.css" />
+
+    <style type="text/css">
+      .ui-layout-north {
+        z-index:20 !important;
+        overflow:visible !important;;
+      }
+
+      .ui-layout-north .ui-layout-unit-content {
+        overflow:visible !important;
+      }
+    </style>
+    <h:form id="validarSession">
+      <h:inputHidden  rendered="#{login.validarSession}" value="#{login.validateSession()}" />
+    </h:form>
+  </h:head>
+
+  <link href="../Styles/estilos.css" rel="stylesheet" type="text/css" />
+  <ui:include src="../sessionTimeOut.xhtml" />
+
+  <h:body>
+
+    <h:form id="form" enctype="multipart/form-data" style="font-family: inherit; font-size: 12px;">
+      <p:growl id="msgs" showDetail="true"/>  
+
+      <div id="cuerpo" align="center">
+        <!--<div id="index_r1_c2" ></div>-->
+        <div id="linea"><div align="center" style="position:relative; top:6px; background-image:url(Images/mensaje2.png); background-repeat:no-repeat; background-position:center; height:38px"></div></div>
+        <div id="linea2" align="left" >
+          <p:menubar model ="#{templateView.model}" style="font-size: 12px" />
+        </div>
+
+        <div id="pagina">
+
+          <div id="superior">     
+          </div>
+          <div id="medio">      
+            <p:panel id="panel" header="Reporte histórico - evolutivo" style="width: 800px;margin-bottom:10px;">  
+              <h:panelGrid columns="3" cellpadding="5">  
+
+                <h:outputText value="Opción:" />  
+                <p:selectOneRadio id="opcion" value="#{reporte.opcion}" style="padding-right: 30px">  
+                  <f:selectItems value="#{reporte.opciones}" /> 
+                </p:selectOneRadio>
+
+                <p:outputLabel/>
+
+                <h:outputText value="Vista:" />  
+                <p:selectOneRadio id="vista" value="#{reporte.vista}" style="padding-right: 30px">  
+                  <f:selectItems value="#{reporte.vistas}" />  
+                  <p:ajax update="tipos,componentes"  
+                          listener="#{reporte.actualizarComboTipos}" />
+                </p:selectOneRadio>
+
+                <p:outputLabel/>
+
+                <h:outputText value="Tipo componente:" /> 
+                <p:selectOneMenu id="tipos" value="#{reporte.tipo}" >
+                  <f:selectItem itemLabel="seleccionar opción" itemValue=""/>
+                  <f:selectItems value="#{reporte.tipos}" />
+                  <p:ajax update="componentes, txtNombreTrafo" 
+                          listener="#{reporte.actualizarComboComponentes}" />
+                </p:selectOneMenu>
+                <p:ajaxStatus style="width: 20px; height: 20px;">
+                  <f:facet name="start">
+                    <img src= "#{request.contextPath}/resources/images/wait20.gif"/>
+                  </f:facet>
+                </p:ajaxStatus>
+
+                <h:outputText value="Nombre:" />
+                <h:panelGroup>
+                  <p:selectOneMenu id="componentes" value="#{reporte.componente}" style="display : #{reporte.displaySelectTrafo};">
+                    <f:selectItem itemLabel="seleccionar opción" itemValue=""/>
+                    <f:selectItems value="#{reporte.componentes}" />
+                  </p:selectOneMenu>
+                  <p:inputText id="txtNombreTrafo" value="#{reporte.selectBDI}" 
+                               style="display : #{reporte.displayInputText};" placeholder="Digite código BDI"/>
+                </h:panelGroup>
+
+              </h:panelGrid>
+
+              <p:separator />
+
+              <h:commandButton value="Buscar" action="#{reporte.llenarDataTable}" >
+
+              </h:commandButton>
+
+            </p:panel>
+
+            <p:dataTable rendered="#{reporte.mostrarTabla}" id="hist" var="trafo" value="#{reporte.trafoPeriodos}"
+                         paginator="true" rows="10" tableStyle="width:auto"
+                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                         style="font-size: 12px">
+
+              <f:facet name="header">
+                Histórico 
+              </f:facet> 
+
+              <p:column>  
+                <f:facet name="header">  
+                  <h:outputText value="Nombre" />  
+                </f:facet>  
+                <h:outputText value="#{trafo.nombre}" /> 
+              </p:column>
+
+              <p:column headerText="%Pérdida actual" >
+                <f:facet name="header">  
+                  <h:outputText value="%Pérdida" />  
+                </f:facet>
+                <h:outputText value="#{reporte.porcentajeByperiodo(trafo.idTrafo, 0, trafo.tipo)}" />
+              </p:column> 
+
+            </p:dataTable>  
+
+            <h:commandButton rendered="#{reporte.mostrarTabla}" image="../resources/images/excel.png" actionListener="#{reporte.exportar('xls')}" /> 
+
+            <h:commandButton rendered="#{reporte.mostrarTabla}" image="../resources/images/pdf.png" actionListener="#{reporte.exportar('pdf')}" /> 
+
+          </div>
+
+          <div id="inferior"></div>
+          <div id="piepagina" align="center">
+          </div>
+
+        </div></div>
+
+      <p:dialog widgetVar="wait" closable="false" resizable="false" draggable="false" position="center" modal="true" showHeader="false">
+        <p:ajaxStatus>
+          <f:facet name="start">
+            <p:graphicImage value="../resources/images/espera.gif" />
+          </f:facet>
+          <f:facet name="complete">
+            <h:outputText value="" />
+          </f:facet>
+        </p:ajaxStatus>
+      </p:dialog> 
+
+    </h:form>   
+
+    <p:dialog header="Versión del SBBT" widgetVar="dlgVersion" modal="true" 
+              resizable="false" height="50" closeOnEscape="true" showEffect="explode" hideEffect="bounce" draggable="false">
+      <h:outputText value="#{eventMenuBean.VERSION}" />
+    </p:dialog>
+
+  </h:body>
+</html>

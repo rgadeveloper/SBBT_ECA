@@ -1,0 +1,258 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+  <p:panelGrid columns="2" id ="gridBarrio" rendered="true"  style="margin-top:20px; font-size: 12px ">
+    <f:facet name="header">
+      <p:row>
+        <p:column colspan="8">Balances por periodo </p:column>
+      </p:row>
+    </f:facet>        
+
+    <c:if test="#{geograficaView.idTipCompo == 12}">
+      <h:outputText style="font-weight: bold;" value="Nombre delegación" />
+      <h:outputText value="#{geograficaView.nombreDelegacion}" />
+    </c:if>
+
+    <c:if test="#{geograficaView.idTipCompo == 7}">
+      <h:outputText style="font-weight: bold;" value="Nombre del barrio" />
+      <h:outputText value="#{geograficaView.nombreBarrio}" />
+
+      <h:outputText style="font-weight: bold;" value="Población" />
+      <h:outputText value="#{geograficaView.nombreAreaEnergetica}" />
+
+      <h:outputText style="font-weight: bold;" value="Municipio" />
+      <h:outputText value="#{geograficaView.matriculaCircuito}" />
+
+      <h:outputText style="font-weight: bold;" value="Delegación" />
+      <h:outputText value="#{geograficaView.nombreDelegacion}" />
+    </c:if>
+
+    <h:outputText style="font-weight: bold;" value="Departamento" />
+    <h:outputText value="#{geograficaView.nombreZona}" />
+
+    <h:outputText style="font-weight: bold;" value="Rango de pérdidas" />
+    <h:outputText value="#{geograficaView.balance.rangoClasificacion.descripcion}" />
+
+    <h:outputText style="font-weight: bold;" value="Energía de entrada macros funcionando (kWh)" />
+    <h:outputText value="#{geograficaView.balance.consumoMacros}" >
+      <f:convertNumber type="number" locale="es_CO" groupingUsed="true" maxFractionDigits="0"/>
+    </h:outputText> 
+
+    <h:outputText style="font-weight: bold;" value="Energía de salida macros funcionando (kWh)" />
+    <h:outputText value="#{geograficaView.balance.consumoSuministro}" >
+      <f:convertNumber type="number" locale="es_CO" groupingUsed="true" maxFractionDigits="0"/>
+    </h:outputText> 
+
+    <h:outputText style="font-weight: bold;" value="Cargas extras macros funcionando (kWh)" />
+    <h:outputText value="#{geograficaView.balance.consumoAdicional}" >
+      <f:convertNumber type="number" locale="es_CO" groupingUsed="true" maxFractionDigits="0"/>
+    </h:outputText> 
+
+    <h:outputText style="font-weight: bold;" value="Energía pérdida macros funcionando (kWh)" />
+    <h:outputText value="#{geograficaView.balance.balEnergiaSum}">
+      <f:convertNumber type="number" locale="es_CO" groupingUsed="true" maxFractionDigits="0"/>
+    </h:outputText> 
+
+    <h:outputText style="font-weight: bold;" value="Porcentaje de pérdidas mes macros funcionando (%)" />
+    <h:outputText value="#{geograficaView.balance.porcPerdidaMes}">
+      <f:convertNumber type="number" locale="es_CO" groupingUsed="true" minFractionDigits="2"/>
+    </h:outputText>
+
+    <h:outputText style="font-weight: bold;" value="Porcentaje de pérdidas móvil macros funcionando (%)" />
+    <h:outputText value="#{geograficaView.balance.porcPerdidaMovil}">
+      <f:convertNumber type="number" locale="es_CO" groupingUsed="true" maxFractionDigits="0"/>
+    </h:outputText>
+
+    <h:outputText style="font-weight: bold;" value="Cantidad trafos totales (Und)" />
+    <h:outputText value="#{geograficaView.cantTrafosTotalesDelega}" >
+      <f:convertNumber type="number" locale="es_CO" groupingUsed="true" maxFractionDigits="0"/>
+    </h:outputText> 
+
+    <h:outputText style="font-weight: bold;" value="Cantidad de trafos sin macros (Und)" />
+    <h:outputText value="#{geograficaView.balance.totalSinMacros}" >
+      <f:convertNumber type="number" locale="es_CO" groupingUsed="true" maxFractionDigits="0"/>
+    </h:outputText>
+
+    <h:outputText style="font-weight: bold;" value="Cantidad de trafos con macros (Und)" />
+    <h:outputText value="#{geograficaView.balance.totalMacros}" >
+      <f:convertNumber type="number" locale="es_CO" groupingUsed="true" maxFractionDigits="0"/>
+    </h:outputText>
+
+    <h:outputText style="font-weight: bold;" value="Cantidad de macros funcionando (Und)" />
+    <h:outputText value="#{geograficaView.balance.totalMacrosFunc}" >
+      <f:convertNumber type="number" locale="es_CO" groupingUsed="true" maxFractionDigits="0"/>
+    </h:outputText> 
+
+    <h:outputText style="font-weight: bold;" value="Cantidad de macros no funcionando (Und)" />
+    <h:outputText value="#{geograficaView.balance.totalMacros-geograficaView.balance.totalMacrosFunc}" >
+      <f:convertNumber type="number" locale="es_CO" groupingUsed="true" maxFractionDigits="0"/>
+    </h:outputText>
+
+    <h:outputText style="font-weight: bold;" value="Cantidad de suministros totales (Und)" />
+    <h:outputText value="#{geograficaView.balance.cantSuministrosTotal}" >
+      <f:convertNumber type="number" locale="es_CO" groupingUsed="true" maxFractionDigits="0"/>
+    </h:outputText>
+
+    <h:outputText style="font-weight: bold;" value="Cantidad de suministros totales trafos con macros (Und)" />
+    <h:outputText value="#{geograficaView.balance.cantSumMacros}" >
+      <f:convertNumber type="number" locale="es_CO" groupingUsed="true" maxFractionDigits="0"/>
+    </h:outputText>
+
+    <h:outputText style="font-weight: bold;" value="Cantidad de suministros con consumo macros funcionando (Und)" />
+    <h:outputText value="#{geograficaView.balance.cantSumFact}" >
+      <f:convertNumber type="number" locale="es_CO" groupingUsed="true" maxFractionDigits="0"/>
+    </h:outputText> 
+
+  </p:panelGrid>
+
+  <p:panelGrid id ="dtbalance" rendered="true"  style="margin-top:20px; font-size: 12px ">
+
+    <f:facet name="header">
+      <p:row>
+        <p:column colspan="6">Información de Macro-medición por rangos </p:column>
+      </p:row>
+      <p:row>
+        <p:column colspan="3">Cantidad de macros funcionando </p:column>
+        <p:column colspan="3">Cantidad de macros no funcionando </p:column>
+      </p:row>
+      <p:row>
+        <p:column>Descripción</p:column>
+        <p:column>Rango %</p:column>
+        <p:column>Und</p:column>
+        <p:column>Descripción</p:column>
+        <p:column>Rango %</p:column>
+        <p:column>Und</p:column>
+      </p:row>
+
+    </f:facet>
+
+    <p:row>
+      <p:column style="font-weight: bold; background-color: black; color: green;" colspan="1">
+        Bajo
+      </p:column>
+      <p:column style="font-weight: bold;" colspan="1">
+        -5 a 14,99
+      </p:column>
+      <p:column style="font-weight: bold;" colspan="1">
+        <h:outputText value="#{geograficaView.dataRangosBalance.bajo - 0}">
+          <f:convertNumber type="number" locale="es_CO" groupingUsed="true" maxFractionDigits="0"/>
+        </h:outputText>
+      </p:column>
+      <p:column style="font-weight: bold;" colspan="1">
+        Sin balance
+      </p:column>
+      <p:column style="font-weight: bold;" colspan="1">
+        N.A
+      </p:column>
+      <p:column style="font-weight: bold;" colspan="1">
+        <h:outputText 
+          value="#{geograficaView.balance.totalMacros - geograficaView.balance.totalMacrosFunc - geograficaView.dataRangosBalance.inconsistentesNegativos - 
+                   geograficaView.dataRangosBalance.inconsistentesPositivos-geograficaView.dataRangosBalance.negativos}">
+          <f:convertNumber type="number" locale="es_CO" groupingUsed="true" maxFractionDigits="0"/>
+        </h:outputText>
+      </p:column>
+    </p:row>
+
+    <p:row>
+      <p:column style="font-weight: bold; background-color: black; color: yellow;" colspan="1">
+        Medio
+      </p:column>
+      <p:column style="font-weight: bold;" colspan="1">
+        15 a 29,99
+      </p:column>
+      <p:column style="font-weight: bold;" colspan="1">
+        <h:outputText value="#{geograficaView.dataRangosBalance.medio - 0}">
+          <f:convertNumber type="number" locale="es_CO" groupingUsed="true" maxFractionDigits="0"/>
+        </h:outputText>
+      </p:column>
+      <p:column style="font-weight: bold; background-color: black; color: dodgerblue;" colspan="1">
+        Negativo
+      </p:column>
+      <p:column style="font-weight: bold;" colspan="1">
+        -10 a -5,01
+      </p:column>
+      <p:column style="font-weight: bold;" colspan="1">
+        <h:outputText value="#{geograficaView.dataRangosBalance.negativos - 0}">
+          <f:convertNumber type="number" locale="es_CO" groupingUsed="true" maxFractionDigits="0"/>
+        </h:outputText>
+      </p:column>
+    </p:row>
+
+    <p:row>
+      <p:column style="font-weight: bold; background-color: black; color: orange;" colspan="1">
+        Alto
+      </p:column>
+      <p:column style="font-weight: bold;" colspan="1">
+        30 a 59,99
+      </p:column>
+      <p:column style="font-weight: bold;" colspan="1">
+        <h:outputText value="#{geograficaView.dataRangosBalance.alto - 0}">
+          <f:convertNumber type="number" locale="es_CO" groupingUsed="true" maxFractionDigits="0"/>
+        </h:outputText>
+      </p:column>
+      <p:column style="font-weight: bold; background-color: black; color: white;" colspan="1">
+        Incosistentes -
+      </p:column>
+      <p:column style="font-weight: bold;" colspan="1">
+        -999999 a -10,01
+      </p:column>
+      <p:column style="font-weight: bold;" colspan="1">
+        <h:outputText value="#{geograficaView.dataRangosBalance.inconsistentesNegativos - 0}">
+          <f:convertNumber type="number" locale="es_CO" groupingUsed="true" maxFractionDigits="0"/>
+        </h:outputText>
+      </p:column>
+    </p:row>
+
+    <p:row>
+      <p:column style="font-weight: bold; background-color: black; color: red;" colspan="1">
+        Crítico
+      </p:column>
+      <p:column style="font-weight: bold;" colspan="1">
+        60 a 79,99
+      </p:column>
+      <p:column style="font-weight: bold;" colspan="1">
+        <h:outputText value="#{geograficaView.dataRangosBalance.critico}">
+          <f:convertNumber type="number" locale="es_CO" groupingUsed="true" maxFractionDigits="0"/>
+        </h:outputText>
+      </p:column>
+      <p:column style="font-weight: bold; background-color: black; color: fuchsia;" colspan="1">
+        Inconsistentes +
+      </p:column>
+      <p:column style="font-weight: bold;" colspan="1">
+        80 a 999999
+      </p:column>
+      <p:column style="font-weight: bold;" colspan="1">
+        <h:outputText value="#{geograficaView.dataRangosBalance.inconsistentesPositivos - 0}">
+          <f:convertNumber type="number" locale="es_CO" groupingUsed="true" maxFractionDigits="0"/>
+        </h:outputText>
+      </p:column>
+    </p:row>
+
+    <p:row>
+      <p:column style="font-weight: bold; background-color: #c2dfef" colspan="2">
+        Total macros funcionando
+      </p:column>
+      <p:column style="font-weight: bold;" colspan="1">
+        <h:outputText value="#{geograficaView.balance.totalMacrosFunc - 0}" >
+          <f:convertNumber type="number" locale="es_CO" groupingUsed="true" maxFractionDigits="0"/>
+        </h:outputText>
+      </p:column>
+      <p:column style="font-weight: bold;  background-color: #c2dfef" colspan="2">
+        Total macros no funcionando
+      </p:column>
+      <p:column style="font-weight: bold;" colspan="1">
+        <h:outputText value="#{geograficaView.balance.totalMacros-geograficaView.balance.totalMacrosFunc}" >
+          <f:convertNumber type="number" locale="es_CO" groupingUsed="true" maxFractionDigits="0"/>
+        </h:outputText>
+      </p:column>
+    </p:row>
+
+
+  </p:panelGrid>
+
+</html>

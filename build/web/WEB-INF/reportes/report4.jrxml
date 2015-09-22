@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report4" language="groovy" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7d93387e-dfbb-4de3-b715-b4bded8334d4">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<subDataset name="dataset" uuid="a8fc9aaa-e838-42a1-88e8-95066ec53266">
+		<parameter name="periodo" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[select row_number() over (order by periodo) as rank,periodo, rango_balance, r.descripcion RANGOS, t.nombre TIPOPCI,
+decode(rango_balance, 31,0, sum(nvl(consumo_macros,0)) - sum(nvl(consumo_suministro,0))- sum(nvl(consumo_adicional,0))) perdidas_kw_mes,
+count(b.id_componente) cantidad
+from balances b, rango_clasificacion r, rel_componente_medida r, componente_medida c, tbltipo t
+where b.id_tipo_componente = 3
+and rango_balance = id_rango(+)
+and b.id_componente = r.id_componente
+and r.id_componente_medida = c.id_componente_medida
+and r.periodo_fin = 999912
+and c.tipo_medidor = t.tipo
+and periodo <= $P{periodo}
+and periodo >= $P{periodo} -12
+group by periodo, rango_balance, r.descripcion, t.nombre
+order by periodo, rango_balance]]>
+		</queryString>
+		<field name="RANK" class="java.math.BigDecimal"/>
+		<field name="PERIODO" class="java.math.BigDecimal"/>
+		<field name="RANGO_BALANCE" class="java.math.BigDecimal"/>
+		<field name="RANGOS" class="java.lang.String"/>
+		<field name="TIPOPCI" class="java.lang.String"/>
+		<field name="PERDIDAS_KW_MES" class="java.math.BigDecimal"/>
+		<field name="CANTIDAD" class="java.math.BigDecimal"/>
+	</subDataset>
+	<parameter name="periodo" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select row_number() over (order by periodo) as rank,periodo, rango_balance, r.descripcion RANGOS, t.nombre TIPOPCI,
+decode(rango_balance, 31,0, sum(nvl(consumo_macros,0)) - sum(nvl(consumo_suministro,0))- sum(nvl(consumo_adicional,0))) perdidas_kw_mes,
+count(b.id_componente) cantidad
+from balances b, rango_clasificacion r, rel_componente_medida r, componente_medida c, tbltipo t
+where b.id_tipo_componente = 3
+and rango_balance = id_rango(+)
+and b.id_componente = r.id_componente
+and r.id_componente_medida = c.id_componente_medida
+and r.periodo_fin = 999912
+and c.tipo_medidor = t.tipo
+group by periodo, rango_balance, r.descripcion, t.nombre
+order by periodo, rango_balance]]>
+	</queryString>
+	<field name="RANK" class="java.math.BigDecimal"/>
+	<field name="PERIODO" class="java.math.BigDecimal"/>
+	<field name="RANGO_BALANCE" class="java.math.BigDecimal"/>
+	<field name="RANGOS" class="java.lang.String"/>
+	<field name="TIPOPCI" class="java.lang.String"/>
+	<field name="PERDIDAS_KW_MES" class="java.math.BigDecimal"/>
+	<field name="CANTIDAD" class="java.math.BigDecimal"/>
+	<summary>
+		<band height="147" splitType="Stretch">
+			<crosstab>
+				<reportElement uuid="989ffb6e-0317-4ebd-ae5d-226ee02bfb82" x="0" y="0" width="752" height="147"/>
+				<crosstabDataset>
+					<dataset>
+						<datasetRun subDataset="dataset" uuid="bf0c72ac-2d58-428b-a0a8-9411fb314969">
+							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						</datasetRun>
+					</dataset>
+				</crosstabDataset>
+				<rowGroup name="RANGOS" width="70" totalPosition="End">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{RANGOS}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement uuid="ccd75343-7380-4882-8310-b3c3fec5c305" style="Crosstab Data Text" x="0" y="0" width="70" height="25"/>
+								<textElement/>
+								<textFieldExpression><![CDATA[$V{RANGOS}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents backcolor="#005FB3" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<staticText>
+								<reportElement uuid="32453dfb-e4d8-47e0-b9c7-716493e64fd0" x="0" y="0" width="140" height="25" forecolor="#FFFFFF"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Total RANGOS]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="TIPOPCI" width="70" totalPosition="End">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{TIPOPCI}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement uuid="3ca3fb42-2e93-4979-bfa6-eb2bbc01aa55" style="Crosstab Data Text" x="0" y="0" width="70" height="25"/>
+								<textElement/>
+								<textFieldExpression><![CDATA[$V{TIPOPCI}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents backcolor="#BFE1FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<staticText>
+								<reportElement uuid="b91b6c39-bec8-40a2-b5d5-58d23fe19980" x="0" y="0" width="70" height="25"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Total TIPOPCI]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<columnGroup name="PERIODO" height="30" totalPosition="End">
+					<bucket class="java.math.BigDecimal">
+						<bucketExpression><![CDATA[$F{PERIODO}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textField>
+								<reportElement uuid="8e0d37e1-7187-4f33-b047-934c12db6f4d" style="Crosstab Data Text" x="0" y="0" width="50" height="30"/>
+								<textElement/>
+								<textFieldExpression><![CDATA[$V{PERIODO}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents backcolor="#BFE1FF" mode="Opaque">
+							<box>
+								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<staticText>
+								<reportElement uuid="33481d67-f454-491a-af38-68dd23124dd0" x="0" y="0" width="50" height="30"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Total PERIODO]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<measure name="CANTIDADMeasure" class="java.math.BigDecimal" calculation="Sum">
+					<measureExpression><![CDATA[$F{CANTIDAD}]]></measureExpression>
+				</measure>
+				<crosstabCell width="50" height="25">
+					<cellContents>
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement uuid="f98d7305-601a-4f45-bb1d-431d3ec0e2ea" style="Crosstab Data Text" x="0" y="0" width="50" height="25"/>
+							<textElement/>
+							<textFieldExpression><![CDATA[$V{CANTIDADMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell height="25" rowTotalGroup="RANGOS">
+					<cellContents backcolor="#005FB3" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement uuid="3d59f8e3-b8a2-4ee3-aedc-bfeff81969f8" style="Crosstab Data Text" x="0" y="0" width="50" height="25" forecolor="#FFFFFF"/>
+							<textElement/>
+							<textFieldExpression><![CDATA[$V{CANTIDADMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="50" columnTotalGroup="PERIODO">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement uuid="aa8b9226-74d7-4576-8d27-9babeaed3b06" style="Crosstab Data Text" x="0" y="0" width="50" height="25"/>
+							<textElement/>
+							<textFieldExpression><![CDATA[$V{CANTIDADMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="RANGOS" columnTotalGroup="PERIODO">
+					<cellContents backcolor="#005FB3" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement uuid="0e5b94e0-2fa5-45b8-b4bd-39865b9ab78c" style="Crosstab Data Text" x="0" y="0" width="50" height="25" forecolor="#FFFFFF"/>
+							<textElement/>
+							<textFieldExpression><![CDATA[$V{CANTIDADMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell height="25" rowTotalGroup="TIPOPCI">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement uuid="ecb1046a-058d-41b1-97b8-5c829b0f7279" style="Crosstab Data Text" x="0" y="0" width="50" height="25"/>
+							<textElement/>
+							<textFieldExpression><![CDATA[$V{CANTIDADMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="TIPOPCI" columnTotalGroup="PERIODO">
+					<cellContents backcolor="#BFE1FF" mode="Opaque">
+						<box>
+							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textField>
+							<reportElement uuid="abc5bb1d-4942-4120-9c50-673ee020978e" style="Crosstab Data Text" x="0" y="0" width="50" height="25"/>
+							<textElement/>
+							<textFieldExpression><![CDATA[$V{CANTIDADMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+			</crosstab>
+		</band>
+	</summary>
+</jasperReport>

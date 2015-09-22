@@ -1,0 +1,140 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+
+    <p:panelGrid columns="2" id ="dtbalanceTrafo"   style="margin-top:15px; font-size: 12px ">
+
+        <f:facet name="header">
+            <p:row>
+                <p:column colspan="8">Información del Transformador </p:column>
+            </p:row>
+        </f:facet>
+
+        <h:outputText style="font-weight: bold;" value="Matricula Del Trafo" />
+        <h:outputText value="#{sElectricaView.componente.idCliente}" />
+
+        <h:outputText style="font-weight: bold;" value="Código BDI Del Trafo" />
+        <h:outputText value="#{sElectricaView.atrComponenteMedida.codigoTrafo}" />
+
+        <h:outputText style="font-weight: bold;" value="Coordenada X" />
+        <h:outputText value="#{sElectricaView.componente.coordX}" />
+
+        <h:outputText style="font-weight: bold;" value="Coordenada Y" />
+        <h:outputText value="#{sElectricaView.componente.coordY}" />
+
+        <h:outputText style="font-weight: bold;" value="Zona" />
+        <h:outputText value="#{sElectricaView.nombreZona}" />
+
+        <h:outputText style="font-weight: bold;" value="Delegación" />
+        <h:outputText value="#{sElectricaView.nombreDelegacion}" />
+
+        <h:outputText style="font-weight: bold;" value="Área Energética" />
+        <h:outputText value="#{sElectricaView.nombreAreaEnergetica}" />
+
+        <h:outputText style="font-weight: bold;" value="Circuito" />
+        <h:outputText value="#{sElectricaView.nombreCircuito}" />
+        
+        <h:outputText style="font-weight: bold;" value="Capacidad (KVA)" />
+        <h:outputText value="#{sElectricaView.atrComponente.cargaInstalada}" />
+
+        <h:outputText style="font-weight: bold;" value="Dirección" />
+        <h:outputText value="#{sElectricaView.componente.direccion}" />
+
+        <h:outputText style="font-weight: bold;" value="Tipo De Red" />
+        <h:outputText value="#{sElectricaView.atrComponente.tbltipo5.nombre}" />
+
+        <h:outputText style="font-weight: bold;" value="Tipo De Macromedidor" />
+        <h:outputText value="" />
+
+        <h:outputText style="font-weight: bold;" value="Factor Multiplicador" />
+        <h:outputText value="" />
+
+        <h:outputText style="font-weight: bold;" value="Tipo De Medidor" />
+        <h:outputText value="#{sElectricaView.atrComponente.tbltipo6.nombre}" />
+
+        <h:outputText style="font-weight: bold;" value="Número De Medidor" />
+        <h:outputText value="#{sElectricaView.atrComponente.medidor}" /> 
+
+        <h:outputText style="font-weight: bold;" value="Lectura Anterior" />
+        <h:outputText value="#{sElectricaView.medida.lecturaAnterior}" />
+
+        <h:outputText style="font-weight: bold;" value="Lectura Actual" />
+        <h:outputText value="#{sElectricaView.medida.lecturaActual}" />
+            
+        <h:outputText style="font-weight: bold;" value="Fecha lectura anterior" />
+        <h:outputText value="#{sElectricaView.medida.fechaLecturaAnterior}" />
+
+        <h:outputText style="font-weight: bold;" value="Fecha lectura actual" />
+        <h:outputText value="#{sElectricaView.medida.fechaLecturaActual}" />
+        
+        <h:outputText style="font-weight: bold;" value="Ruta De Lectura" />
+        <h:outputText value="#{sElectricaView.atrComponente.ciclo.idCiclo}" />
+
+        <h:outputText style="font-weight: bold;" value="Itinerario" />
+        <h:outputText value="#{sElectricaView.atrComponente.ruta}" />
+
+        <h:outputText style="font-weight: bold;" value="Aol" />
+        <h:outputText value="#{sElectricaView.atrComponente.aolFin}" />
+
+        <h:outputText style="font-weight: bold;" value="Anomalía De Lectura" />
+        <h:outputText value="#{sElectricaView.medida.observacion}" />
+
+        <h:outputText style="font-weight: bold;" value="Cantidad De Suministros (Und)" />
+        <h:outputText value="#{sElectricaView.balance.cantSuministrosTotal}" >
+            <f:convertNumber integerOnly="true" pattern="#,###"/>
+        </h:outputText> 
+
+        <h:outputText style="font-weight: bold;" value="Rango De Pérdidas" />
+        <h:outputText value="#{sElectricaView.balance.rangoClasificacion.descripcion}" />
+
+        <h:outputText style="font-weight: bold;" value="Energía De Entrada Macro (kWh)" />
+        <h:outputText value="#{sElectricaView.balance.consumoMacros}" >
+            <f:convertNumber integerOnly="true" pattern="#,###"/>
+        </h:outputText> 
+
+        <h:outputText style="font-weight: bold;" value="Energía De Salida Macro (kWh)" />
+        <h:outputText value="#{sElectricaView.balance.consumoSuministro}" >
+            <f:convertNumber integerOnly="true" pattern="#,###"/>
+        </h:outputText> 
+
+        <h:outputText style="font-weight: bold;" value="Cargas Extras Macro (kWh)" />
+        <h:outputText value="#{sElectricaView.balance.consumoAdicional}" >
+            <f:convertNumber integerOnly="true" pattern="#,###"/>
+        </h:outputText>  
+
+        <h:outputText style="font-weight: bold;" value="Energía Perdida Macro (kWh)" />
+        <h:outputText value="#{sElectricaView.balance.balEnergiaSum}" >
+            <f:convertNumber integerOnly="true" pattern="#,###"/>
+        </h:outputText> 
+
+        <h:outputText style="font-weight: bold;" value="Porcentaje De Perdidas Macro (%)" />
+        <h:outputText value="#{sElectricaView.balance.porcPerdidaMes}" />
+        
+        <h:outputText style="font-weight: bold;" value="Estado Del Balance" />
+        <h:outputText value="#{sElectricaView.balance.estado.descripcion}" />
+
+        <h:outputText style="font-weight: bold;" value="Motivo De No Balance" />
+        <h:outputText value="#{sElectricaView.balance.tbltipo.nombre}" />
+        
+    </p:panelGrid>        
+
+    <p:dialog id="dgTipoUso" header="Cantidades Suministro por Tipo de Uso" widgetVar="dlgTipoUso">  
+        <p:dataTable var="tu" value="#{sElectricaView.listCantXTipoUso}">  
+            <p:column headerText="Tipo de Uso">  
+                <h:outputText value="#{tu.nombre}" />  
+            </p:column>  
+
+            <p:column headerText="Cantidad de Suministros">  
+                <h:outputText value="#{tu.valor}" />  
+            </p:column>  
+
+
+        </p:dataTable> 
+    </p:dialog> 
+
+
+</html>

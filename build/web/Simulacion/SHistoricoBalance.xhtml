@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f ="http://java.sun.com/jsf/core">
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+            <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+            <title>ECA - SBBT</title>
+        </f:facet>
+
+        <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/default.css" />
+        <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/syntaxhighlighter/syntaxhighlighter.css" />
+        <ui:include src="../sessionTimeOut.xhtml" />
+
+        <style type="text/css">
+            .ui-layout-north {
+                z-index:20 !important;
+                overflow:visible !important;;
+            }
+
+            .ui-layout-north .ui-layout-unit-content {
+                overflow:visible !important;
+            }
+        </style>
+        <h:form id="validarSession">
+            <h:inputHidden  rendered="#{login.validarSession}" value="#{login.validateSession()}" />
+        </h:form>
+    </h:head>   
+
+    <script type="text/javascript" src="../resources/js/espaniol.js" />
+    <link href="../Styles/estilos.css" rel="stylesheet" type="text/css" />
+    <ui:include src="../sessionTimeOut.xhtml" />
+
+    <h:body>
+        <h:form id="form" enctype="multipart/form-data">
+
+
+            <div id="cuerpo" align="center">
+                <!--<div id="index_r1_c2" ></div>-->
+                <div id="linea"><div align="center" style="position:relative; top:6px; background-image:url(Images/mensaje2.png); background-repeat:no-repeat; background-position:center; height:38px"></div></div>
+                <div id="linea2" align="left" >
+                    <p:menubar model ="#{templateView.model}" style="font-size: 12px" />
+                </div>
+
+                <div id="pagina">
+
+                    <div id="superior">     
+                    </div>
+                    <div id="medio">   
+                        <p:growl id="msgs" showDetail="true"/>           
+                        <p:panel id="display" style="width: 300px; border: none;">  
+                            <h:panelGrid columns="2" cellpadding="5">
+                                <h:outputLabel value="Fecha inicial:" />
+                                <p:calendar locale="es" id="dateIni" value="#{sHistoricoBalance.fechaIni}" 
+                                            mode="popup" size="5" />
+
+                                <h:outputLabel value="Fecha Final:" />
+                                <p:calendar locale="es" id="dateFin" value="#{sHistoricoBalance.fechaFin}" 
+                                            mode="popup" size="5" />              
+                            </h:panelGrid> 
+
+
+                            <p:commandButton  global="false" value="Buscar" update="hist,:form:msgs,:form:display"  action="#{sHistoricoBalance.visualizarHistorico}" icon="ui-icon-search" />
+                        </p:panel>  
+
+                        <p:dataTable id="hist" var="simulacion" value="#{sHistoricoBalance.historico}"
+                                     paginator="true" rows="10" rowKey="#{simulacion.id}"
+                                     selection="#{sHistoricoBalance.historicoSelected}"
+                                     tableStyle="width:auto" style="font-size: 12px">
+
+                            <f:facet name="header">
+                                Historico de Balances
+                            </f:facet>
+
+                            <p:column selectionMode="single" style="width:18px" /> 
+
+                            <p:column>  
+                                <p:rowToggler />  
+                            </p:column> 
+
+                            <p:column headerText="ID Simulacion" >
+                                <h:outputText value="#{simulacion.id}" />
+                            </p:column> 
+
+                            <p:rowExpansion>  
+                                <p:dataTable var="x" value="#{simulacion.empresas}"
+                                             rows="10" paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"                                                
+                                             tableStyle="width:auto" style="font-size: 11px"> 
+
+                                    <f:facet name="header">
+                                        Empresas
+                                    </f:facet>
+
+                                    <p:column headerText="Nombre" >
+                                        <h:outputText value="#{x.nombre}" />
+                                    </p:column> 
+
+                                    <p:column headerText="id Comercial VG" >
+                                        <h:outputText value="#{x.idComercialGeografico}" />
+                                    </p:column>
+
+                                    <p:column headerText="id Comercial VE" >
+                                        <h:outputText value="#{x.idComercialElectrico}" />
+                                    </p:column>
+
+                                    <p:column headerText="%PE mes VG" >
+                                        <h:outputText value="#{x.perdidaGeografico}" />
+                                    </p:column>
+
+                                    <p:column headerText="%PE mes VE" >
+                                        <h:outputText value="#{x.perdidaElectrico}" />
+                                    </p:column>
+
+                                </p:dataTable>  
+
+                            </p:rowExpansion> 
+
+                            <f:facet name="footer">  
+                                <p:commandButton value="Exportar" update=":form:msgs" onclick="wait.show()" oncomplete="wait.hide()" action="#{sHistoricoBalance.exportar()}" />
+                            </f:facet> 
+
+                        </p:dataTable>
+
+                        <p:dialog widgetVar="wait" closable="false" resizable="false" draggable="false" position="center" modal="true" showHeader="false">
+                            <p:ajaxStatus>
+                                <f:facet name="start">
+                                    <p:graphicImage value="../resources/images/espera.gif" />
+                                </f:facet>
+                                <f:facet name="complete">
+                                    <h:outputText value="" />
+                                </f:facet>
+                            </p:ajaxStatus>
+                        </p:dialog> 
+                    </div>
+
+                    <div id="inferior"></div>
+                    <div id="piepagina" align="center">
+                    </div>
+
+                </div></div>
+
+        </h:form>
+    </h:body>
+</html>

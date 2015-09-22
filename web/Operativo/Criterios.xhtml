@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f ="http://java.sun.com/jsf/core">
+<h:head>
+    <f:facet name="first">
+        <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+        <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+       <title>ECA - SBBT</title>
+    </f:facet>
+
+    <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/default.css" />
+    <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/syntaxhighlighter/syntaxhighlighter.css" />
+
+    <style type="text/css">
+        .ui-layout-north {
+            z-index:20 !important;
+            overflow:visible !important;;
+        }
+
+        .ui-layout-north .ui-layout-unit-content {
+            overflow:visible !important;
+        }
+    </style>
+   <h:form id="validarSession">
+   <h:inputHidden  rendered="#{login.validarSession}" value="#{login.validateSession()}" />
+   </h:form>
+</h:head>    
+
+<link href="../Styles/estilos.css" rel="stylesheet" type="text/css" />
+<ui:include src="../sessionTimeOut.xhtml" />
+
+<h:body>
+ <h:form id="form">
+     
+<div id="cuerpo" align="center">
+<!--<div id="index_r1_c2" ></div>-->
+<div id="linea"><div align="center" style="position:relative; top:6px; background-image:url(Images/mensaje2.png); background-repeat:no-repeat; background-position:center; height:38px"></div></div>
+<div id="linea2" align="left" >
+    <p:menubar  model ="#{templateView.model}" style="font-size: 12px" />
+</div>
+
+<div id="pagina">
+
+  <div id="superior">     
+  </div>
+  <div id="medio"> 
+            <p:tabView id="tabView" dynamic="true" style="font-size: 12px; width: 945px;">
+
+                        <!--<p:ajax event="tabChange" listener="#{tabBean.onTabChange}" update=":form:growl"/>  -->
+
+                <p:tab  title="Búsqueda por filtros" id="criterios">
+                   
+                    
+                    <h:panelGrid columns="3">
+                        <h:outputText value="Criterio" />  
+                        <p:selectOneMenu id="lblperfil" value="#{criteriosView.idCriterioAcargar}" required="false" requiredMessage="No hay criterios almacenados">
+                        <f:selectItems value="#{criteriosView.criteriosList}" var="criterio"
+                                       itemLabel="#{criterio.descripcion}" itemValue="#{criterio.idCriterio}"/>                                                                  
+                        </p:selectOneMenu>
+                        <h:commandButton value="Cargar" action="#{criteriosView.cargarCriterio}" />
+                    </h:panelGrid> 
+                    
+                    
+                    
+                    <p:growl autoUpdate="false" id="messages" />
+                    
+                    <p:dataTable var="filtros" value="#{criteriosView.filtrosList}" id="tbl">
+                        <p:column>  
+                            <f:facet name="header">  
+                                <h:outputText value="Sel." />  
+                                <h:selectBooleanCheckbox value="#{criteriosView.checkFiltros}" >
+                                    <p:ajax update=":form:tabView:tbl" listener="#{criteriosView.seleccionarFiltros()}"/> 
+                                </h:selectBooleanCheckbox>    
+                            </f:facet>  
+                            <h:selectBooleanCheckbox value="#{filtros.selected}" /> 
+                        </p:column> 
+
+                        <p:column headerText="Operador lógico">
+                            <h:outputText value="#{filtros.tbltipo1.nombre}" />
+                        </p:column>
+                        <p:column headerText="Nombre variable">
+                            <h:outputText value="#{filtros.variables.nombreVariable}" />
+                        </p:column>
+
+                        <p:column headerText="Operador">
+                            <h:outputText value="#{filtros.tbltipo3.nombre}" />
+                        </p:column>
+
+                        <p:column headerText="Valor">
+                            <h:outputText value="#{filtros.valor1 }" />
+                        </p:column>
+
+
+                    </p:dataTable>
+                                                                                                           
+                    <p:commandButton value="Agregar" type="button" onclick="criterioAdd.show()" />
+                    <h:commandButton value="Eliminar" action="#{criteriosView.eliminarFiltros()}"  />
+                    <h:commandButton value="Validar"  action="#{criteriosView.buscarCandidatos()}" />
+                          
+                    <h:panelGrid id="Crit" >
+                        <p:row>
+                            <p:column>
+                                <h:outputLabel  value="Nuevo criterio"  style="padding:10px; font-weight: bold;"/>
+                            </p:column>
+                            <p:column>
+                                <p:inputText value="#{criteriosView.criterio}" style="width:120px;"  maxlength="255"
+                                                id="criterio" required="false" label="Nombre de Criterio " />
+                            </p:column>
+                            <p:column>
+                                <h:commandButton id="guardarbtn" value="Guardar"
+                                                    action="#{criteriosView.guardarCriterio()}" />
+                            </p:column>
+                        </p:row>
+                    </h:panelGrid>
+                    
+                    <p:separator rendered="#{criteriosView.mostrarCrearCampania}" style="margin-top: 12px; margin-bottom: 12px;" />  
+                    
+                    <p:dataTable rendered="#{criteriosView.mostrarCrearCampania}" id="tbl2" var="candi" value="#{criteriosView.candidatos}" paginator="true" rows="10" >  
+                        <p:column>  
+                            <f:facet name="header">  
+                                <h:outputText value="Sel." />  
+                                <h:selectBooleanCheckbox value="#{criteriosView.checkAll}" >
+                                    <p:ajax update=":form:tabView:tbl2" listener="#{criteriosView.seleccionar()}"/> 
+                                </h:selectBooleanCheckbox>    
+                            </f:facet>  
+                            <h:selectBooleanCheckbox value="#{candi.check}" /> 
+                        </p:column> 
+                        <p:column>  
+                            <f:facet name="header">  
+                                <h:outputText value="Transformador" />  
+                            </f:facet>  
+                            <h:outputText value="#{candi.idTrafo}" />  
+                        </p:column>  
+
+                        <p:column>  
+                            <f:facet name="header">  
+                                <h:outputText value="Nombre trafo" />  
+                            </f:facet>  
+                            <h:outputText value="#{candi.nombre}"/>  
+                        </p:column>  
+
+                        <p:column>  
+                            <f:facet name="header">  
+                                <h:outputText value="Macromedidor" />  
+                            </f:facet>  
+                            <h:outputText value="#{candi.idMacro}" />  
+                        </p:column>  
+                    </p:dataTable>
+                    
+                    <h:commandButton rendered="#{criteriosView.mostrarCrearCampania}" value="Filt. Sumi." action="#{criteriosView.filtSumiChange()}"  />
+                    
+                    <h:panelGrid id="generarCampania" rendered="#{criteriosView.filtSumi}" columns="2" cellpadding="4">
+                        <h:outputText value="Descripción" />
+                        <h:inputText value="#{criteriosView.descripcion}" />
+
+                        <h:outputText value="Actividad" />
+                        <p:selectOneMenu value="#{criteriosView.actividadSelected}" required="false">
+                            <f:selectItems value="#{criteriosView.actividades}" var="actividadItem"
+                                            itemLabel="#{actividadItem.nombre}" itemValue="#{actividadItem.tipo}"/>                                                                  
+                        </p:selectOneMenu> 
+
+                        <h:commandButton id="downloadLinkFiltro" value="Crear campaña"  onclick="PrimeFaces.monitorDownload(start, stop)" > 
+                            <p:fileDownload value="#{criteriosView.descargarFileFiltro(login.usuario,'Criterios.xhtml')}" />                               
+                        </h:commandButton>
+                    </h:panelGrid>
+                    
+                    <p:dataTable rendered="#{criteriosView.filtSumiNO}" var="filtrosSumin" value="#{criteriosView.filtrosListSumin}">
+                        <p:column>  
+                            <f:facet name="header">  
+                                <h:outputText value="Sel." />  
+                                <h:selectBooleanCheckbox value="#{criteriosView.checkFiltrosSumin}" >
+                                    <p:ajax update=":form:tabView:tblSumin" listener="#{criteriosView.seleccionarFiltrosSumin()}"/> 
+                                </h:selectBooleanCheckbox>    
+                            </f:facet>  
+                            <h:selectBooleanCheckbox value="#{filtrosSumin.selected}" /> 
+                        </p:column> 
+
+                        <p:column headerText="Operador lógico">
+                            <h:outputText value="#{filtrosSumin.tbltipo1.nombre}" />
+                        </p:column>
+                        <p:column headerText="Nombre variable">
+                            <h:outputText value="#{filtrosSumin.variables.nombreVariable}" />
+                        </p:column>
+
+                        <p:column headerText="Operador">
+                            <h:outputText value="#{filtrosSumin.tbltipo3.nombre}" />
+                        </p:column>
+
+                        <p:column headerText="Valor">
+                            <h:outputText value="#{filtrosSumin.valor1 }" />
+                        </p:column>
+                    </p:dataTable>
+                    
+                    <p:commandButton rendered="#{criteriosView.filtSumiNO}" value="Agregar" type="button" onclick="criterioAddSumin.show()" />
+                    <h:commandButton rendered="#{criteriosView.filtSumiNO}" value="Eliminar" action="#{criteriosView.eliminarFiltrosSumin()}"  />
+                    <h:commandButton rendered="#{criteriosView.filtSumiNO}" value="Validar"  action="#{criteriosView.buscarCandidatosSumin()}" />
+
+                    <p:separator rendered="#{criteriosView.mostrarCrearCampaniaSumin}" style="margin-top: 12px; margin-bottom: 12px;" />  
+                    
+                    <p:dataTable rendered="#{criteriosView.mostrarCrearCampaniaSumin}" id="tblSumin" var="candi" value="#{criteriosView.candidatosSumin}" paginator="true" rows="10" >  
+                        <p:column>  
+                            <f:facet name="header">  
+                                <h:outputText value="Sel." />  
+                                <h:selectBooleanCheckbox value="#{criteriosView.checkAllSumin}" >
+                                    <p:ajax update=":form:tabView:tblSumin" listener="#{criteriosView.seleccionarSumin()}"/> 
+                                </h:selectBooleanCheckbox>    
+                            </f:facet>  
+                            <h:selectBooleanCheckbox value="#{candi.check}" /> 
+                        </p:column> 
+                        <p:column>  
+                            <f:facet name="header">  
+                                <h:outputText value="Suministro" />  
+                            </f:facet>  
+                            <h:outputText value="#{candi.idComponente}" />  
+                        </p:column>  
+
+                        <p:column>  
+                            <f:facet name="header">  
+                                <h:outputText value="Nombre" />  
+                            </f:facet>  
+                            <h:outputText value="#{candi.nombre}"/>  
+                        </p:column> 
+                        
+                        <p:column>  
+                            <f:facet name="header">  
+                                <h:outputText value="Id cliente" />  
+                            </f:facet>  
+                            <h:outputText value="#{candi.idCliente}" />  
+                        </p:column>  
+
+                        <p:column>  
+                            <f:facet name="header">  
+                                <h:outputText value="Transformador" />  
+                            </f:facet>  
+                            <h:outputText value="#{candi.idClienteTrafo}" />  
+                        </p:column>  
+                    </p:dataTable>   
+                    
+                    <h:panelGrid id="generarCampaniaSumin" rendered="#{criteriosView.mostrarCrearCampaniaSumin}" columns="2" cellpadding="4">
+                        <h:outputText value="Descripción" />
+                        <h:inputText value="#{criteriosView.descripcionSumin}" />                        
+
+                        <h:commandButton id="downloadLinkFiltroSumin" value="Crear campaña"  onclick="PrimeFaces.monitorDownload(start, stop)" > 
+                            <p:fileDownload value="#{criteriosView.descargarFileFiltroSumin(login.usuario,'Criterios.xhtml')}" />                               
+                        </h:commandButton>
+                    </h:panelGrid>
+
+                </p:tab>
+
+                <p:tab title="Universo " id="universo">                   
+                    <h:panelGrid id="IdUniverso" >
+                        <p:row>
+                            <p:column>
+                                <h:commandButton id="cargarMercaUniverso" value="Refrescar"
+                                                    action="#{criteriosView.buscarIdMacro()}" />
+                            </p:column>
+                        </p:row>
+                    </h:panelGrid>
+                    
+                    <p:messages id="messagesUniverso" showDetail="true" closable="true" />
+
+                    <p:dataTable id="tblIdMacroUniverso" var="idMacro" value="#{criteriosView.candidatosIdMacro}"  paginator="true" rows="20" 
+                                 style="width: 850px;" filteredValue="#{criteriosView.candidatosIdMacroFiltro}" >  
+
+
+                        <p:column headerText="ZONA" filterBy="#{idMacro.zona}" sortBy="#{idMacro.zona}" >
+                            <h:outputText value="#{idMacro.zona }" />
+                        </p:column>
+                        <p:column headerText="CIRCUITO" filterBy="#{idMacro.circuito}" sortBy="#{idMacro.circuito}">
+                            <h:outputText value="#{idMacro.circuito}" />
+                        </p:column>
+                        <p:column headerText="TRANSFORMADOR" filterBy="#{idMacro.idTrafo}" sortBy="#{idMacro.idTrafo}">
+                            <h:outputText value="#{idMacro.idTrafo}" />
+                        </p:column>
+                        <p:column headerText="IDMACRO" filterStyle="width:80px;" filterBy="#{idMacro.idMacro}" sortBy="#{idMacro.idMacro}">
+                            <h:outputText value="#{idMacro.idMacro}" />
+                        </p:column>
+                        <p:column headerText="SUM FACT" filterStyle="width:50px;" filterBy="#{idMacro.cantSum}" sortBy="#{idMacro.cantSum}">
+                            <h:outputText value="#{idMacro.cantSum}" />
+                        </p:column>
+                        <p:column headerText="% PÉRDIDA" filterStyle="width:60px;" filterBy="#{idMacro.porcPerdida}" sortBy="#{idMacro.porcPerdida}">
+                            <h:outputText value="#{idMacro.porcPerdida}" />
+                        </p:column>
+                        <p:column headerText="RANGO" filterStyle="width:60px;" filterBy="#{idMacro.rango}" sortBy="#{idMacro.rango}">
+                            <h:outputText value="#{idMacro.rango}" />
+                        </p:column>
+
+                        <p:column headerText="SEL."  >
+                            <f:facet name="header">  
+                                <h:outputText value="Sel." />  
+                                <h:selectBooleanCheckbox value="#{criteriosView.checkAllCamp}" >
+                                    <p:ajax update=":form:tabView: " listener="#{criteriosView.seleccionarCamp()}"/> 
+                                </h:selectBooleanCheckbox>    
+                            </f:facet> 
+                            <h:selectBooleanCheckbox value="#{idMacro.check}" />
+                        </p:column>
+
+                    </p:dataTable>
+                                                  
+
+                    <h:panelGrid columns="3" cellpadding="10">
+                        <h:outputText value="Descripción" />
+                        <h:inputText value="#{criteriosView.descripcionUniverso}" />
+
+                        <h:commandButton  id="downloadLink" image="../resources/images/csv.png" onclick="PrimeFaces.monitorDownload(start, stop)" >  
+                            <p:fileDownload value="#{criteriosView.descargarFileUniverso(login.usuario,'Criterios.xhtml')}" />  
+                        </h:commandButton>
+                    </h:panelGrid>                                
+
+                </p:tab>
+
+
+                <p:tab title="Importar " id="campania">
+                    <p:panel header="Importar campaña" style="font-size: 13px; width: 500px">  
+                        <p:messages id="msgimportar"  showDetail="true" autoUpdate="true" escape="true" />  
+                        <h:panelGrid id="ingresarIdCampania" columns="2" cellpadding="10">
+                            <h:outputText value="Id campaña" />
+                            <h:inputText value="#{criteriosView.idCampaniaAimportar}" />                
+                        </h:panelGrid>
+                        <p:commandButton value="Procesar" actionListener="#{criteriosView.importarCampania}" update="ingresarIdCampania" onstart="wait.show()" oncomplete="wait.hide()"/>
+                    </p:panel>                                        
+                </p:tab>
+            </p:tabView>
+          
+  </div>
+    
+  <div id="inferior"></div>
+  <div id="piepagina" align="center">
+</div>
+
+</div></div>
+     
+     <p:dialog widgetVar="wait" closable="false" resizable="false" draggable="false" position="center" modal="true" showHeader="false">
+        <p:ajaxStatus>
+        <f:facet name="start">
+            <p:graphicImage value="../resources/images/espera.gif" />
+        </f:facet>
+        <f:facet name="complete">
+            <h:outputText value="" />
+        </f:facet>
+        </p:ajaxStatus>
+    </p:dialog> 
+     
+  </h:form>
+    
+    <p:dialog header="Crear nuevo criterio" widgetVar="criterioAdd" resizable="false" modal="true">
+        <h:form id="form2">            
+            <h:panelGrid columns="2" cellpadding="6" >
+
+                <h:outputLabel  value="Operador lógico" />
+                <p:selectOneMenu value="#{criteriosView.codOperadorLog}" required="true">
+                    <f:selectItems value="#{criteriosView.operadorLogList}" var="operLogItem"
+                                    itemLabel="#{operLogItem.nombre}" itemValue="#{operLogItem.tipo}"/>
+                </p:selectOneMenu>
+
+                <h:outputLabel  value="Nombre variable" />
+                <p:selectOneMenu value="#{criteriosView.codVariable}" required="true">
+                    <f:selectItems value="#{criteriosView.variableList}" var="variableItem"
+                                    itemLabel="#{variableItem.nombreVariable }" itemValue="#{variableItem.idVariable}"/>
+                </p:selectOneMenu>
+
+                <h:outputLabel  value="Operador" />
+                <p:selectOneMenu value="#{criteriosView.codOperador}" required="true">
+                    <f:selectItems value="#{criteriosView.operadorList}" var="operadorItem"
+                                    itemLabel="#{operadorItem.nombre}" itemValue="#{operadorItem.tipo}"/>
+                </p:selectOneMenu>                    
+
+
+                <h:outputLabel for="valor" value="Valor" />
+                <p:inputText value="#{criteriosView.valor}" id="valor" required="true" requiredMessage="Debe ingresar el valor" label="Valor " />
+
+
+                <f:facet name="footer">
+                    <h:commandButton id="userAddButton" value="Agregar" action="#{criteriosView.addCriterio()}" />
+                </f:facet>
+            </h:panelGrid>
+
+        </h:form>
+    </p:dialog>
+    
+    <p:dialog header="crear nuevo criterio" widgetVar="criterioAddSumin" resizable="false" modal="true">
+        <h:form id="formSumin">            
+            <h:panelGrid columns="2" cellpadding="6" >
+
+                <h:outputLabel  value="Operador lógico" />
+                <p:selectOneMenu value="#{criteriosView.codOperadorLogSumin}" required="true">
+                    <f:selectItems value="#{criteriosView.operadorLogList}" var="operLogItem"
+                                    itemLabel="#{operLogItem.nombre}" itemValue="#{operLogItem.tipo}"/>
+                </p:selectOneMenu>
+
+                <h:outputLabel  value="Nombre variable" />
+                <p:selectOneMenu value="#{criteriosView.codVariableSumin}" required="true">
+                    <f:selectItems value="#{criteriosView.variableListSumin}" var="variableItem"
+                                    itemLabel="#{variableItem.nombreVariable }" itemValue="#{variableItem.idVariable}"/>
+                </p:selectOneMenu>
+
+                <h:outputLabel  value="Operador" />
+                <p:selectOneMenu value="#{criteriosView.codOperadorSumin}" required="true">
+                    <f:selectItems value="#{criteriosView.operadorList}" var="operadorItem"
+                                    itemLabel="#{operadorItem.nombre}" itemValue="#{operadorItem.tipo}"/>
+                </p:selectOneMenu>                    
+
+
+                <h:outputLabel for="valor" value="Valor" />
+                <p:inputText value="#{criteriosView.valorSumin}" id="valor" required="true" requiredMessage="Debe ingresar el valor" label="Valor " />
+
+
+                <f:facet name="footer">
+                    <h:commandButton id="userAddButtonSumin" value="Agregar" action="#{criteriosView.addCriterioSumin()}" />
+                </f:facet>
+            </h:panelGrid>
+
+        </h:form>
+    </p:dialog>
+    
+</h:body>
+</html>

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f ="http://java.sun.com/jsf/core">
+  <h:head>
+    <f:facet name="first">
+      <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+      <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+      <title>ECA - SBBT</title>
+    </f:facet>
+
+    <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/default.css" />
+    <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/syntaxhighlighter/syntaxhighlighter.css" />
+
+    <style type="text/css">
+      .ui-layout-north {
+        z-index:20 !important;
+        overflow:visible !important;;
+      }
+
+      .ui-layout-north .ui-layout-unit-content {
+        overflow:visible !important;
+      }
+    </style>
+
+    <h:form id="validarSession">
+      <h:inputHidden  rendered="#{login.validarSession}" value="#{login.validateSession()}" />
+    </h:form>
+  </h:head>
+
+  <link href="../Styles/estilos.css" rel="stylesheet" type="text/css" />
+  <ui:include src="../sessionTimeOut.xhtml" />
+
+  <h:body>
+    <h:form id="form">
+
+      <div id="cuerpo" align="center">
+        <!--<div id="index_r1_c2" ></div>-->
+        <div id="linea"><div align="center" style="position:relative; top:6px; background-image:url(Images/mensaje2.png); background-repeat:no-repeat; background-position:center; height:38px"></div></div>
+        <div id="linea2" align="left" >
+          <p:menubar model ="#{templateView.model}" style="font-size: 12px" />
+        </div>
+
+        <div id="pagina">
+
+          <div id="superior">     
+          </div>
+          <div id="medio">      
+            <p:dataTable id="zonas" var="zona" value="#{zonaView.zonas}" tableStyle="width:auto"
+                         paginator="true" rows="10"
+                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                         style="font-size: 12px">
+              <f:facet name="header">
+                ZONAS GEOGRÁFICAS
+              </f:facet>
+
+              <p:column filterStyle="width: 85px" width="90" headerText="Nombre" sortBy="#{zona.nombre}" filterBy="#{zona.nombre}">
+                <h:outputText value="#{zona.nombre}" />
+              </p:column>
+
+              <p:column filterStyle="width: 75px" width="80" sortBy="#{zonaView.nombreTipo(zona.tipoComponente.idTipoComponente.toString())}" headerText="Tipo" filterBy="#{zonaView.nombreTipo(zona.tipoComponente.idTipoComponente.toString())}">
+                <h:outputText value="#{zonaView.nombreTipo(zona.tipoComponente.idTipoComponente.toString())}" />
+              </p:column>
+
+              <p:column sortBy="#{zonaView.nombrePadre(zona.idPadre.toString())}" headerText="Nombre Padre" filterBy="#{zonaView.nombrePadre(zona.idPadre.toString())}">
+                <h:outputText value="#{zonaView.nombrePadre(zona.idPadre.toString())}" />
+              </p:column>
+
+              <p:column filterStyle="width: 45px" width="50" sortBy="#{zonaView.nombreEstado(zona.estado)}" headerText="Estado" filterBy="#{zonaView.nombreEstado(zona.estado)}">
+                <h:outputText value="#{zonaView.nombreEstado(zona.estado)}" />
+              </p:column>
+
+              <p:column filterStyle="width: 65px" width="70" sortBy="#{zona.coordY}" headerText="Coordenada Y" filterBy="#{zona.coordY}">
+                <h:outputText value="#{zona.coordY}" />
+              </p:column>   
+
+              <p:column filterStyle="width: 65px" width="70" sortBy="#{zona.coordX}" headerText="Coordenada X" filterBy="#{zona.coordX}">
+                <h:outputText value="#{zona.coordX}" />
+              </p:column>
+
+              <p:column filterStyle="width: 85px" width="90" sortBy="#{zona.idComercial}" headerText="Id Comercial" filterBy="#{zona.idComercial}">
+                <h:outputText value="#{zona.idComercial}" />
+              </p:column>
+
+              <p:column filterStyle="width: 75px" width="80" sortBy="#{zona.tipoComponente.tbltipo.nombre}" headerText="Nivel" filterBy="#{zona.tipoComponente.tbltipo.nombre}">
+                <h:outputText value="#{zona.tipoComponente.tbltipo.nombre}" />
+              </p:column> 
+
+              <p:column style="width:40px">
+                <h:panelGrid columns="3" styleClass="actions" cellpadding="2" >
+                  <p:commandButton id="editButton" update=":form3:displayEdit" oncomplete="zonaEdit.show()" icon="ui-icon-pencil" title="Editar">
+                    <f:setPropertyActionListener value="#{zona}" target="#{zonaView.zonaSelected}"/>
+                  </p:commandButton>
+                </h:panelGrid>
+              </p:column> 
+
+              <f:facet name="footer">
+                <p:commandButton value="Agregar" type="button" onclick="zonaAdd.show()" />                                    
+              </f:facet>
+
+            </p:dataTable> 
+
+          </div>
+
+          <div id="inferior"></div>
+          <div id="piepagina" align="center">
+          </div>
+
+        </div></div>
+
+    </h:form>
+
+    <p:dialog header="Crear nueva zona geográfica" widgetVar="zonaAdd" resizable="false" modal="true"> 
+      <h:form id="form2">
+        <p:growl id="growl" showDetail="false" sticky="true" />
+        <h:panelGrid columns="2" cellpadding="6" >            
+
+          <h:outputLabel for="nombre" value="Nombre:" />
+          <p:inputText value="#{zonaView.nombre}"
+                       required="true" label="Nombre" requiredMessage="Nombre de la zona es obligatorio." />
+
+          <h:outputLabel value="Tipo:" />  
+          <p:selectOneMenu value="#{zonaView.tipoComponente}" >
+            <f:selectItems value="#{zonaView.idTiposComerciales}" />                                                                  
+          </p:selectOneMenu> 
+
+          <h:outputLabel value="Padre:" />  
+          <p:selectOneMenu value="#{zonaView.idPadre}" >
+            <f:selectItems value="#{zonaView.idPadresComerciales}" />                                                                  
+          </p:selectOneMenu>                
+
+          <h:outputLabel for="coordX" value="Coordenada X:" />
+          <p:inputText value="#{zonaView.coordX}" size="10"
+                       required="false" label="coordX" />  
+
+          <h:outputLabel for="coordY" value="Coordenada Y:" />
+          <p:inputText value="#{zonaView.coordY}" 
+                       required="false" label="coordY" />
+
+
+          <f:facet name="footer">
+            <h:commandButton id="userAddButton" value="Agregar"
+                             action="#{zonaView.saveZona(login.usuario, 'zonas.xhtml')}" />
+            <h:commandButton style="margin-left:30px;" value="Cancelar" type="button" onclick="zonaAdd.hide()" />
+          </f:facet>
+        </h:panelGrid>                    
+
+      </h:form> 
+    </p:dialog>
+
+    <p:dialog header="Editar zona geográfica" widgetVar="zonaEdit" resizable="false" id="zonEdit">
+      <h:form id="form3"> 
+        <h:panelGrid id="displayEdit" columns="2" cellpadding="4" style="margin:0 auto;" >
+
+          <h:outputText value="Nombre:"/>
+          <p:inplace editor="true">  
+            <p:inputText value="#{zonaView.zonaSelected.nombre}"  
+                         required="true" label="Nombre"/>  
+          </p:inplace>      
+
+          <h:outputLabel value="Tipo:" />  
+          <p:inplace label="#{zonaView.nombreTipo(zonaView.zonaSelected.tipoComponente.idTipoComponente.toString())}" effectSpeed="fast" event="dblclick">
+            <p:selectOneMenu value="#{zonaView.idTipoSelected}" >
+              <f:selectItem itemLabel="Seleccione" itemValue="no" />
+              <f:selectItems value="#{zonaView.idTiposComerciales}" />                                                                  
+            </p:selectOneMenu> 
+          </p:inplace>   
+
+          <h:outputLabel value="Padre:" />  
+          <p:inplace emptyLabel="--" label="#{zonaView.nombrePadre(zonaView.zonaSelected.idPadre.toString())}" effectSpeed="fast" event="dblclick">
+            <p:selectOneMenu value="#{zonaView.idPadreComercialSelected}"  required="false">
+              <f:selectItem itemLabel="Seleccione" itemValue="no" />
+              <f:selectItems value="#{zonaView.idPadresComerciales}" />                                                                  
+            </p:selectOneMenu> 
+          </p:inplace>  
+
+          <h:outputText value="Coordenada X:"/>
+          <p:inplace emptyLabel="-" editor="true">  
+            <p:inputText value="#{zonaView.zonaSelected.coordX}"  
+                         />  
+          </p:inplace>  
+
+          <h:outputText value="Coordenada Y:"/>
+          <p:inplace emptyLabel="-" editor="true">  
+            <p:inputText value="#{zonaView.zonaSelected.coordY}"/>  
+          </p:inplace>  
+
+          <h:outputText value="Id Comercial"/>
+          <p:inplace editor="true">  
+            <p:inputText value="#{zonaView.zonaSelected.idComercial}"  
+                         required="false" label="idcomercial"/>  
+          </p:inplace>   
+
+          <h:outputLabel for="estado" value="Estado:" />  
+          <p:inplace id="selectableInplace" label="#{zonaView.nombreEstado(zonaView.zonaSelected.estado)}" effectSpeed="fast" event="dblclick">
+            <p:selectOneMenu value="#{zonaView.zonaSelected.estado}" required="true" label="est" style="width:100px;">
+              <f:selectItem itemLabel="Activo" itemValue="AC001" /> 
+              <f:selectItem itemLabel="Inactivo" itemValue="AC002" />
+            </p:selectOneMenu>  
+          </p:inplace>                
+
+          <f:facet name="footer">
+            <h:commandButton id="usuarioEditButton" value="Guardar"
+                             action="#{zonaView.editZona(login.usuario, 'zonas.xhtml')}"  />
+            <h:commandButton style="margin-left:30px;" value="Cancelar" type="button" onclick="zonaEdit.hide()" />
+          </f:facet>
+
+        </h:panelGrid>                      
+      </h:form>  
+    </p:dialog>
+
+    <p:dialog header="Versión del SBBT" widgetVar="dlgVersion" modal="true" 
+              resizable="false" height="50" closeOnEscape="true" showEffect="explode" hideEffect="bounce" draggable="false">
+      <h:outputText value="#{eventMenuBean.VERSION}" />
+    </p:dialog>
+
+  </h:body>
+</html>

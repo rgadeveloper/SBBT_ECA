@@ -1,0 +1,218 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <f:view contentType="text/html">
+
+        <h:head>
+            <f:facet name="first">
+                <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>ECA - SBBT</title>
+            </f:facet>
+
+            <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/default.css" />
+            <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/syntaxhighlighter/syntaxhighlighter.css" />
+
+            <style type="text/css">
+                .ui-layout-north {
+                    z-index:20 !important;
+                    overflow:visible !important;;
+                }
+
+                .ui-layout-north .ui-layout-unit-content {
+                    overflow:visible !important;
+                }
+            </style>
+        </h:head>
+
+        <h:body>
+            <h:form id="form" enctype="multipart/form-data">
+            <p:growl id="msgs" showDetail="true"/> 
+                  <div>
+
+                    <div id="content" class="left_content">
+                        <ui:insert name="content">
+
+                            <p:layout fullPage="true" id ="layout">
+
+                                <p:layoutUnit id="top" position="north" size="50">
+                                    <p:menubar model ="#{templateView.model}" style="font-size: 12px" />
+                                </p:layoutUnit>
+
+                                <p:layoutUnit id="bottom" position="south" size="60">
+                                    <p align ="left" style="font-size: 12px">
+                                        Bienvenido : <h:outputText value="#{login.usuario}" />
+                                        ©2012 RGA ltda. y/o AC ltda. Todos los derechos reservados </p>
+                                </p:layoutUnit>
+
+                                <p:layoutUnit id="center" position="center">  
+                                    
+                                    <p:panel id="display" header="Reporte Historico - Evolutivo" style="margin-bottom:10px;">  
+                                        <h:panelGrid columns="2" cellpadding="5">  
+                                            
+                                            <h:outputText value="Opcion:" />  
+                                            <p:selectOneRadio id="opcion" value="#{sreporte.opcion}" style="padding-right: 30px">  
+                                                <f:selectItems value="#{sreporte.opciones}" /> 
+                                            </p:selectOneRadio>
+
+                                            <h:outputText value="Vista:" />  
+                                            <p:selectOneRadio id="vista" value="#{sreporte.vista}" style="padding-right: 30px">  
+                                                <f:selectItems value="#{sreporte.vistas}" />  
+                                                <p:ajax update="tipos,componentes"  
+                                                        listener="#{sreporte.actualizarComboTipos}" />
+                                            </p:selectOneRadio>   
+
+                                            <h:outputText value="Tipo Componente:" /> 
+                                            <p:selectOneMenu id="tipos" value="#{sreporte.tipo}">  
+                                                <f:selectItem itemLabel="seleccionar opción" itemValue="" />  
+                                                <f:selectItems value="#{sreporte.tipos}" />  
+                                                <p:ajax update="componentes"  
+                                                        listener="#{sreporte.actualizarComboComponentes}" />  
+                                            </p:selectOneMenu> 
+
+                                            <h:outputText value="Nombre:" /> 
+                                            <p:selectOneMenu id="componentes" value="#{sreporte.componente}">  
+                                                <f:selectItem itemLabel="seleccionar opción" itemValue="" />  
+                                                <f:selectItems value="#{sreporte.componentes}" />  
+                                            </p:selectOneMenu>                                              
+               
+                                        </h:panelGrid>  
+
+                                        <p:separator />  
+
+                                        <p:commandButton value="Buscar" update="hist,:form:msgs,:form:display" action="#{sreporte.llenarDataTable}" />  
+
+                                    </p:panel>
+                                    
+                                    <p:dataTable id="hist" var="trafo" value="#{sreporte.trafos}"
+                                                                                              
+                                                tableStyle="width:auto" style="font-size: 12px">
+
+                                        <f:facet name="header">
+                                          Historico 
+                                        </f:facet>
+
+                                        <p:column headerText="ID Simulacion" >
+                                            <h:outputText value="#{trafo.idComponente.toString()}" />
+                                        </p:column> 
+                                        
+                                        <p:column>  
+                                            <f:facet name="header">  
+                                                <h:outputText value="Nombre Trafo" />  
+                                            </f:facet>  
+                                            <h:outputText value="#{trafo.nombre}" /> 
+                                        </p:column>
+                                        
+                                        <p:column headerText="%Perdida" >
+                                            <f:facet name="header">  
+                                                <h:outputText value="%Perdida" />  
+                                            </f:facet>
+                                            <h:outputText value="#{sreporte.porcentajeByperiodo(trafo.idComponente.toString(),0)}" />
+                                        </p:column> 
+                                        
+                                        <p:column headerText="%Perdida-1" > 
+                                            <f:facet name="header">  
+                                                <h:outputText value="%Perdida-1" />  
+                                            </f:facet>
+                                            <h:outputText value="#{sreporte.porcentajeByperiodo(trafo.idComponente.toString(),1)}" />
+                                        </p:column>
+                                        
+                                        <p:column headerText="%Perdida-2" >
+                                             <f:facet name="header">  
+                                                <h:outputText value="%Perdida-2" />  
+                                            </f:facet>
+                                            <h:outputText value="#{sreporte.porcentajeByperiodo(trafo.idComponente.toString(),2)}" />
+                                        </p:column>
+                                        
+                                        <p:column headerText="%Perdida-3" >  
+                                             <f:facet name="header">  
+                                                <h:outputText value="%Perdida-3" />  
+                                            </f:facet>
+                                            <h:outputText value="#{sreporte.porcentajeByperiodo(trafo.idComponente.toString(),3)}" />
+                                        </p:column>
+                                        
+                                        <p:column headerText="%Perdida-4" > 
+                                             <f:facet name="header">  
+                                                <h:outputText value="%Perdida-4" />  
+                                            </f:facet>
+                                            <h:outputText value="#{sreporte.porcentajeByperiodo(trafo.idComponente.toString(),4)}" />
+                                        </p:column>
+                                        
+                                        <p:column headerText="%Perdida-5" > 
+                                             <f:facet name="header">  
+                                                <h:outputText value="%Perdida-5" />  
+                                            </f:facet>
+                                            <h:outputText value="#{sreporte.porcentajeByperiodo(trafo.idComponente.toString(),5)}" />
+                                        </p:column>
+                                        
+                                        <p:column headerText="%Perdida-6" >
+                                             <f:facet name="header">  
+                                                <h:outputText value="%Perdida-6" />  
+                                            </f:facet>
+                                            <h:outputText value="#{sreporte.porcentajeByperiodo(trafo.idComponente.toString(),6)}" />
+                                        </p:column>
+                                        
+                                        <p:column headerText="%Perdida-7" >   
+                                             <f:facet name="header">  
+                                                <h:outputText value="%Perdida-7" />  
+                                            </f:facet>
+                                            <h:outputText value="#{sreporte.porcentajeByperiodo(trafo.idComponente.toString(),7)}" />
+                                        </p:column>
+                                        
+                                        <p:column headerText="%Perdida-8" >   
+                                             <f:facet name="header">  
+                                                <h:outputText value="%Perdida-8" />  
+                                            </f:facet>
+                                            <h:outputText value="#{sreporte.porcentajeByperiodo(trafo.idComponente.toString(),8)}" />
+                                        </p:column>
+                                        
+                                        <p:column headerText="%Perdida-9" >  
+                                             <f:facet name="header">  
+                                                <h:outputText value="%Perdida-9" />  
+                                            </f:facet>
+                                            <h:outputText value="#{sreporte.porcentajeByperiodo(trafo.idComponente.toString(),9)}" />
+                                        </p:column>
+                                        
+                                        <p:column headerText="%Perdida-10" >  
+                                             <f:facet name="header">  
+                                                <h:outputText value="%Perdida-10" />  
+                                            </f:facet>
+                                            <h:outputText value="#{sreporte.porcentajeByperiodo(trafo.idComponente.toString(),10)}" />
+                                        </p:column>
+                                        
+                                        <p:column headerText="%Perdida-11" >    
+                                             <f:facet name="header">  
+                                                <h:outputText value="%Perdida-11" />  
+                                            </f:facet>
+                                            <h:outputText value="#{sreporte.porcentajeByperiodo(trafo.idComponente.toString(),11)}" />
+                                        </p:column>
+
+                                    </p:dataTable>                                    
+                                     
+                                         
+                                    <h:commandLink >  
+                                            <p:graphicImage value="../images/excel.png" style="padding-top: 10px;" />  
+                                            <p:dataExporter type="xls" target="hist" fileName="historico"/>  
+                                    </h:commandLink>  
+                                    
+                                    <h:commandButton image="../images/pdf.png" actionListener="#{sreporte.jasperPrueba}" />  
+
+                                                                    
+                                </p:layoutUnit>
+ 
+                            </p:layout>
+
+                        </ui:insert>
+
+                    </div>
+                </div>
+            </h:form>
+
+        </h:body>
+    </f:view>
+</html>

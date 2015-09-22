@@ -1,0 +1,142 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    
+
+    <p:panelGrid columns="2" id ="dtbalanceTrafo"   style="margin-top:15px; font-size: 12px ">
+
+        <f:facet name="header">
+            <p:row>
+                <p:column colspan="8">Información del Transformador </p:column>
+            </p:row>
+        </f:facet>
+        
+        <h:outputText style="font-weight: bold;" value="Id del Macro" />
+        <h:outputText value="#{sGeograficaView.componenteMedida.idComercial}" />
+
+        <h:outputText style="font-weight: bold;" value="Id del Transformador" />
+        <h:outputText value="#{sGeograficaView.componente.idCliente}" />
+                
+        <h:outputText style="font-weight: bold;" value="Coordenada X" />
+        <h:outputText value="#{sGeograficaView.componente.coordX}" />
+         
+        <h:outputText style="font-weight: bold;" value="Coordenada Y" />
+        <h:outputText value="#{sGeograficaView.componente.coordY}" />
+                
+        <h:outputText style="font-weight: bold;" value="Zona" />
+        <h:outputText value="#{sGeograficaView.relacionGeo.nombrePadre}" />
+           
+        <h:outputText style="font-weight: bold;" value="Municipio" />
+        <h:outputText value="#{sGeograficaView.relacionGeo.nombreHijo}" />
+        
+        <h:outputText style="font-weight: bold;" value="Subestacion" />
+        <h:outputText value="#{sGeograficaView.relacionElec.nombrePadre}" />
+            
+        <h:outputText style="font-weight: bold;" value="Circuito" />
+        <h:outputText value="#{sGeograficaView.relacionElec.nombreHijo}" />
+                
+        <h:outputText style="font-weight: bold;" value="Capacidad de Transformador" />
+        <h:outputText value="#{sGeograficaView.atrComponente.cargaInstalada}" />
+         
+        <h:outputText style="font-weight: bold;" value="Ciclo" />
+        <h:outputText value="#{sGeograficaView.atrComponente.ciclo.descripcion}" />
+        
+        <h:outputText style="font-weight: bold;" value="Direccion" />
+        <h:outputText value="#{sGeograficaView.componente.direccion}" />
+           
+        <h:outputText style="font-weight: bold;" value="Tipo de Red" />
+        <h:outputText value="#{sGeograficaView.atrComponente.tbltipo5.nombre}" />
+        
+        <h:outputText style="font-weight: bold;" value="Tipo de Macromedidor" />
+        <h:outputText value="#{sGeograficaView.atrComponente.tbltipo3.nombre}" />
+            
+        <h:outputText style="font-weight: bold;" value="Factor multiplicador" />
+        <h:outputText value="#{sGeograficaView.atrComponenteMedida.constante}" />
+            
+        <h:outputText style="font-weight: bold;" value="Tipo Medidor" />
+        <h:outputText value="#{sGeograficaView.atrComponente.tbltipo1.nombre}" />
+         
+        <h:outputText style="font-weight: bold;" value="Medidor" />
+        <h:outputText value="#{sGeograficaView.atrComponente.medidor}" /> 
+        
+        <h:outputText style="font-weight: bold;" value="Lectura anterior" />
+        <h:outputText value="#{sGeograficaView.medida.lecturaAnterior}" />
+       
+        <h:outputText style="font-weight: bold;" value="Lectura Actual" />
+        <h:outputText value="#{sGeograficaView.medida.lecturaActual}" />  
+        
+        <h:outputText style="font-weight: bold;" value="Fecha de Instalación" />
+        <h:outputText value="#{sGeograficaView.atrComponente.fechaInstalacion}" /> 
+        
+        <h:outputText style="font-weight: bold;" value="Fecha lectura anterior" />
+        <h:outputText value="#{sGeograficaView.medida.fechaLecturaAnterior}" /> 
+         
+        <h:outputText style="font-weight: bold;" value="Fecha lectura actual" />
+        <h:outputText value="#{sGeograficaView.medida.fechaLecturaActual}" />    
+        
+        <h:outputText style="font-weight: bold;" value="Energia Perdida Macromedidor (Kwh)" />
+        <h:outputText value="#{sGeograficaView.balance.balEnergiaSum}" >
+            <f:convertNumber integerOnly="true" pattern="#,###"/>
+        </h:outputText>
+        
+        <h:outputText style="font-weight: bold;" value="Energia carga Extra" />
+        <h:outputText value="#{sGeograficaView.medida.consumoAdicional}" />
+        
+        <h:outputText style="font-weight: bold;" value="% Perdida Energia Mes" />
+        <h:outputText value="#{sGeograficaView.balance.porcPerdidaMes}" />
+          
+        <h:outputText style="font-weight: bold;" value="% Perdida Energia Movil" />
+        <h:outputText value="#{sGeograficaView.balance.porcPerdidaMovil}" />
+        
+        <h:outputText style="font-weight: bold;" value="Rango de perdida" />
+        <h:outputText value="#{sGeograficaView.balance.rangoClasificacion.descripcion}" />
+        
+        <h:outputText style="font-weight: bold;" value="Ruta" />
+        <h:outputText value="#{sGeograficaView.atrComponente.ruta}" />
+           
+        <h:outputText style="font-weight: bold;" value="Anomalia de lectura" />
+        <h:outputText value="#{sGeograficaView.medida.tbltipo.nombre}" />
+          
+        <h:outputText style="font-weight: bold;" value="Clientes sin medida" />
+        <h:outputText value="#{sGeograficaView.cantSumNoMedidos}" />
+          
+        <h:outputText style="font-weight: bold;" value="Energia Macromedidor" />
+        <h:outputText value="#{sGeograficaView.balance.consumoMacros}" />        
+        
+        <h:outputText style="font-weight: bold;" value="Motivo de no Balance" />
+        <h:outputText value="#{sGeograficaView.balance.tbltipo.nombre}" />
+        
+        <h:outputText style="font-weight: bold;" value="Estado del balance" />
+        <h:outputText value="#{sGeograficaView.balance.tbltipo.nombre}" /> 
+        
+        <h:outputText style="font-weight: bold;" value="Consumo" />
+        <h:outputText value="#{sGeograficaView.medida.consumoFacturado}" />
+        
+        <h:outputText style="font-weight: bold;" value="Dias Facturados" />
+        <h:outputText value="#{sGeograficaView.medida.diasFacturados}" />
+               
+    </p:panelGrid>    
+        
+    
+        
+    
+    
+    <p:dialog id="dgTipoUso" header="Cantidades Suministro por Tipo de Uso" widgetVar="dlgTipoUso">  
+        <p:dataTable var="tu" value="#{sGeograficaView.listCantXTipoUso}">  
+        <p:column headerText="Tipo de Uso">  
+            <h:outputText value="#{tu.nombre}" />  
+        </p:column>  
+  
+        <p:column headerText="Cantidad de Suministros">  
+            <h:outputText value="#{tu.valor}" />  
+        </p:column>  
+  
+        
+    </p:dataTable> 
+    </p:dialog> 
+    
+
+</html>

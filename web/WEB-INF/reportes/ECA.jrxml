@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ECA" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="fc580676-49ee-42d7-97a3-65545fe9eea1">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="158"/>
+	<parameter name="periodo" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[201403]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select periodo, sum(nvl(consumo_macros,0)) entrada, sum(nvl(consumo_suministro,0))+ sum(nvl(consumo_adicional,0)) salida,
+sum(nvl(consumo_macros,0)) - (sum(nvl(consumo_suministro,0))+ sum(nvl(consumo_adicional,0))) perdidas
+from balances
+where id_tipo_componente = 8
+--and rango_balance <> 31
+group by periodo]]>
+	</queryString>
+	<field name="PERIODO" class="java.math.BigDecimal"/>
+	<field name="ENTRADA" class="java.math.BigDecimal"/>
+	<field name="SALIDA" class="java.math.BigDecimal"/>
+	<field name="PERDIDAS" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="1" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="55" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="4067e189-8763-418a-9da8-0220e70b482e" mode="Opaque" x="0" y="0" width="802" height="16" forecolor="#FFFFFF" backcolor="#2B94C2"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ELECTRICARIBE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a2b5b20b-66d0-4ad9-98e7-e3ae2a39281d" mode="Opaque" x="0" y="16" width="802" height="14" forecolor="#FFFFFF" backcolor="#2B94C2"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[OPERACIÓN AT - EVOLUCIÓN PERDIDAS PCI]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="95" splitType="Stretch">
+			<subreport>
+				<reportElement uuid="b1de80a6-699a-44b0-bb60-bcdd1cb655cf" positionType="Float" x="0" y="0" width="802" height="91"/>
+				<subreportParameter name="periodo">
+					<subreportParameterExpression><![CDATA[$P{periodo}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}+"report2.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</columnHeader>
+	<lastPageFooter>
+		<band height="131">
+			<subreport>
+				<reportElement uuid="d2a4d940-388d-4473-bd8d-f57f96d56dec" stretchType="RelativeToTallestObject" x="0" y="27" width="802" height="101"/>
+				<subreportParameter name="periodo">
+					<subreportParameterExpression><![CDATA[$P{periodo}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}+"report3.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement uuid="dec8a412-2af0-476f-8ab8-4df4d8872b44" mode="Opaque" x="0" y="7" width="802" height="20" forecolor="#FFFFFF" backcolor="#2B94C2"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[OPERACIÓN AT - EVOLUTIVO POR RANGOS Y TIPO PCI - CANTIDADES Y PERDIDA DE ENERGÍA (MWh -Mes)]]></text>
+			</staticText>
+		</band>
+	</lastPageFooter>
+	<summary>
+		<band height="163" splitType="Stretch">
+			<subreport>
+				<reportElement uuid="d9801e3c-912f-4393-b573-3d2955f35bdf" positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" x="0" y="29" width="802" height="125"/>
+				<subreportParameter name="periodo">
+					<subreportParameterExpression><![CDATA[$P{periodo}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}+"report1.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement uuid="5472571f-c751-4611-9230-1b2686f32c00" mode="Opaque" x="0" y="3" width="802" height="20" forecolor="#FFFFFF" backcolor="#2B94C2"/>
+				<textElement textAlignment="Justified">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PERIODO]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

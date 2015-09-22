@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f ="http://java.sun.com/jsf/core">
+  <h:head>
+    <f:facet name="first">
+      <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+      <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+      <title>ECA - SBBT</title>
+    </f:facet>
+
+    <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/default.css" />
+    <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/syntaxhighlighter/syntaxhighlighter.css" />
+
+    <style type="text/css">
+      .ui-layout-north {
+        z-index:20 !important;
+        overflow:visible !important;;
+      }
+
+      .ui-layout-north .ui-layout-unit-content {
+        overflow:visible !important;
+      }
+    </style>
+    <h:form id="validarSession">
+      <h:inputHidden  rendered="#{login.validarSession}" value="#{login.validateSession()}" />
+    </h:form>
+  </h:head>
+
+  <script type="text/javascript" src="../resources/js/espaniol.js" />
+  <link href="../Styles/estilos.css" rel="stylesheet" type="text/css" />
+  <ui:include src="../sessionTimeOut.xhtml" />
+
+  <h:body> 
+
+    <h:form id="form" enctype="multipart/form-data" style="font-family: inherit; font-size: 12px;">
+      <p:growl id="msgs" />   
+
+      <div id="cuerpo" align="center">
+        <!--<div id="index_r1_c2" ></div>-->
+        <div id="linea"><div align="center" style="position:relative; top:6px; background-image:url(Images/mensaje2.png); background-repeat:no-repeat; background-position:center; height:38px"></div></div>
+        <div id="linea2" align="left" >
+          <p:menubar   model ="#{templateView.model}" style="font-size: 12px" />
+        </div>
+
+        <div id="pagina">
+
+          <div id="superior">     
+          </div>
+          <div id="medio">      
+            <p:panel id="display" header="Filtrar - Log auditoría" style="width:500px;margin-bottom:10px;">  
+              <h:panelGrid columns="2" cellpadding="5">                                                
+
+                <h:outputText value="Programa:" />
+                <p:selectOneMenu value="#{logAuditorias.programaEjecucion}" required="false">
+                  <f:selectItem itemLabel="Escoja uno" itemValue="" noSelectionOption="true" />
+                  <f:selectItems value="#{logAuditorias.programasEjecucion}" var="programaEjecucion"
+                                 itemLabel="#{programaEjecucion}" itemValue="#{programaEjecucion}"/>
+                </p:selectOneMenu>  
+
+
+                <h:outputLabel value="Fecha inicial:" />
+                <p:calendar locale="es" required="false" value="#{logAuditorias.fechaIni}" 
+                            mode="popup" size="5" >  
+                </p:calendar>
+
+                <h:outputLabel value="Fecha final:" />                                            
+                <p:calendar locale="es" required="false" value="#{logAuditorias.fechaFin}" 
+                            mode="popup" size="5" >                
+                </p:calendar> 
+
+              </h:panelGrid>  
+
+              <p:separator />  
+
+              <h:commandButton value="Buscar" action="#{logAuditorias.visualizarAuditorias}" />  
+
+            </p:panel>
+
+            <p:dataTable var="auditoria" value="#{logAuditorias.auditorias}"
+                         paginator="true" rows="10" tableStyle="width:auto"
+                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                         style="font-size: 12px;width: 800px;">
+
+              <f:facet name="header">
+                Log Auditoría
+              </f:facet>
+
+              <p:column headerText="Fecha" >
+                <f:facet name="header">  
+                  <h:outputText value="Fecha" />  
+                </f:facet>  
+                <h:outputText value="#{logAuditorias.getFechaFormato(auditoria.fecha, 'dd/MM/yyyy')}" />
+              </p:column> 
+
+              <p:column headerText="Programa ejecución" >
+                <f:facet name="header">  
+                  <h:outputText value="Programa ejecución" />  
+                </f:facet>  
+                <h:outputText value="#{auditoria.programaEjecucion}" />
+              </p:column> 
+
+              <p:column headerText="Descripción" >
+                <f:facet name="header">  
+                  <h:outputText value="Descripción" />  
+                </f:facet>  
+                <h:outputText value="#{auditoria.descripcion}" />
+              </p:column> 
+
+              <p:column headerText="Tipo" >
+                <f:facet name="header">  
+                  <h:outputText value="Tipo" />  
+                </f:facet>  
+                <h:outputText value="#{auditoria.tbltipo.nombre}" />
+              </p:column> 
+            </p:dataTable> 
+
+
+          </div>
+
+          <div id="inferior"></div>
+          <div id="piepagina" align="center">
+          </div>
+
+        </div></div>
+
+    </h:form>
+
+    <p:dialog header="Versión del SBBT" widgetVar="dlgVersion" modal="true" 
+              resizable="false" height="50" closeOnEscape="true" showEffect="explode" hideEffect="bounce" draggable="false">
+      <h:outputText value="#{eventMenuBean.VERSION}" />
+    </p:dialog>
+
+  </h:body>
+</html>

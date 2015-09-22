@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f ="http://java.sun.com/jsf/core">
+  <h:head>
+    <f:facet name="first">
+      <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+      <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+      <title>ECA - SBBT</title>
+    </f:facet>
+
+    <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/default.css" />
+    <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/syntaxhighlighter/syntaxhighlighter.css" />
+
+    <style type="text/css">
+      .ui-layout-north {
+        z-index:20 !important;
+        overflow:visible !important;
+      }
+
+      .ui-layout-north .ui-layout-unit-content {
+        overflow:visible !important;
+      }       
+
+    </style>
+    <h:form id="validarSession">
+      <h:inputHidden  rendered="#{login.validarSession}" value="#{login.validateSession()}" />
+    </h:form>
+  </h:head>    
+
+  <link href="../Styles/estilos.css" rel="stylesheet" type="text/css" />
+  <ui:include src="../sessionTimeOut.xhtml" />
+
+  <h:body>
+    <p:growl id="messages" showDetail="true" />
+    <h:form id="formCarga" enctype="multipart/form-data"> 
+
+      <div id="cuerpo" align="center">
+        <!--<div id="index_r1_c2" ></div>-->
+        <div id="linea"><div align="center" style="position:relative; top:6px; background-image:url(Images/mensaje2.png); background-repeat:no-repeat; background-position:center; height:38px"></div></div>
+        <div id="linea2" align="left" >
+          <p:menubar  model ="#{templateView.model}" style="font-size: 12px" />
+        </div>
+
+        <div id="pagina">
+
+          <div id="superior">     
+          </div>
+          <div id="medio"> 
+
+            <p:panel header="Carga de balances de áreas MT" style="font-size: 13px; width: 700px"> 
+
+              <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+              <h:panelGrid id="pnlCarga" > 
+
+                <p:row>
+                  <p:column colspan="1"><p:fileUpload value="#{balanceEnergiaView.file}" mode="simple" update=":messages,:formCarga:pnlLog,:formCarga:pnlCarga"/>  </p:column>
+                  <p:column  colspan="1"><h:commandButton value="Cargar" action="#{balanceEnergiaView.upload()}"  />   </p:column>
+                </p:row>    
+
+              </h:panelGrid>
+              <h:panelGrid id="pnlLog" rendered="#{balanceEnergiaView.estado !='Carga'}"> 
+                <f:facet name="header">
+                  <p:row>
+                    <p:column colspan="8">Log de Resultados </p:column>
+                  </p:row>
+                </f:facet>
+                <p:row>
+                  <p:column  colspan="1">
+                    <p:editor id="editor" value="#{balanceEnergiaView.mensaje}" width="600" disabled="true"  controls="" /> 
+                  </p:column>
+                </p:row> 
+                <p:row>
+                  <p:column  colspan="1"><p:commandButton value="Limpiar" onclick="window.location.reload(true)" update=":messages,@form" actionListener="#{balanceEnergiaView.limpiar}"/>   </p:column>
+                </p:row>    
+              </h:panelGrid>
+
+
+              <h2>Estructura del Archivo a Cargar</h2>
+              <p>Esta funcionalidad permite al ususario realizar la carga masiva en el simbal del balance de energía</p>
+              <p>El archivo debe tener la siguiente estructura:</p>
+              <p>codigo_area;periodo;energia_entrada;energia_salida;energia_perdida;porc_perd_total</p>
+              <p>EMT333;201405;2304;25;77;10</p>
+            </p:panel>
+
+          </div>
+
+          <div id="inferior"></div>
+          <div id="piepagina" align="center">
+          </div>
+
+        </div></div>
+
+    </h:form>
+
+    <p:dialog header="Versión del SBBT" widgetVar="dlgVersion" modal="true" 
+              resizable="false" height="50" closeOnEscape="true" showEffect="explode" hideEffect="bounce" draggable="false">
+      <h:outputText value="#{eventMenuBean.VERSION}" />
+    </p:dialog>
+
+  </h:body>
+</html>

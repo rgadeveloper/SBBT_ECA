@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f ="http://java.sun.com/jsf/core">
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+            <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+            <title>ECA - SBBT</title>
+        </f:facet>
+
+        <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/default.css" />
+        <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/syntaxhighlighter/syntaxhighlighter.css" />
+
+        <style type="text/css">
+            .ui-layout-north {
+                z-index:20 !important;
+                overflow:visible !important;;
+            }
+
+            .ui-layout-north .ui-layout-unit-content {
+                overflow:visible !important;
+            }
+        </style>
+        <h:form id="validarSession">
+            <h:inputHidden  rendered="#{login.validarSession}" value="#{login.validateSession()}" />
+        </h:form>
+    </h:head>
+
+    <script type="text/javascript" src="../resources/js/espaniol.js" />
+    <link href="../Styles/estilos.css" rel="stylesheet" type="text/css" />
+    <ui:include src="../sessionTimeOut.xhtml" />
+
+    <h:body>
+        <h:form><h:inputHidden value="#{reportesOperativo.clearCampos()}"/></h:form>            
+
+        <h:form id="form" enctype="multipart/form-data" style="font-family: inherit; font-size: 12px;">
+            <p:growl id="msgs" showDetail="true"/>   
+
+            <div id="cuerpo" align="center">
+                <!--<div id="index_r1_c2" ></div>-->
+                <div id="linea"><div align="center" style="position:relative; top:6px; background-image:url(Images/mensaje2.png); background-repeat:no-repeat; background-position:center; height:38px"></div></div>
+                <div id="linea2" align="left" >
+                    <p:menubar model ="#{templateView.model}" style="font-size: 12px" />
+                </div>
+
+                <div id="pagina">
+
+                    <div id="superior">     
+                    </div>
+                    <div id="medio">      
+                        <p:panel  id="display" header="Reporte operativo - órdenes de trabajo con irregularidad" style="width:500px;margin-bottom:10px;">  
+                            <h:panelGrid columns="2" cellpadding="5">                                                
+
+                                <h:outputText value="Actividad" />
+                                <p:selectOneMenu value="#{reportesOperativo.actividadSelected}" required="false">
+                                    <f:selectItem itemLabel="Seleccione uno" itemValue="" noSelectionOption="true" />
+                                    <f:selectItems value="#{reportesOperativo.actividades}" var="actividadItem"
+                                                   itemLabel="#{actividadItem.nombre}" itemValue="#{actividadItem.tipo}"/>                                                                  
+                                    <p:ajax update="form:dateFin,form:dateIni,form:idCampanias" listener="#{reportesOperativo.clearChangeActividad()}"   />
+                                </p:selectOneMenu> 
+
+
+                                <h:outputLabel value="Fecha inicial:" />
+                                <p:calendar locale="es" id="dateIni" value="#{reportesOperativo.fechaIni}" 
+                                            mode="popup" size="5" >
+                                    <p:ajax update="form:dateFin,form:idCampanias"  
+                                            event="dateSelect" listener="#{reportesOperativo.clearFechaFinal}" />
+
+                                </p:calendar>
+
+                                <h:outputLabel value="Fecha final:" />                                            
+                                <p:calendar locale="es" id="dateFin" value="#{reportesOperativo.fechaFin}" 
+                                            mode="popup" size="5" >
+                                    <p:ajax update="form:idCampanias,:form:msgs"  
+                                            event="dateSelect" listener="#{reportesOperativo.actualizarComboCampanias}" />
+                                </p:calendar> 
+
+                                <h:outputText value="Id campañas" />
+                                <p:selectOneMenu id="idCampanias" value="#{reportesOperativo.campaniaSelected}">
+                                    <f:selectItem itemLabel="Seleccione uno" itemValue="" noSelectionOption="true" />
+                                    <f:selectItem itemLabel="todo" itemValue="todo"/>
+                                    <f:selectItems value="#{reportesOperativo.campanias}" var="campaniaItem"
+                                                   itemLabel="#{campaniaItem.idCampania}-#{campaniaItem.descripcion}" itemValue="#{campaniaItem.idCampania}"/>                                                                  
+                                </p:selectOneMenu> 
+
+
+                            </h:panelGrid>  
+
+                            <p:separator />  
+
+                            <h:commandButton value="Buscar" action="#{reportesOperativo.llenarTableOrdenesIrregulares()}" />  
+
+                        </p:panel>
+
+                        <p:dataTable rendered="#{reportesOperativo.mostrarTblYbtnOrdenesIrregulares}" id="ordenesTrabajoIrregulares" var="orden" value="#{reportesOperativo.resultOrdenesTrabajo}"
+                                     paginator="true" rows="10" tableStyle="width:auto"
+                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                     style="font-size: 12px">
+
+                            <f:facet name="header">
+                                Órdenes de Trabajo con Irregularidad
+                            </f:facet>
+
+                            <p:column headerText="ID campaña" >
+                                <f:facet name="header">  
+                                    <h:outputText value="ID campaña" />  
+                                </f:facet>  
+                                <h:outputText value="#{orden.idCampania}" />
+                            </p:column> 
+
+                            <p:column>  
+                                <f:facet name="header">  
+                                    <h:outputText value="Nombre campaña" />  
+                                </f:facet>  
+                                <h:outputText value="#{orden.nombre}" /> 
+                            </p:column>  
+
+                            <p:column>  
+                                <f:facet name="header">  
+                                    <h:outputText value="Periodo" />  
+                                </f:facet>  
+                                <h:outputText value="#{orden.periodo}" /> 
+                            </p:column> 
+
+                            <p:column>  
+                                <f:facet name="header">  
+                                    <h:outputText value="Id orden" />  
+                                </f:facet>  
+                                <h:outputText value="#{orden.ordenTrabajo.idOrden}" /> 
+                            </p:column> 
+                        </p:dataTable>  
+
+
+
+                        <h:commandButton rendered="#{reportesOperativo.mostrarTblYbtnOrdenesIrregulares}" image="../resources/images/pdf.png" actionListener="#{reportesOperativo.exportar('Ordenes de Trabajos con Irregularidad','pdf')}" />  
+                        <h:commandButton rendered="#{reportesOperativo.mostrarTblYbtnOrdenesIrregulares}" image="../resources/images/excel.png" actionListener="#{reportesOperativo.exportar('Ordenes de Trabajos con Irregularidad','xlsx')}"/>
+
+                    </div>
+
+                    <div id="inferior"></div>
+                    <div id="piepagina" align="center">
+                    </div>
+
+                </div></div>
+
+        </h:form>
+
+    </h:body>
+</html>

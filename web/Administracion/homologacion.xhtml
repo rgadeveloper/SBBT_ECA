@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f ="http://java.sun.com/jsf/core">
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+            <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+            <title>CEO - SIMBAL</title>
+        </f:facet>
+
+        <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/default.css" />
+        <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/syntaxhighlighter/syntaxhighlighter.css" />
+
+        <style type="text/css">
+            .ui-layout-north {
+                z-index:20 !important;
+                overflow:visible !important;;
+            }
+
+            .ui-layout-north .ui-layout-unit-content {
+                overflow:visible !important;
+            }
+        </style>
+
+        <h:form id="validarSession">
+            <h:inputHidden  rendered="#{login.validarSession}" value="#{login.validateSession()}" />
+        </h:form>
+    </h:head>
+
+    <link href="../Styles/estilos.css" rel="stylesheet" type="text/css" />
+    <ui:include src="../sessionTimeOut.xhtml" />
+
+    <h:body>
+        <h:form id="form">
+
+            <div id="cuerpo" align="center">
+                <!--<div id="index_r1_c2" ></div>-->
+                <div id="linea">
+                  <div align="center" style="position:relative; top:6px; background-image:url(Images/mensaje2.png); background-repeat:no-repeat; background-position:center; height:38px"></div>
+                </div>
+                <div id="linea2" align="left" >
+                    <p:menubar model ="#{templateView.model}" style="font-size: 12px" />
+                </div>
+
+                <div id="pagina">
+
+                    <div id="superior">     
+                    </div>
+                    <div id="medio">      
+                        <p:dataTable id="homologacion" var="homologacion" value="#{homologacionView.homologaciones}" tableStyle="width:auto"
+                                     paginator="true" rows="10"
+                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                     style="font-size: 12px">
+                            <f:facet name="header">
+                                HOMOLOGACIÓN
+                            </f:facet>
+
+                            <p:column filterStyle="width: 85px" width="90" headerText="Tipo Ceo" sortBy="#{homologacion.tipo_ceo}" filterBy="#{homologacion.tipo_ceo}">
+                                <h:outputText value="#{homologacion.tipo_ceo}" />
+                            </p:column>
+
+                            <p:column filterStyle="width: 75px" width="80" sortBy="#{homologacion.tipo_simbal}" headerText="Tipo Simbal" filterBy="#{homologacion.tipo_simbal}">
+                                <h:outputText value="#{homologacion.tipo_simbal}" />
+                            </p:column>
+
+                            <p:column sortBy="#{homologacion.grupo}" headerText="Grupo" filterBy="#{homologacion.grupo}">
+                                <h:outputText value="#{homologacion.grupo}" />
+                            </p:column>
+
+                            <p:column style="width:40px">
+                                <h:panelGrid columns="3" styleClass="actions" cellpadding="2" >
+                                    <p:commandButton id="editButton" update=":form3:displayEdit" oncomplete="homologacionEdit.show()" icon="ui-icon-pencil" title="Editar">
+                                        <f:setPropertyActionListener value="#{homologacion}" target="#{homologacionView.homologacionSelected}"/>
+                                    </p:commandButton>
+                                </h:panelGrid>
+                            </p:column> 
+
+                            <f:facet name="footer">
+                                <p:commandButton value="Agregar" type="button" onclick="homologacionAdd.show()" />                                    
+                            </f:facet>
+
+                        </p:dataTable> 
+
+                    </div>
+
+                    <div id="inferior"></div>
+                    <div id="piepagina" align="center">
+                    </div>
+
+                </div></div>
+
+        </h:form>
+
+        <p:dialog header="Crear nueva homologación" widgetVar="homologacionAdd" resizable="false" modal="true"> 
+            <h:form id="form2">
+                <p:growl id="growl" showDetail="false" sticky="true" />
+                <h:panelGrid columns="2" cellpadding="6" >            
+
+                    <h:outputLabel for="tipoCeo" value="Tipo Ceo: " />
+                    <p:inputText value="#{homologacionView.tipo_ceo}"
+                                 required="true" label="Nombre" requiredMessage="Tipo Ceo es obligatorio." />
+
+                    <h:outputLabel for="tipoSimbal" value="Tipo Simbal: " />
+                    <p:inputText value="#{homologacionView.tipo_simbal}"
+                                 required="true" label="Nombre" requiredMessage="Tipo Simbal es obligatorio." />
+
+                    <h:outputLabel for="tipoCeo" value="Tipo Ceo: " />
+                    <p:inputText value="#{homologacionView.grupo}"
+                                 required="true" label="Nombre" requiredMessage="El grupo es obligatorio." />
+
+                    <f:facet name="footer">
+                        <h:commandButton id="userAddButton" value="Agregar"
+                                         action="#{homologacionView.saveHomologacion(login.usuario, 'homologacion.xhtml')}" />
+                        <h:commandButton style="margin-left:30px;" value="Cancelar" type="button" onclick="homologacionAdd.hide()" />
+                    </f:facet>
+                </h:panelGrid>                    
+
+            </h:form> 
+        </p:dialog>
+
+        <p:dialog header="Editar homologación" widgetVar="HomologacionEdit" resizable="false" id="homEdit">
+            <h:form id="form3"> 
+                <h:panelGrid id="displayEdit" columns="2" cellpadding="4" style="margin:0 auto;" >
+
+                    <h:outputText value="Tipo Ceo:"/>
+                    <p:inplace editor="true">  
+                        <p:inputText value="#{homologacionView.homologacionSelected.tipo_ceo}"  
+                                     required="true" label="tipoCeo"/>  
+                    </p:inplace>      
+
+                    <h:outputText value="Tipo Simbal:"/>
+                    <p:inplace editor="true">  
+                        <p:inputText value="#{homologacionView.homologacionSelected.tipo_simbal}"  
+                                     required="true" label="tipoSimbal"/>  
+                    </p:inplace> 
+
+                    <h:outputText value="Grupo:"/>
+                    <p:inplace editor="true">  
+                        <p:inputText value="#{homologacionView.homologacionSelected.grupo}"  
+                                     required="true" label="grupo"/>  
+                    </p:inplace> 
+
+                    <f:facet name="footer">
+                        <h:commandButton id="usuarioEditButton" value="Guardar"
+                                         action="#{homologacionView.editHomologacion(login.usuario,'homologacion.xhtml')}"  />
+                        <h:commandButton style="margin-left:30px;" value="Cancelar" type="button" onclick="homologacionEdit.hide()" />
+                    </f:facet>
+
+                </h:panelGrid>                      
+            </h:form>  
+        </p:dialog>
+
+    </h:body>
+</html>

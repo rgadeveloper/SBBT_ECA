@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f ="http://java.sun.com/jsf/core">
+  <h:head>
+    <f:facet name="first">
+      <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+      <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+      <title>ECA - SBBT</title>
+    </f:facet>
+
+    <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/default.css" />
+    <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/syntaxhighlighter/syntaxhighlighter.css" />
+
+    <style type="text/css">
+      .ui-layout-north {
+        z-index:20 !important;
+        overflow:visible !important;;
+      }
+
+      .ui-layout-north .ui-layout-unit-content {
+        overflow:visible !important;
+      }
+    </style>
+    <h:form id="validarSession">
+      <h:inputHidden  rendered="#{login.validarSession}" value="#{login.validateSession()}" />
+    </h:form>
+  </h:head>
+
+  <link href="../Styles/estilos.css" rel="stylesheet" type="text/css" />
+  <ui:include src="../sessionTimeOut.xhtml" />
+
+  <h:body> 
+
+    <h:form id="form" enctype="multipart/form-data" style="font-family: inherit; font-size: 12px;">
+      <p:growl id="msgs" />   
+
+      <div id="cuerpo" align="center">
+        <!--<div id="index_r1_c2" ></div>-->
+        <div id="linea">
+          <div align="center" style="position:relative; top:6px; background-image:url(Images/mensaje2.png); background-repeat:no-repeat; background-position:center; height:38px"></div>
+        </div>
+        <div id="linea2" align="left" >
+          <p:menubar  model ="#{templateView.model}" style="font-size: 12px" />
+        </div>
+
+        <div id="pagina">
+
+          <div id="superior">     
+          </div>
+          <div id="medio">      
+            <p:panel id="display" header="Filtrar tipos por grupo" style="width:600px;margin-bottom:10px;">  
+              <h:panelGrid columns="2" cellpadding="5">                                                
+
+                <h:outputText value="Grupo:" />
+                <p:selectOneMenu value="#{tipoView.codgrupo}" required="false" style="width:500px;" >
+                  <f:selectItem itemLabel="TODOS" itemValue="todo" />
+                  <f:selectItems value="#{tipoView.grupos}" var="grupo"
+                                 itemLabel="#{grupo.nombre}" itemValue="#{grupo.codigo}"/>
+                </p:selectOneMenu>  
+
+              </h:panelGrid>  
+
+              <p:separator />  
+
+              <h:commandButton value="Buscar" action="#{tipoView.filtrar()}" />  
+
+            </p:panel>
+
+            <p:dataTable var="tipo" value="#{tipoView.tipos}"
+                         paginator="true" rows="10" tableStyle="width:auto"
+                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                         style="font-size: 12px;width: 800px;">
+
+              <f:facet name="header">
+                Tipos
+              </f:facet>
+
+
+
+              <p:column headerText="Tipo" >
+                <f:facet name="header">  
+                  <h:outputText value="Tipo" />  
+                </f:facet>  
+                <h:outputText value="#{tipo.tipo}" />
+              </p:column> 
+
+              <p:column headerText="Nombre" >
+                <f:facet name="header">  
+                  <h:outputText value="Nombre" />  
+                </f:facet>  
+                <h:outputText value="#{tipo.nombre}" />
+              </p:column> 
+
+              <p:column headerText="Grupo" >
+                <f:facet name="header">  
+                  <h:outputText value="Grupo" />  
+                </f:facet>  
+                <h:outputText value="#{tipo.grupo.nombre}" />
+              </p:column>
+
+              <f:facet name="footer" >
+                <p:commandButton rendered="#{!tipoView.codgrupo.equals('todo')}"  value="Agregar" type="button" onclick="tipoAdd.show()" />                                    
+              </f:facet> 
+            </p:dataTable> 
+
+
+          </div>
+
+          <div id="inferior"></div>
+          <div id="piepagina" align="center">
+          </div>
+
+        </div></div>
+
+    </h:form>
+
+    <p:dialog header="Crear Nuevo Tipo" widgetVar="tipoAdd" resizable="false" modal="true" style="max-width: 650px"> 
+      <h:form id="form2">
+
+        <h:panelGrid columns="2" cellpadding="4" >
+          <f:facet name="header">
+            Nuevo tipo
+          </f:facet>
+
+          <h:outputLabel for="tipoid" value="Código del tipo:" />
+          <p:inputText value="#{tipoView.codtipo}" size="10"
+                       id="tipoid" required="true" requiredMessage="Código del tipo es obligatorio">
+
+          </p:inputText>
+
+
+          <h:outputLabel for="tiponame" value="Nombre:" />
+          <p:inputText value="#{tipoView.nombre}" 
+                       id="tiponame" required="true" requiredMessage="Nombre es obligatorio." >
+          </p:inputText> 
+
+          <f:facet name="footer">
+            <h:commandButton id="tipoAddButton" value="Agregar" action="#{tipoView.saveTipo(login.usuario, 'tipos.xhtml')}" />
+            <h:commandButton style="margin-left:30px;" value="Cancelar" type="button" onclick="tipoAdd.hide()" />
+          </f:facet>
+        </h:panelGrid>                    
+
+      </h:form> 
+    </p:dialog>
+
+    <p:dialog header="Versión del SBBT" widgetVar="dlgVersion" modal="true" 
+              resizable="false" height="50" closeOnEscape="true" showEffect="explode" hideEffect="bounce" draggable="false">
+      <h:outputText value="#{eventMenuBean.VERSION}" />
+    </p:dialog>
+
+  </h:body>
+</html>

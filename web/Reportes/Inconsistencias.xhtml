@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f ="http://java.sun.com/jsf/core">
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+            <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+            <title>ECA - SBBT</title>
+        </f:facet>
+
+        <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/default.css" />
+        <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/syntaxhighlighter/syntaxhighlighter.css" />
+
+        <style type="text/css">
+            .ui-layout-north {
+                z-index:20 !important;
+                overflow:visible !important;;
+            }
+
+            .ui-layout-north .ui-layout-unit-content {
+                overflow:visible !important;
+            }
+        </style>
+        <h:form id="validarSession">
+            <h:inputHidden  rendered="#{login.validarSession}" value="#{login.validateSession()}" />
+        </h:form>
+    </h:head>
+
+    <link href="../Styles/estilos.css" rel="stylesheet" type="text/css" />
+    <ui:include src="../sessionTimeOut.xhtml" />
+
+    <h:body>
+        <h:form id="form">
+            <p:growl id="msgs" showDetail="true"/>   
+            <div id="cuerpo" align="center">
+                <!--<div id="index_r1_c2" ></div>-->
+                <div id="linea"><div align="center" style="position:relative; top:6px; background-image:url(Images/mensaje2.png); background-repeat:no-repeat; background-position:center; height:38px"></div></div>
+                <div id="linea2" align="left" >
+                    <p:menubar  model ="#{templateView.model}" style="font-size: 12px" />
+                </div>
+
+                <div id="pagina">
+
+                    <div id="superior">     
+                    </div>
+                    <div id="medio">      
+                        <p:panel header="Generar reporte de inconsistencias" style="font-size: 13px; width: 500px">  
+                            <h:panelGrid columns="2">
+                                <h:outputText value="Periodo:" />
+                                <p:selectOneMenu style="width: 90px;" id="lblperfil" value="#{rinconsistencias.periodo}" required="true" requiredMessage="Periodo Obligatorio">
+                                    <f:selectItems value="#{rinconsistencias.periodos}" var="periodo"
+                                                   itemLabel="#{periodo}" itemValue="#{periodo}"/>                                                                  
+                                </p:selectOneMenu>
+                            </h:panelGrid>
+
+                            <p:separator /> 
+
+                            <h:commandButton value="Buscar" action="#{rinconsistencias.llenarDataTable}" >
+                            </h:commandButton>
+                        </p:panel>  
+                        
+                        <p:dataTable rendered="#{rinconsistencias.mostrarTabla}" id="tblResul" var="trafo" value="#{rinconsistencias.trafosInconsistentes}"
+                                     paginator="true" rows="10" tableStyle="width:auto"
+                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                     style="font-size: 12px; margin-top: 20px;">
+
+                            <f:facet name="header">
+                                Trafos inconsistentes 
+                            </f:facet> 
+
+                            <p:column>  
+                                <f:facet name="header">  
+                                    <h:outputText value="Transformador" />  
+                                </f:facet>  
+                                <h:outputText value="#{trafo.trafo.nombre}" /> 
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header">  
+                                    <h:outputText value="% PE mes" />  
+                                </f:facet>
+                                <h:outputText value="#{trafo.balance.porcPerdidaMes}" />
+                            </p:column> 
+                            
+                            <p:column>
+                                <f:facet name="header">  
+                                    <h:outputText value="Estado" />  
+                                </f:facet>
+                                <h:outputText value="#{trafo.balance.rangoClasificacion.descripcion}" />
+                            </p:column>
+
+                        </p:dataTable>  
+                        
+                        <h:commandButton rendered="#{rinconsistencias.mostrarTabla}" image="../resources/images/pdf.png" actionListener="#{rinconsistencias.exportar}" />
+                        
+                        <h:commandLink rendered="#{rinconsistencias.mostrarTabla}">  
+                            <p:graphicImage value="../resources/images/excel.png" />  
+                            <p:dataExporter type="xls" target="tblResul" fileName="Reporte de Inconsistencias #{rinconsistencias.periodo}"/>  
+                        </h:commandLink>
+                    </div>
+
+                    <div id="inferior"></div>
+                    <div id="piepagina" align="center">
+                    </div>
+
+                </div></div>
+
+            <p:dialog widgetVar="wait" closable="false" resizable="false" draggable="false" position="center" modal="true" showHeader="false">
+                <p:ajaxStatus>
+                    <f:facet name="start">
+                        <p:graphicImage value="../resources/images/espera.gif" />
+                    </f:facet>
+                    <f:facet name="complete">
+                        <h:outputText value="" />
+                    </f:facet>
+                </p:ajaxStatus>
+            </p:dialog> 
+
+        </h:form>
+
+    </h:body>
+</html>

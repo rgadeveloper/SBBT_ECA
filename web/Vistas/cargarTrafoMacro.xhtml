@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f ="http://java.sun.com/jsf/core"> 
+
+    <p:panel header="Amarre/Desamarre de trafos a macros virtuales" style="font-size: 13px; width: 500px"> 
+
+        <p:messages id="messages2" rendered="#{macroVirtual.estadoTrafoMacro =='Cargado'}" showDetail="true" autoUpdate="false" closable="true" />
+        <h:panelGrid id="pnlCarga2" rendered="#{macroVirtual.estadoTrafoMacro =='Carga'}" > 
+
+            <p:row>
+                <p:column colspan="1"><p:fileUpload value="#{macroVirtual.file}" mode="simple" update=":formCarga:pnlLog2,:formCarga:pnlCarga2,:formCarga:pnlCarga2:editor2"/>  </p:column>
+                <p:column  colspan="1"><h:commandButton value="Cargar" action="#{macroVirtual.cargarArchivo('macroTrafo')}"  />   </p:column>
+            </p:row>    
+
+        </h:panelGrid>
+        <h:panelGrid id="pnlLog2" rendered="#{macroVirtual.estadoTrafoMacro !='Carga'}"> 
+            <f:facet name="header">
+                <p:row>
+                    <p:column colspan="8">Log. de resultados </p:column>
+                </p:row>
+            </f:facet>
+            <p:row>
+                <p:column  colspan="1">
+                    <p:editor id="editor2" value="#{macroVirtual.mensaje}" width="600" disabled="true"  controls="" /> 
+                </p:column>
+            </p:row> 
+            <p:row>
+                <p:column  colspan="1"><h:commandButton value="Volver" action="#{macroVirtual.volverTrafoMacro}" />   </p:column>
+            </p:row>    
+        </h:panelGrid>
+
+
+        <h2>Estructura del archivo a cargar</h2>
+        <p>Esta funcionalidad permite al usuario realizar la carga masiva en el simbal de los amarres/desamarres de trafos a macros virtuales.</p>
+        <p>El archivo debe tener la siguiente estructura:</p>
+        <p>IDMACROVIRTUAL;IDCOMERCIALTRAFO;PERIODO;TIPO</p>
+        <p>El campo ‘TIPO’ se refiere al tipo de accion a realizar:</p>
+        <ul>
+            <li>Crear relación. TIPO = A</li>
+            <li>Terminar relación. TIPO = D</li>
+        </ul>
+
+        <h3>Ejemplo:</h3>
+        <p>MVG061212;T161110455;201209;A</p>
+        <p>MVG061212;T161070210;201209;D</p>
+
+    </p:panel>
+
+</html>

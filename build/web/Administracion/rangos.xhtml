@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f ="http://java.sun.com/jsf/core">
+  <h:head>
+    <f:facet name="first">
+      <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+      <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+      <title>ECA - SBBT</title>
+    </f:facet>
+
+    <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/default.css" />
+    <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/syntaxhighlighter/syntaxhighlighter.css" />
+
+    <style type="text/css">
+      .ui-layout-north {
+        z-index:20 !important;
+        overflow:visible !important;;
+      }
+
+      .ui-layout-north .ui-layout-unit-content {
+        overflow:visible !important;
+      }
+    </style>
+    <h:form id="validarSession">
+      <h:inputHidden  rendered="#{login.validarSession}" value="#{login.validateSession()}" />
+    </h:form>
+  </h:head>
+
+  <link href="../Styles/estilos.css" rel="stylesheet" type="text/css" />
+
+  <ui:include src="../sessionTimeOut.xhtml" />
+
+  <h:body>
+    <h:form id="form">
+
+      <div id="cuerpo" align="center">
+        <!--<div id="index_r1_c2" ></div>-->
+        <div id="linea">
+          <div align="center" style="position:relative; top:6px; background-image:url(Images/mensaje2.png); background-repeat:no-repeat; background-position:center; height:38px"></div>                    
+        </div>
+        <div id="linea2" align="left" >
+          <p:menubar model ="#{templateView.model}" style="font-size: 12px" />
+        </div>
+
+        <div id="pagina">
+
+          <div id="superior">     
+          </div>
+          <div id="medio">      
+            <p:dataTable id="ranges" var="rango" value="#{rangoView.rangos}" tableStyle="width:auto"
+                         paginator="true" rows="10" 
+                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                         style="font-size: 12px">
+              <f:facet name="header">
+                Rangos
+              </f:facet>
+
+              <p:column filterStyle="width: 50px" width="60" headerText="ID Rango" sortBy="#{rango.idRango}" filterBy="#{rango.idRango}">
+                <h:outputText value="#{rango.idRango}" />
+              </p:column>
+
+              <p:column filterStyle="width: 55px" width="65" sortBy="#{rango.porcMinimo}" headerText="% Mínimo" filterBy="#{rango.porcMinimo}">
+                <h:outputText value="#{rango.porcMinimo}" />
+              </p:column>
+
+              <p:column filterStyle="width: 55px" width="65" sortBy="#{rango.porcMaximo}" headerText="% Máximo" filterBy="#{rango.porcMaximo}">
+                <h:outputText value="#{rango.porcMaximo}" />
+              </p:column>
+
+              <p:column filterStyle="width: 65px" width="70" sortBy="#{rango.descripcion}" headerText="Descripción" filterBy="#{rango.descripcion}">
+                <h:outputText value="#{rango.descripcion}" />
+              </p:column>
+
+              <p:column sortBy="#{rango.color.descripcion}" headerText="Color" filterBy="#{rango.color.descripcion}">
+                <h:outputText value="#{rango.color.descripcion}" />
+              </p:column>
+
+              <p:column sortBy="#{rango.tipoComponente.descripcion}" headerText="Tipo componente" filterBy="#{rango.tipoComponente.descripcion}">
+                <h:outputText value="#{rango.tipoComponente.descripcion}" />
+              </p:column>  
+
+              <p:column sortBy="#{rango.tipoComponente.tbltipo.nombre}" headerText="Nivel" filterBy="#{rango.tipoComponente.tbltipo.nombre}">
+                <h:outputText value="#{rango.tipoComponente.tbltipo.nombre}" />
+              </p:column>  
+
+              <p:column style="width:40px">
+                <h:panelGrid columns="3" styleClass="actions" cellpadding="2" >
+                  <p:commandButton id="editButton" update=":form3:displayEdit" oncomplete="rangeEdit.show()" icon="ui-icon-pencil" title="Editar">
+                    <f:setPropertyActionListener value="#{rango}" target="#{rangoView.rangoSelected}"/>
+                  </p:commandButton>
+                </h:panelGrid>
+              </p:column> 
+
+              <f:facet name="footer">
+                <p:commandButton value="Agregar" type="button" onclick="rangeAdd.show()" /> 
+              </f:facet>
+
+            </p:dataTable>      
+          </div>
+
+          <div id="inferior"></div>
+          <div id="piepagina" align="center">
+          </div>
+
+        </div></div>
+
+    </h:form>
+
+    <p:dialog header="Crear nuevo rango" widgetVar="rangeAdd" resizable="false" modal="true"> 
+      <h:form id="form2">
+
+        <h:panelGrid id="displayNewColor" columns="2" cellpadding="6" >
+          <f:facet name="header">
+            Nuevo Rango
+          </f:facet>
+
+          <h:outputLabel value="% Mínimo" />
+          <p:inputText value="#{rangoView.porcMinimo}"
+                       id="porcMinimo" required="false" label="Porc. Minimo" />
+
+          <h:outputLabel value="% Máximo" />
+          <p:inputText value="#{rangoView.porcMaximo}"
+                       id="porcMaximo" required="false" label="Porc. Maximo" />
+
+          <h:outputLabel id="comboColores" for="color" value="Color:" />  
+          <h:panelGrid columns="2">
+            <p:selectOneMenu id="color" value="#{rangoView.codigoColor}" >
+              <f:selectItems value="#{rangoView.colores}" var="color"
+                             itemLabel="#{color.descripcion}" itemValue="#{color.idColor}"/>                                                                  
+            </p:selectOneMenu> 
+
+            <h:commandButton value="+" type="button" onclick="colorAdd.show()" /> 
+          </h:panelGrid>
+
+          <h:outputLabel for="lblrango" value="Tipo componente:" />                                                                      
+          <p:selectOneMenu value="#{rangoView.codTipo}" >
+            <f:selectItems value="#{rangoView.tipoComponentes}" var="tipo"
+                           itemLabel="#{tipo.descripcion} - #{tipo.idTipoComponente}" itemValue="#{tipo.idTipoComponente}"/>                                                                  
+          </p:selectOneMenu>
+
+          <h:outputLabel for="lbldescripcion" value="Descripción:" />
+          <p:selectOneMenu value="#{rangoView.descripcion}" >
+            <f:selectItems value="#{tipoView.tiposDescripcion}" var="descripcion"
+                           itemLabel="#{descripcion.nombre}" itemValue="#{descripcion.nombre}"/>                                                                  
+          </p:selectOneMenu>                                    
+
+          <f:facet name="footer">
+            <h:commandButton id="rangoAddButton" value="Guardar" action="#{rangoView.saveRango(login.usuario, 'rangos.xhtml')}" />
+            <h:commandButton style="margin-left:30px;" value="Cancelar" type="button" onclick="rangeAdd.hide()" />
+          </f:facet>
+        </h:panelGrid>                    
+
+      </h:form> 
+    </p:dialog>
+
+    <p:dialog header="Editar rango" widgetVar="rangeEdit" resizable="false" id="parEdit">
+      <h:form id="form3"> 
+        <h:panelGrid id="displayEdit" columns="2" cellpadding="4" style="margin:0 auto;" >
+          <f:facet name="header">
+            <h:outputText value="Datos del parámetro seleccionado"/>
+          </f:facet>
+
+          <h:outputText value="Id rango:"/>
+          <h:outputText value="#{rangoView.rangoSelected.idRango}"/>
+
+          <h:outputLabel value="% Mínimo:" />
+          <p:inplace editor="true" emptyLabel="-" >  
+            <p:inputText value="#{rangoView.rangoSelected.porcMinimo}"  
+                         required="false" label="text"/>  
+          </p:inplace>
+
+          <h:outputLabel value="% Máximo:" />
+          <p:inplace editor="true" emptyLabel="-">  
+            <p:inputText value="#{rangoView.rangoSelected.porcMaximo}"  
+                         required="false" label="text"/>  
+          </p:inplace>
+
+          <h:outputLabel value="Crear nuevo color:" />
+          <h:commandButton value="+" type="button" onclick="colorAdd.show()" />
+
+          <h:outputLabel value="Agregar color:" /> 
+          <p:inplace label="#{rangoView.rangoSelected.color.descripcion}" effectSpeed="fast" event="dblclick">
+            <p:selectOneMenu value="#{rangoView.codigoColor}" >  
+              <f:selectItem itemLabel="Seleccione" itemValue="0" />
+              <f:selectItems value="#{rangoView.colores}" var="color"
+                             itemLabel="#{color.descripcion}" itemValue="#{color.idColor}" />                                                                  
+            </p:selectOneMenu> 
+          </p:inplace>
+
+          <h:outputLabel value="Tipo componente:" /> 
+          <p:inplace label="#{rangoView.rangoSelected.tipoComponente.descripcion}" effectSpeed="fast" event="dblclick">
+            <p:selectOneMenu value="#{rangoView.codTipo}"  >                       
+              <f:selectItem itemLabel="Seleccione" itemValue="no" />
+              <f:selectItems value="#{rangoView.tipoComponentes}" var="tipo"
+                             itemLabel="#{tipo.descripcion} - #{tipo.idTipoComponente}" itemValue="#{tipo.idTipoComponente}"/>                                                                  
+              <p:ajax update=":form4:grow4"  listener="#{rangoView.advertenciaCambioTipo}" />
+            </p:selectOneMenu>
+          </p:inplace> 
+
+          <h:outputLabel value="Descripción:" /> 
+          <p:inplace label="#{rangoView.rangoSelected.descripcion}" effectSpeed="fast" event="dblclick">
+            <p:selectOneMenu value="#{rangoView.descripcion}"  >
+              <f:selectItem itemLabel="Seleccione" itemValue="no" />
+              <f:selectItems value="#{tipoView.tiposDescripcion}" var="descripcion"
+                             itemLabel="#{descripcion.nombre}" itemValue="#{descripcion.nombre}"/>
+              <p:ajax update=":form4:grow4"  listener="#{rangoView.advertenciaCambioTipo}" />       
+            </p:selectOneMenu>
+          </p:inplace>                
+
+
+          <f:facet name="footer">
+            <h:commandButton value="Guardar" action="#{rangoView.editRango(login.usuario, 'rangos.xhtml')}" />
+            <h:commandButton style="margin-left:30px;" value="Cancelar" type="button" onclick="rangeEdit.hide()" />
+          </f:facet>
+
+        </h:panelGrid>                      
+      </h:form>  
+    </p:dialog>
+
+    <p:dialog header="Crear nuevo color" widgetVar="colorAdd" resizable="false" modal="true"> 
+      <h:form id="form4"> 
+        <p:growl globalOnly="false" id="grow4" showDetail="false" sticky="true" />
+        <h:panelGrid columns="2" cellpadding="6" >
+          <f:facet name="header">
+            Nuevo color
+          </f:facet>
+
+          <h:outputLabel  value="Descripción:" />
+          <p:inputText value="#{rangoView.descripcionColor}" required="true" requiredMessage="Descripción del color es obligatoria." />  
+
+          <h:outputText value="Seleccione color: " />  
+          <p:colorPicker id="popupCP" value="#{rangoView.colorHEX}" widgetVar="picker" required="true" requiredMessage="Seleccionar un color es obligatorio." />
+
+          <f:facet name="footer">
+            <p:commandButton value="Guardar" actionListener="#{rangoView.saveColor(login.usuario, 'rangos.xhtml')}" oncomplete="colorAdd.hide();" update=":form2:displayNewColor,:form4:grow4,:form3:displayEdit"/>
+            <p:commandButton style="margin-left:30px;" value="Cancelar" type="button" onclick="colorAdd.hide()" />
+          </f:facet>
+        </h:panelGrid>                    
+
+      </h:form> 
+    </p:dialog>
+
+    <p:dialog header="Versión del SBBT" widgetVar="dlgVersion" modal="true" 
+              resizable="false" height="50" closeOnEscape="true" showEffect="explode" hideEffect="bounce" draggable="false">
+      <h:outputText value="#{eventMenuBean.VERSION}" />
+    </p:dialog>
+
+  </h:body>
+</html>

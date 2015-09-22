@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <p:panelGrid columns="2" id ="gridBarrio" rendered="true"  style="margin-top:20px; font-size: 12px ">
+        <f:facet name="header">
+            <p:row>
+                <p:column colspan="8">Balances por periodo </p:column>
+            </p:row>
+        </f:facet>        
+       
+        <h:outputText style="font-weight: bold;" value="Nombre Del Barrio" />
+        <h:outputText value="#{sGeograficaView.nombreDelegacion}" />
+        
+        <h:outputText style="font-weight: bold;" value="Población" />
+        <h:outputText value="#{sGeograficaView.nombreAreaEnergetica}" />
+        
+        <h:outputText style="font-weight: bold;" value="Municipio" />
+        <h:outputText value="#{sGeograficaView.nombreCircuito}" />
+        
+        <h:outputText style="font-weight: bold;" value="Departamento" />
+        <h:outputText value="#{sGeograficaView.nombreZona}" />
+
+        <h:outputText style="font-weight: bold;" value="Rango De Pérdidas" />
+        <h:outputText value="#{sGeograficaView.balance.rangoClasificacion.descripcion}" />
+
+        <h:outputText style="font-weight: bold;" value="Energía De Entrada Macros Funcionando (kWh)" />
+        <h:outputText value="#{sGeograficaView.balance.consumoMacros}" >
+            <f:convertNumber integerOnly="true" pattern="#,###"/>
+        </h:outputText> 
+
+        <h:outputText style="font-weight: bold;" value="Energía De Salida Macros Funcionando (kWh)" />
+        <h:outputText value="#{sGeograficaView.balance.consumoSuministro}" >
+            <f:convertNumber integerOnly="true" pattern="#,###"/>
+        </h:outputText> 
+
+        <h:outputText style="font-weight: bold;" value="Cargas Extras Macros Funcionando (kWh)" />
+        <h:outputText value="#{sGeograficaView.balance.consumoAdicional}" >
+            <f:convertNumber integerOnly="true" pattern="#,###"/>
+        </h:outputText> 
+        
+        <h:outputText style="font-weight: bold;" value="Energía Perdida Macros Funcionando (kWh)" />
+        <h:outputText value="#{sGeograficaView.balance.balEnergiaSum}">
+            <f:convertNumber integerOnly="true" pattern="#,###"/>
+        </h:outputText> 
+        
+        <h:outputText style="font-weight: bold;" value="Porcentaje De Perdidas Macros Funcionando (%)" />
+        <h:outputText value="#{sGeograficaView.balance.porcPerdidaMes}" />
+
+        <h:outputText style="font-weight: bold;" value="Cantidad De Macros En El Barrio (Und)" />
+        <h:outputText value="#{sGeograficaView.balance.totalMacros}" >
+            <f:convertNumber integerOnly="true" pattern="#,###"/>
+        </h:outputText> 
+        
+        <h:outputText style="font-weight: bold;" value="Cantidad De Macros Funcionando (Und)" />
+        <h:outputText value="#{sGeograficaView.balance.totalMacrosFunc}" >
+            <f:convertNumber integerOnly="true" pattern="#,###"/>
+        </h:outputText> 
+        
+        <h:outputText style="font-weight: bold;" value="Cantidad De Macros No Funcionando (Und)" />
+        <h:outputText value="#{sGeograficaView.balance.cantMacrosNoFunc}" >
+            <f:convertNumber integerOnly="true" pattern="#,###"/>
+        </h:outputText> 
+        
+        <h:outputText style="font-weight: bold;" value="Cantidad De Suministros Con Consumo Macros Funcionando (Und)" />
+        <h:outputText value="#{sGeograficaView.balance.cantSumFact}" >
+            <f:convertNumber integerOnly="true" pattern="#,###"/>
+        </h:outputText> 
+        
+    </p:panelGrid>
+
+    <p:panelGrid id ="dtbalance" rendered="true"  style="margin-top:20px; font-size: 12px ">
+
+        <f:facet name="header">
+            <p:row>
+                <p:column colspan="8">Información de Macro-medición por rangos </p:column>
+            </p:row>
+        </f:facet>
+
+        <p:row>
+            <p:column style="font-weight: bold;" colspan="1">
+                Cantidad Macros Negativos
+            </p:column>
+            <p:column style="font-weight: bold;" colspan="1">
+                <h:outputText value="#{sGeograficaView.dataRangosBalance.negativos}" />
+            </p:column>
+            <p:column style="font-weight: bold;" colspan="1">
+                Cantidad Macros Inconsistentes
+            </p:column>
+            <p:column style="font-weight: bold;" colspan="1">
+                <h:outputText value="#{sGeograficaView.dataRangosBalance.inconsistentes}" />
+            </p:column>
+            <p:column style="font-weight: bold;" colspan="1">
+                Cantidad Macros Bajo
+            </p:column>
+            <p:column style="font-weight: bold;" colspan="1">
+                <h:outputText value="#{sGeograficaView.dataRangosBalance.bajo}" />
+            </p:column>
+        </p:row>
+        <p:row>
+            <p:column style="font-weight: bold;" colspan="1">
+                Cantidad Macros Sin Balances
+            </p:column>
+            <p:column style="font-weight: bold;" colspan="1">
+                <h:outputText value="#{sGeograficaView.dataRangosBalance.sinBalance}" />
+            </p:column>
+            <p:column style="font-weight: bold;" colspan="1">
+                Cantidad Macros Medio
+            </p:column>
+            <p:column style="font-weight: bold;" colspan="1">
+                <h:outputText value="#{sGeograficaView.dataRangosBalance.medio}" />
+            </p:column>
+            <p:column style="font-weight: bold;" colspan="1">
+                Cantidad Macros Critico
+            </p:column>
+            <p:column style="font-weight: bold;" colspan="1">
+                <h:outputText value="#{sGeograficaView.dataRangosBalance.critico}" />
+            </p:column>
+        </p:row>
+    </p:panelGrid>
+    
+    <h:panelGrid columns="2">
+        <h:commandButton image="../resources/images/pdf.png" actionListener="#{sGeograficaView.exportar('Barrio','pdf')}" />
+        <h:commandButton image="../resources/images/excel.png" actionListener="#{sGeograficaView.exportar('Barrio','xls')}" />
+    </h:panelGrid> 
+
+</html>

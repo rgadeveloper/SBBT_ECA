@@ -1,0 +1,125 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+  <h:head>
+    <title>ECA ::: Sistema de Macromedición y Balance - SBBT :::</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style type="text/css">
+      td img {display: block;}body {
+        background-image: url(resources/images/ImgFndGral.jpg);
+        background-repeat: repeat;
+        margin-left: 0px;
+        margin-top: 0px;
+        margin-right: 0px;
+        margin-bottom: 0px;
+      }
+    </style>
+    <!--Fireworks CS5 Dreamweaver CS5 target.  Created Wed Sep 12 22:45:57 GMT-0500 2012-->
+    <link href="Styles/CEOAPP_Styles.css" rel="stylesheet" type="text/css" />
+
+    <p:idleMonitor onactive="sessionTimeOutDialog.show();" timeout="1740000" />
+
+    <p:dialog header="Fuera de Tiempo" widgetVar="sessionTimeOutDialog"
+              modal="true" closable="false" width="400" visible="false" resizable="false">
+      <h:panelGrid columns="1">
+        <h:outputText value="Tiempo de espera agotado para el inicio de sesion." />
+        <input id="confirmBackToLogin" type="button" value="Refrescar"
+               onclick="window.location = '#{facesContext.externalContext.requestContextPath}/login.xhtml';" />
+      </h:panelGrid>
+    </p:dialog> 
+
+    <h:form id="logueado">
+      <h:inputHidden  rendered="#{!login.validarSession}" value="#{login.goInicio()}" />
+    </h:form>
+
+  </h:head>
+
+  <h:body> 
+
+    <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td align="center" valign="middle"><table style="display: inline-table;" border="0" cellpadding="0" cellspacing="0" width="990">
+            <!-- fwtable fwsrc="fwTemplateCEOAPP_0201.png" fwpage="Página 1" fwbase="index.jpg" fwstyle="Dreamweaver" fwdocid = "189440091" fwnested="0" -->
+            <tr>
+              <td><img src="resources/images/spacer.gif" width="471" height="1" border="0" alt="" /></td>
+              <td><img src="resources/images/spacer.gif" width="6" height="1" border="0" alt="" /></td>
+              <td><img src="resources/images/spacer.gif" width="97" height="1" border="0" alt="" /></td>
+              <td><img src="resources/images/spacer.gif" width="76" height="1" border="0" alt="" /></td>
+              <td><img src="resources/images/spacer.gif" width="340" height="1" border="0" alt="" /></td>
+              <td><img src="resources/images/spacer.gif" width="1" height="1" border="0" alt="" /></td>
+            </tr>
+            <!--<tr>
+                <td colspan="5"><img name="index_r1_c1" src="resources/images/index_r1_c1.jpg" width="990" height="99" border="0" id="index_r1_c1" alt="" /></td>
+                <td><img src="resources/images/spacer.gif" width="1" height="99" border="0" alt="" /></td>
+            </tr>-->
+            <!--<tr>
+                <td colspan="5"><img name="index_r2_c1" src="resources/images/index_r2_c1.jpg" width="990" height="6" border="0" id="index_r2_c1" alt="" /></td>
+                <td><img src="resources/images/spacer.gif" width="1" height="6" border="0" alt="" /></td>
+            </tr>-->
+            <tr>
+              <td colspan="5"><img src="resources/images/FotoIni.jpg" width="990" height="334" /></td>
+              <td><img src="resources/images/spacer.gif" width="1" height="331" border="0" alt="" /></td>
+            </tr>
+            <!--<tr>
+                <td colspan="5"><img name="index_r4_c1" src="resources/images/index_r4_c1.jpg" width="990" height="6" border="0" id="index_r4_c1" alt="" /></td>
+                <td><img src="resources/images/spacer.gif" width="1" height="6" border="0" alt="" /></td>
+            </tr>-->
+            <tr>
+              <td rowspan="8"><img name="index_r5_c1" src="resources/images/index_r5_c1.jpg" width="471" height="177" border="0" id="index_r5_c1" alt="" /></td>
+              <td><img name="index_r5_c2" src="resources/images/index_r5_c2.jpg" width="6" height="25" border="0" id="index_r5_c2" alt="" /></td>
+              <td colspan="2"><img name="index_r5_c3" src="resources/images/index_r5_c3.jpg" width="173" height="25" border="0" id="index_r5_c3" alt="" /></td>
+              <td rowspan="8">&nbsp;</td>
+              <td><img src="resources/images/spacer.gif" width="1" height="25" border="0" alt="" /></td>
+            </tr>
+            <tr>
+              <td rowspan="7"><img name="index_r6_c2" src="resources/images/index_r6_c2.jpg" width="6" height="152" border="0" id="index_r6_c2" alt="" /></td>
+              <td><img name="index_r6_c3" src="resources/images/index_r6_c3.jpg" width="97" height="19" border="0" id="index_r6_c3" alt="" /></td>
+              <td><img name="index_r6_c4" src="resources/images/index_r6_c4.jpg" width="76" height="19" border="0" id="index_r6_c4" alt="" /></td>
+              <td><img src="resources/images/spacer.gif" width="1" height="19" border="0" alt="" /></td>
+            </tr>
+            <h:form>
+              <p:growl id="msg" showDetail="true" />
+              <tr>
+                <td colspan="2" class="txtGral"><p:inputText value="#{login.usuario}"
+                                                             id="username" label="username" /></td>
+                <td><img src="resources/images/spacer.gif" width="1" height="27" border="0" alt="" /></td>
+              </tr>
+              <tr>
+                <td colspan="2"><img name="index_r8_c3" src="resources/images/index_r8_c3.jpg" width="173" height="13" border="0" id="index_r8_c3" alt="" /></td>
+                <td><img src="resources/images/spacer.gif" width="1" height="13" border="0" alt="" /></td>
+              </tr>
+              <tr>
+                <td><img name="index_r9_c3" src="resources/images/index_r9_c3.jpg" width="97" height="20" border="0" id="index_r9_c3" alt="" /></td>
+                <td><img name="index_r9_c4" src="resources/images/index_r9_c4.jpg" width="76" height="20" border="0" id="index_r9_c4" alt="" /></td>
+                <td><img src="resources/images/spacer.gif" width="1" height="20" border="0" alt="" /></td>
+              </tr>
+              <tr>
+                <td colspan="2" class="txtGral"><p:password value="#{login.contrasena}"
+                                                            id="password" label="password" /></td>
+                <td><img src="resources/images/spacer.gif" width="1" height="26" border="0" alt="" /></td>
+              </tr>
+              <tr>
+                <td colspan="2"><h:commandButton id="loginButton" value="Login"
+                                                 action="#{login.validarLogin()}" image="resources/images/PngBtnLogin2.png" /><img name="index_r11_c3" src="resources/images/index_r11_c3.jpg" width="173" height="10" border="0" id="index_r11_c3" alt="" /></td>
+                <td><img src="resources/images/spacer.gif" width="1" height="10" border="0" alt="" /></td>
+              </tr>
+
+            </h:form>
+            <tr>
+              <td colspan="5">&nbsp;</td>
+              <td><img src="resources/images/spacer.gif" width="1" height="31" border="0" alt="" /></td>
+            </tr>
+
+            <tr>
+              <td colspan="5">&nbsp;</td>
+              <td><img src="resources/images/spacer.gif" width="1" height="12" border="0" alt="" /></td>
+            </tr>
+          </table></td>
+      </tr>
+    </table>
+  </h:body>
+
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f ="http://java.sun.com/jsf/core">
+
+  <h:head>
+    <f:facet name="first">
+      <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+      <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+      <title>ECA - SBBT</title>
+    </f:facet>
+
+    <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/default.css" />
+    <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/syntaxhighlighter/syntaxhighlighter.css" />
+
+    <style type="text/css">
+      .ui-layout-north {
+        z-index:20 !important;
+        overflow:visible !important;;
+      }
+
+      .ui-layout-north .ui-layout-unit-content {
+        overflow:visible !important;
+      }
+    </style>
+    <h:inputHidden rendered="#{login.validarSession}" value="#{login.validateSession()}" />
+  </h:head>
+
+  <style type="text/css">
+    #medio{
+      top:22px;	
+      background-image:url(Images/medio.png); background-repeat:repeat-y;
+      width: 990px;	
+      height: 310px;
+      position: relative; padding-left:15px; padding-right:15px; padding-top:10px; padding-bottom:10px;
+    }
+
+  </style>
+
+  <link href="Styles/estilos.css" rel="stylesheet" type="text/css" />
+  <ui:include src="sessionTimeOut.xhtml" />
+  <h:body>
+    <h:form id="form">
+
+      <div id="cuerpo" align="center">
+        <div id="es" ></div>
+        <div id="linea"><div align="center" style="position:relative; top:6px; background-image:url(Images/mensaje2.png); background-repeat:no-repeat; background-position:center; height:38px"></div></div>
+        <div id="linea2" align="left" >
+          <p:menubar  model ="#{templateView.model}" style="font-size: 12px"/>
+        </div>
+
+        <div id="pagina">
+
+          <div id="superior">     
+          </div>
+          <div id="medio"> 
+            <div align="center" style="height: 450px"><img src="resources/images/eca.png"  height="50%" width="50%"/> </div>
+          </div>
+
+          <div id="inferior"></div>
+          <div id="piepagina" align="center">
+          </div>
+
+        </div></div>
+
+      <p:dialog header="Versión del SBBT" widgetVar="dlgVersion" modal="true" 
+                resizable="false" height="50" closeOnEscape="true" showEffect="explode" hideEffect="bounce" draggable="false">
+        <h:outputText value="#{eventMenuBean.VERSION}" />
+      </p:dialog>
+
+    </h:form>
+
+  </h:body>
+</html>

@@ -1,0 +1,133 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+
+    <p:panelGrid columns="2" id ="dtbalanceTrafo"   style="margin-top:15px; font-size: 12px ">
+
+        <f:facet name="header">
+            <p:row>
+                <p:column colspan="8">Información del transformador </p:column>
+            </p:row>
+        </f:facet>
+
+        <h:outputText style="font-weight: bold;" value="Matrícula del trafo" />
+        <h:outputText value="#{electricaView.componenteMedida.nombre}" />
+
+        <h:outputText style="font-weight: bold;" value="Código BDI del trafo" />
+        <h:outputText value="#{electricaView.componente.nombre}" />
+
+        <h:outputText style="font-weight: bold;" value="Coordenada X" />
+        <h:outputText value="#{electricaView.componente.coordX}" />
+
+        <h:outputText style="font-weight: bold;" value="Coordenada Y" />
+        <h:outputText value="#{electricaView.componente.coordY}" />
+
+        <h:outputText style="font-weight: bold;" value="Zona" />
+        <h:outputText value="#{electricaView.nombreZona}" />
+
+        <h:outputText style="font-weight: bold;" value="Delegación" />
+        <h:outputText value="#{electricaView.nombreDelegacion}" />
+
+        <h:outputText style="font-weight: bold;" value="Área energética" />
+        <h:outputText value="#{electricaView.nombreAreaEnergetica}" />
+
+        <h:outputText style="font-weight: bold;" value="Circuito" />
+        <h:outputText value="#{electricaView.matriculaCircuito}" />
+
+        <h:outputText style="font-weight: bold;" value="Capacidad (KVA)" />
+        <h:outputText value="#{electricaView.atrComponente.cargaInstalada}" />
+
+        <h:outputText style="font-weight: bold;" value="Dirección" />
+        <h:outputText value="#{electricaView.componente.direccion}" />
+
+        <h:outputText style="font-weight: bold;" value="Tipo de red" />
+        <h:outputText value="#{electricaView.atrComponente.tbltipo5.nombre}" />
+
+        <h:outputText style="font-weight: bold;" value="Tipo de acromedidor" />
+        <h:outputText value="" />
+
+        <h:outputText style="font-weight: bold;" value="Factor multiplicador" />
+        <h:outputText value="" />
+
+        <h:outputText style="font-weight: bold;" value="Tipo de medidor" />
+        <h:outputText value="#{electricaView.atrComponente.tbltipo6.nombre}" />
+
+        <h:outputText style="font-weight: bold;" value="Número de medidor" />
+        <h:outputText value="#{electricaView.atrComponente.medidor}" /> 
+
+        <h:outputText style="font-weight: bold;" value="Lectura anterior" />
+        <h:outputText value="#{electricaView.medida.lecturaAnterior}" />
+
+        <h:outputText style="font-weight: bold;" value="Lectura actual" />
+        <h:outputText value="#{electricaView.medida.lecturaActual}" />
+
+        <h:outputText style="font-weight: bold;" value="Fecha lectura anterior" />
+        <h:outputText value="#{electricaView.medida.fechaLecturaAnterior}" />
+
+        <h:outputText style="font-weight: bold;" value="Fecha lectura actual" />
+        <h:outputText value="#{electricaView.medida.fechaLecturaActual}" />
+
+        <h:outputText style="font-weight: bold;" value="Ruta de lectura" />
+        <h:outputText value="#{electricaView.atrComponente.ciclo.idCiclo}" />
+
+        <h:outputText style="font-weight: bold;" value="Itinerario" />
+        <h:outputText value="#{electricaView.atrComponente.ruta}" />
+
+        <h:outputText style="font-weight: bold;" value="Aol" />
+        <h:outputText value="#{electricaView.atrComponente.aolFin}" />
+
+        <h:outputText style="font-weight: bold;" value="Anomalía de lectura" />
+        <h:outputText value="#{electricaView.medida.observacion}" />
+
+        <h:outputText style="font-weight: bold;" value="Cantidad de suministros (Und)" />
+        <h:outputText value="#{electricaView.balance.cantSuministrosTotal}" >
+            <f:convertNumber type="number" locale="es_CO" groupingUsed="true" maxFractionDigits="0"/>
+        </h:outputText> 
+
+        <h:outputText style="font-weight: bold;" value="Rango de pérdidas" />
+        <h:outputText value="#{electricaView.balance.rangoClasificacion.descripcion}" />
+
+        <h:outputText style="font-weight: bold;" value="Energía de entrada macro (kWh)" />
+        <h:outputText value="#{electricaView.balance.consumoMacros}" >
+            <f:convertNumber type="number" locale="es_CO" groupingUsed="true" maxFractionDigits="0"/>
+        </h:outputText> 
+
+        <h:outputText style="font-weight: bold;" value="Energía de salida macro (kWh)" />
+        <h:outputText value="#{electricaView.balance.consumoSuministro}" >
+            <f:convertNumber type="number" locale="es_CO" groupingUsed="true" maxFractionDigits="0"/>
+        </h:outputText> 
+
+        <h:outputText style="font-weight: bold;" value="Cargas extras macro (kWh)" />
+        <h:outputText value="#{electricaView.balance.consumoAdicional}" >
+            <f:convertNumber type="number" locale="es_CO" groupingUsed="true" maxFractionDigits="0"/>
+        </h:outputText>  
+
+        <h:outputText style="font-weight: bold;" value="Energía pérdida macro (kWh)" />
+        <h:outputText value="#{electricaView.balance.balEnergiaSum}" >
+            <f:convertNumber type="number" locale="es_CO" groupingUsed="true" maxFractionDigits="0"/>
+        </h:outputText> 
+
+        <h:outputText style="font-weight: bold;" value="Porcentaje de pérdidas macro (%)" />
+        <h:outputText value="#{electricaView.balance.porcPerdidaMes}">
+            <f:convertNumber type="number" locale="es_CO" groupingUsed="true" minFractionDigits="2"/>
+        </h:outputText>
+
+    </p:panelGrid>
+
+    <p:dialog id="dgTipoUso" header="Cantidad de suministro por tipo de uso" widgetVar="dlgTipoUso">  
+        <p:dataTable var="tu" value="#{electricaView.listCantXTipoUso}">  
+            <p:column headerText="Tipo de Uso">  
+                <h:outputText value="#{tu.nombre}" />  
+            </p:column>  
+
+            <p:column headerText="Cantidad de suministros">  
+                <h:outputText value="#{tu.valor}" />  
+            </p:column>         
+        </p:dataTable> 
+    </p:dialog> 
+
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f ="http://java.sun.com/jsf/core">
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+            <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+            <title>ECA - SBBT</title>
+        </f:facet>
+
+        <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/default.css" />
+        <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/syntaxhighlighter/syntaxhighlighter.css" />
+
+        <style type="text/css">
+            .ui-layout-north {
+                z-index:20 !important;
+                overflow:visible !important;
+            }
+
+            .ui-layout-north .ui-layout-unit-content {
+                overflow:visible !important;
+            }       
+
+        </style>
+        <h:form id="validarSession">
+            <h:inputHidden  rendered="#{login.validarSession}" value="#{login.validateSession()}" />
+        </h:form>
+    </h:head>    
+
+    <link href="../Styles/estilos.css" rel="stylesheet" type="text/css" />
+    <ui:include src="../sessionTimeOut.xhtml" />
+
+    <h:body>
+        <p:growl id="messages" showDetail="true" />
+
+
+        <div id="cuerpo" align="center">
+            <!--<div id="index_r1_c2" ></div>-->
+            <div id="linea"><div align="center" style="position:relative; top:6px; background-image:url(Images/mensaje2.png); background-repeat:no-repeat; background-position:center; height:38px"></div></div>
+            <div id="linea2" align="left" >
+                <h:form>
+                    <p:menubar  model ="#{templateView.model}" style="font-size: 12px" />
+                </h:form>
+            </div>
+
+            <div id="pagina">
+
+                <div id="superior">     
+                </div>
+                <div id="medio"> 
+
+                    <p:tabView id="tabView" orientation="left">
+                        <p:ajax event="tabChange" update=":tabView:formCarga,:tabView:editor,:tabView:relCompoListUbiEli,:tabView:relCompoListEliminar"/>
+                        <p:tab title="Subir masivo" id="masivo">
+                            <p:fieldset style="margin-bottom:20px">
+                                <h:panelGrid columns="1" cellpadding="5">
+                                    <h:form id="formCarga" prependId="true" enctype="multipart/form-data">
+                                        <p:fileUpload fileUploadListener="#{amarresView.handleFileUpload}" mode="advanced" update=":messages,:tabView:formCarga,:tabView:editor,:tabView:relCompoListUbiEli,:tabView:relCompoListEliminar" auto="true" sizeLimit="100000" allowTypes="/(\.|\/)(csv|txt)$/" />
+                                    </h:form>    
+                                    <p:separator/>
+                                    <p:outputLabel value="Log. de errores"/>
+                                    <p:inputTextarea id="editor" value="#{amarresView.mensaje}" rows="12" cols="73" disabled="true"/> 
+                                    <p:separator/>
+                                    <h2>Estructura del Archivo a Cargar</h2>
+                                    <p>Esta funcionalidad permite al ususario realizar la carga masiva en el simbal de amarres</p>
+                                    <p>El archivo debe tener la siguiente estructura:</p>
+                                    <p>Tipo_Carga;id_Componente;Periodo;Consumo</p>
+                                    <p>TM0308;89283;201405;8977</p>
+                                    <p></p>
+                                    <p>Dónde TM0308 -> GRAL ELECT  AC1 son los tipos.</p>
+
+                                </h:panelGrid>
+                            </p:fieldset>   
+                        </p:tab>
+
+                        <p:tab title="Eliminar" id="eliminar">
+
+                            <h:panelGrid columns="1" cellpadding="10">
+                                <p:dataTable id="relCompoListUbiEli" var="relCompoListUbiEli" value="#{amarresView.relCompoListUbiEli}">
+                                    <p:column headerText="ID zona">
+                                        <h:outputText value="#{relCompoListUbiEli.relComponenteUbicacionPK.idZona}" />
+                                    </p:column>
+
+                                    <p:column headerText="Id componente">
+                                        <h:outputText value="#{relCompoListUbiEli.relComponenteUbicacionPK.idComponente}" />
+                                    </p:column>
+
+                                    <p:column headerText="Periodo inicial">
+                                        <h:outputText value="#{relCompoListUbiEli.relComponenteUbicacionPK.periodoIni}" />
+                                    </p:column>
+
+                                    <p:column headerText="Periodo fin">
+                                        <h:outputText value="#{relCompoListUbiEli.periodoFin}" />
+                                    </p:column>
+                                </p:dataTable>
+
+                                <p:dataTable id="relCompoListEliminar" var="relCompoListEliminar" value="#{amarresView.relCompoListEliminar}">
+                                    <p:column headerText="ID componente">
+                                        <h:outputText value="#{relCompoListEliminar.relComponentePK.idComponente}" />
+                                    </p:column>
+
+                                    <p:column headerText="Id suministro">
+                                        <h:outputText value="#{relCompoListEliminar.relComponentePK.idComponenteHijo}" />
+                                    </p:column>
+
+                                    <p:column headerText="Periodo inicial">
+                                        <h:outputText value="#{relCompoListEliminar.relComponentePK.periodoIni}" />
+                                    </p:column>
+
+                                    <p:column headerText="Periodo fin">
+                                        <h:outputText value="#{relCompoListEliminar.periodoFin}" />
+                                    </p:column>
+                                </p:dataTable>
+
+                                <p:inputTextarea id="mensajeEliminar" value="#{amarresView.mensajeEliminar}" rows="12" cols="73" disabled="true"/> 
+
+                            </h:panelGrid>
+
+                            <p:commandButton id="btnSubmit" actionListener="#{amarresView.eliminarAmarres}" value="Eliminar amarres" update="@this,:messages">
+                            </p:commandButton> 
+                        </p:tab>
+                    </p:tabView>
+
+                </div>
+
+                <div id="inferior"></div>
+                <div id="piepagina" align="center">
+                </div>
+
+            </div></div>
+
+
+    </h:body>
+</html>

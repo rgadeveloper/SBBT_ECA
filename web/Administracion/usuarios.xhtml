@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f ="http://java.sun.com/jsf/core">
+  <h:head>
+    <f:facet name="first">
+      <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+      <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+      <title>ECA - SBBT</title>
+    </f:facet>
+
+    <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/default.css" />
+    <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/syntaxhighlighter/syntaxhighlighter.css" />
+
+    <style type="text/css">
+      .ui-layout-north {
+        z-index:20 !important;
+        overflow:visible !important;;
+      }
+
+      .ui-layout-north .ui-layout-unit-content {
+        overflow:visible !important;
+      }
+    </style>
+    <h:form id="validarSession">
+      <h:inputHidden  rendered="#{login.validarSession}" value="#{login.validateSession()}" />
+    </h:form>
+  </h:head>
+
+  <link href="../Styles/estilos.css" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="../resources/js/espaniol.js" />
+  <ui:include src="../sessionTimeOut.xhtml" />
+
+  <script type="text/javascript">
+    var PreventExitSplash = false;
+    var exitsplashmessage = '***************************************\n\n    SEGURO DESEA SALIR DE LA PÁGINA !\n\n  TEN EN CUENTA SI ABANDONAS LA PÁGINA\n     SE CERRARA LA APLICACIÓN.\n\n***************************************';
+    function DisplayExitSplash() {
+      confirmation.show()
+    }
+
+
+  </script> 
+
+  <h:body onunload="DisplayExitSplash" >
+    <h:form id="form">
+      <p:growl showDetail="false" sticky="true" life="100" />  
+
+      <div id="cuerpo" align="center">
+        <!--<div id="index_r1_c2" ></div>-->
+        <div id="linea">
+          <div align="center" style="position:relative; top:6px; background-image:url(Images/mensaje2.png); background-repeat:no-repeat; background-position:center; height:38px"></div>
+        </div>
+        <div id="linea2" align="left" >
+          <p:menubar  model ="#{templateView.model}" style="font-size: 12px" />
+        </div>
+
+        <div id="pagina">
+
+          <div id="superior">     
+          </div>
+          <div id="medio">      
+            <p:dataTable id="users" var="usuario" value="#{userView.usuarios}" tableStyle="width:auto"
+                         paginator="true" rows="10" 
+                         paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                         style="font-size: 12px">
+              <f:facet name="header">
+                USUARIOS
+              </f:facet>
+
+              <p:column headerText="Código" sortBy="#{usuario.codigo}" filterBy="#{usuario.codigo}">
+                <h:outputText value="#{usuario.codigo}" />
+              </p:column>
+
+              <p:column sortBy="#{usuario.nombre}" headerText="Nombre" filterBy="#{usuario.nombre}">
+                <h:outputText value="#{usuario.nombre}" />
+              </p:column>
+
+              <p:column sortBy="#{usuario.telefono}" headerText="Teléfono" filterBy="#{usuario.telefono}">
+                <h:outputText value="#{usuario.telefono}" />
+              </p:column>
+
+              <p:column sortBy="#{usuario.email}" headerText="Correo" filterBy="#{usuario.email}">
+                <h:outputText value="#{usuario.email}" />
+              </p:column>
+
+              <p:column sortBy="#{userView.PerfilDelUsuario(usuario.codigo)}" headerText="Perfil" filterBy="#{userView.PerfilDelUsuario(usuario.codigo)}">
+                <h:outputText value="#{userView.PerfilDelUsuario(usuario.codigo)}" />
+              </p:column>
+
+              <p:column width="100" sortBy="#{userView.getNombreEstado(usuario.estado)}" headerText="Estado" filterBy="#{userView.getNombreEstado(usuario.estado)}">
+                <h:outputText value="#{userView.getNombreEstado(usuario.estado)}" />
+              </p:column>
+
+              <p:column style="width:40px">
+                <h:panelGrid columns="3" styleClass="actions" cellpadding="2" >
+                  <p:commandButton id="editButton" update=":form3:displayEdit" oncomplete="userEdit.show()" icon="ui-icon-pencil" title="Editar">
+                    <f:setPropertyActionListener value="#{usuario}" target="#{userView.usuarioSelected}"/>
+                  </p:commandButton>
+                </h:panelGrid>
+              </p:column>  
+
+              <f:facet name="footer">
+                <p:commandButton value="Agregar" type="button" onclick="userAdd.show()" />                                    
+              </f:facet>  
+            </p:dataTable>                                      
+
+          </div>
+          <div id="inferior"></div>
+          <div id="piepagina" align="center">
+          </div>
+
+        </div></div>
+
+    </h:form>
+
+    <p:dialog id="confirmDialog"  
+              header="Initiating destroy process" widgetVar="confirmation">  
+      <h:form id="formc">           
+        <p:commandButton id="confirm" value="Yes Sure" oncomplete="confirmation.hide()"  
+                         actionListener="#{buttonBean.destroyWorld}" />  
+        <p:commandButton id="decline" value="Not Yet" onclick="confirmation.hide()" type="button" />   
+      </h:form>          
+    </p:dialog> 
+
+    <p:dialog header="Crear Nuevo Usuario" widgetVar="userAdd" resizable="false" modal="true" style="max-width: 650px"> 
+      <h:form id="form2">
+
+        <h:panelGrid columns="3" cellpadding="4" >
+          <f:facet name="header">
+            Nuevo usuario
+          </f:facet>
+
+          <h:outputLabel for="userid" value="Código de usuario:" />
+          <p:inputText value="#{userView.codigo}" size="10"
+                       id="userid" required="true" requiredMessage="Código de usuario es obligatorio">
+            <f:validator for="aqui" validatorId="codigoUsuarioValidator" />
+          </p:inputText>
+          <p:message for="userid"  />
+
+          <h:outputLabel for="username" value="Nombres y apellidos:" />
+          <p:inputText value="#{userView.nombre}" 
+                       id="username" required="true" requiredMessage="Nombres y apellidos es obligatorio." >
+            <f:validator  validatorId="nombreUsuarioValidator" />
+          </p:inputText> 
+          <p:message for="username" />
+
+          <h:outputLabel for="tel" value="Teléfono:" />
+          <p:inputText value="#{userView.tel}" size="10" maxlength="10"
+                       id="tel" required="false" label="tel" />  
+          <p:message for="tel"/>
+
+          <h:outputLabel for="email" value="Correo electrónico:" />
+          <p:inputText value="#{userView.email}" 
+                       id="email">
+            <f:validator validatorId="emailValidator" />
+          </p:inputText>
+          <p:message for="email" />
+
+
+          <h:outputLabel for="lblperfil" value="Perfil:" />                                                                      
+          <p:selectOneMenu id="lblperfil" value="#{userView.codigoPerfil}" required="true" requiredMessage="Perfil de usuario es obligatorio">
+            <f:selectItems value="#{perfilView.perfilesActivos}" var="perfilItem"
+                           itemLabel="#{perfilItem.nombre}" itemValue="#{perfilItem.codigo}"/>                                                                  
+          </p:selectOneMenu>
+          <p:message for="lblperfil" />
+
+          <h:outputLabel for="pass" value="Contraseña:" />
+          <p:inputText value="#{userView.contrasena}" 
+                       id="pass" required="true" requiredMessage="La contraseña de usuario es obligatoria">
+            <f:validator validatorId="passwordValidator" />
+          </p:inputText>
+          <p:message for="pass"  />
+
+          <h:outputLabel for="date" value="Fecha de solicitud:" />
+          <p:calendar locale="es" required="true" id="date" value="#{userView.fecha_alta}" mode="popup" size="5" label="Fecha Solicitud" requiredMessage="Fecha de solicitud es obligatoria" />
+          <p:message for="date" />
+
+          <f:facet name="footer">
+            <h:commandButton id="userAddButton" value="Agregar" action="#{userView.saveUsuario(login.usuario, 'usuarios.xhtml')}" />
+            <h:commandButton style="margin-left:30px;" value="Cancelar" type="button" onclick="userAdd.hide()" />
+          </f:facet>
+        </h:panelGrid>                    
+
+      </h:form> 
+    </p:dialog>
+
+    <p:dialog header="Editar usuario" widgetVar="userEdit" resizable="false" id="usuEdit" style="max-width: 450px">
+      <h:form id="form3" >        
+        <h:panelGrid id="displayEdit" columns="2" cellpadding="4" style="margin:0 auto;" >
+
+          <h:outputText value="Código de usuario:"/>
+          <h:outputText id="codUserEdit" value="#{userView.usuarioSelected.codigo}"/>                    
+
+          <h:outputLabel for="nombre" value="Nombre:" />
+          <p:inplace editor="true">  
+            <p:inputText id="nomUserEdit" value="#{userView.usuarioSelected.nombre}"  
+                         required="true" label="Nombre" maxlength="50">
+              <f:validator validatorId="nombreUsuarioValidator" />
+            </p:inputText> 
+            <p:message for="nomUserEdit" />
+          </p:inplace>                      
+
+          <h:outputLabel for="Telefono" value="Teléfono:" />  
+          <p:inplace editor="true" emptyLabel="-">  
+            <p:inputText id="telEdit" value="#{userView.usuarioSelected.telefono}"
+                         required="false" label="Teléfono" maxlength="10" />                        
+          </p:inplace>    
+
+
+          <h:outputLabel for="Correo" value="Correo:" />  
+          <p:inplace editor="true" emptyLabel="-">  
+            <p:inputText id="emailEdit" value="#{userView.usuarioSelected.email}"
+                         required="false" label="text">
+              <f:validator validatorId="emailValidator" />
+            </p:inputText>
+            <p:message for="emailEdit" />
+          </p:inplace> 
+
+
+          <h:outputLabel for="estado" value="Estado:" />  
+          <p:inplace  label="#{userView.getNombreEstado(userView.usuarioSelected.estado)}" effectSpeed="fast" event="dblclick">
+            <p:selectOneMenu id="selectableInplace" value="#{userView.usuarioSelected.estado}" label="est" style="width:100px;">
+              <f:selectItem itemLabel="ACTIVO" itemValue="SY001" /> 
+              <f:selectItem itemLabel="INACTIVO" itemValue="SY002" />
+            </p:selectOneMenu>                          
+          </p:inplace>                    
+
+          <h:outputLabel for="perfil" value="Perfil:" />  
+          <p:inplace label="#{userView.PerfilDelUsuario(userView.usuarioSelected.codigo)}" effectSpeed="fast" event="dblclick">
+            <p:selectOneMenu id="selectableInplacePerfil" value="#{userView.codigoPerfil}" >
+              <f:selectItem itemLabel="Seleccione" itemValue="no" />
+              <f:selectItems value="#{perfilView.perfilesActivos}" var="perfilItem"
+                             itemLabel="#{perfilItem.nombre}" itemValue="#{perfilItem.codigo}"/>                                                                  
+            </p:selectOneMenu>                         
+          </p:inplace>                    
+
+          <h:outputLabel for="Pass" value="Contraseña:" />  
+          <p:inplace editor="true" label="SETEAR">  
+            <p:inputText id="passEdit" value="#{userView.usuarioSelected.pass}"
+                         required="false" label="clave" >
+              <f:validator for="passEdit" validatorId="passwordValidator" />
+            </p:inputText>
+            <p:message for="passEdit" />
+          </p:inplace>  
+
+          <h:outputLabel for="Intentos" value="Intentos:" />  
+          <p:inplace editor="true" emptyLabel="-">  
+            <p:inputText id="telIntentos" value="#{userView.usuarioSelected.intentos}"
+                         required="false" label="Teléfono" maxlength="1" />                        
+          </p:inplace>   
+
+          <f:facet name="footer">
+            <h:commandButton id="usuarioEditButton" value="Guardar"
+                             action="#{userView.editUsuario(login.usuario, 'usuarios.xhtml')}" actionListener="#{userView.msgEditado()}"  />
+            <h:commandButton style="margin-left:30px;" value="Cancelar" type="button" onclick="userEdit.hide()" />
+          </f:facet>
+
+        </h:panelGrid>                      
+      </h:form>  
+    </p:dialog> 
+
+    <p:dialog header="Versión del SBBT" widgetVar="dlgVersion" modal="true" 
+              resizable="false" height="50" closeOnEscape="true" showEffect="explode" hideEffect="bounce" draggable="false">
+      <h:outputText value="#{eventMenuBean.VERSION}" />
+    </p:dialog>
+
+  </h:body>
+</html>

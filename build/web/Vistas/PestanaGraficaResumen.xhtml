@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">    
+
+    <p:panelGrid  rendered="#{geograficaView.mostrarTorta}"  style="margin-top:20px; font-size: 12px ">
+
+        <f:facet name="header">
+            <p:row>
+                <p:column colspan="8">Información de macro-medición por rangos </p:column>
+            </p:row>
+        </f:facet>
+
+        <p:row>
+            <p:column style="font-weight: bold;" colspan="1">
+                Cantidad macros negativos
+            </p:column>
+            <p:column style="font-weight: bold;" colspan="1">             
+                <p:commandLink onclick="trafosNegativos.show()">
+                    <p:ajax update="tn"   />
+                    <h:outputText value="#{geograficaView.dataRangosBalance.negativos}" />
+                </p:commandLink>                       
+            </p:column>
+            <p:column style="font-weight: bold;" colspan="1">
+                Cantidad macros inconsistentes &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </p:column>
+            <p:column style="font-weight: bold;" colspan="1">
+                <p:commandLink  onclick="trafosInconsistentes.show()">
+                    <h:outputText value="#{geograficaView.dataRangosBalance.inconsistentes}" />
+                </p:commandLink>
+            </p:column>
+            <p:column style="font-weight: bold;" colspan="1">
+                Cantidad macros bajos
+            </p:column>
+            <p:column style="font-weight: bold;" colspan="1">
+                <p:commandLink onclick="trafosBajo.show()">
+                    <h:outputText value="#{geograficaView.dataRangosBalance.bajo}" />
+                </p:commandLink>
+            </p:column>
+        </p:row>
+        <p:row>
+            <p:column style="font-weight: bold;" colspan="1">
+                Cantidad macros sin balances &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </p:column>
+            <p:column style="font-weight: bold;" colspan="1">
+                <p:commandLink onclick="trafosSinBalances.show()">
+                    <h:outputText value="#{geograficaView.dataRangosBalance.sinBalance}" />
+                </p:commandLink>    
+            </p:column>
+            <p:column style="font-weight: bold;" colspan="1">
+                Cantidad macros medio
+            </p:column>
+            <p:column style="font-weight: bold;" colspan="1">
+                <p:commandLink   onclick="trafosMedio.show()">
+                    <h:outputText value="#{geograficaView.dataRangosBalance.medio}" />
+                </p:commandLink>
+            </p:column>
+            <p:column style="font-weight: bold;" colspan="1">
+                Cantidad macros crítico
+            </p:column>
+            <p:column style="font-weight: bold;" colspan="1">
+                <p:commandLink  onclick="trafosCritico.show()">
+                    <h:outputText value="#{geograficaView.dataRangosBalance.critico}" />
+                </p:commandLink>
+            </p:column>
+        </p:row>
+    </p:panelGrid>    
+
+</html>

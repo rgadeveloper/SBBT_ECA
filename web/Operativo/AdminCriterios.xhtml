@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f ="http://java.sun.com/jsf/core">
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+            <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+            <title>ECA - SBBT</title>
+        </f:facet>
+
+        <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/default.css" />
+        <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/syntaxhighlighter/syntaxhighlighter.css" />
+
+        <style type="text/css">
+            .ui-layout-north {
+                z-index:20 !important;
+                overflow:visible !important;;
+            }
+
+            .ui-layout-north .ui-layout-unit-content {
+                overflow:visible !important;
+            }
+        </style>
+        <h:form id="validarSession">
+            <h:inputHidden  rendered="#{login.validarSession}" value="#{login.validateSession()}" />
+        </h:form>
+    </h:head>    
+
+    <link href="../Styles/estilos.css" rel="stylesheet" type="text/css" />
+    <ui:include src="../sessionTimeOut.xhtml" />
+
+    <h:body>
+        <h:form id="form" style="font-family: inherit; font-size: 12px;">
+     
+            <div id="cuerpo" align="center">
+                <!--<div id="index_r1_c2" ></div>-->
+                <div id="linea"><div align="center" style="position:relative; top:6px; background-image:url(Images/mensaje2.png); background-repeat:no-repeat; background-position:center; height:38px"></div></div>
+                <div id="linea2" align="left" >
+                    <p:menubar  model ="#{templateView.model}" style="font-size: 12px" />
+                </div>
+
+                <div id="pagina">
+
+                    <div id="superior">     
+                    </div>
+                    <div id="medio">      
+                        <p:dataTable id="criterios" var="criterio" value="#{criteriosView.criteriosList}"
+                                     paginator="true" rows="10" rowKey="#{criterio.idCriterio}"
+                                     selection="#{criteriosView.criterioSelected}"
+                                     tableStyle="width:auto" style="font-size: 12px">
+
+                            <f:facet name="header">
+                                Criterios 
+                            </f:facet>
+
+                            <p:column selectionMode="single" style="width:18px" />
+
+                            <p:column headerText="Nombre" >
+                                <h:outputText value="#{criterio.descripcion}" />
+                            </p:column>
+
+                            <p:column headerText="Fecha Creación" >
+                                <h:outputText value="#{criteriosView.getFechaFormato(criterio.fechaModif, 'dd/MM/yyyy')}" />
+                            </p:column>                       
+
+                        </p:dataTable>
+
+                        <p:commandButton value="Ver filtros" update=":form:filtros" action="#{criteriosView.llenarTablaFiltros}" />  
+
+                        <p:dataTable id="filtros" var="filtro" value="#{criteriosView.filtrosByCriteriosList}"
+                                     paginator="true" rows="10" rowKey="#{filtro.idFiltro}"
+                                     selection="#{criteriosView.filtroSelected}"
+                                     tableStyle="width:auto" style="font-size: 12px">
+
+                            <f:facet name="header">
+                                Filtros
+                            </f:facet>
+
+                            <p:column selectionMode="single" style="width:18px" />
+
+                            <p:column headerText="Operador lógico" >
+                                <h:outputText value="#{filtro.tbltipo1.nombre}" />
+                            </p:column> 
+
+                            <p:column headerText="Variable" >
+                                <h:outputText value="#{filtro.variables.nombreVariable}" />
+                            </p:column>
+
+                            <p:column headerText="Operador matemático" >
+                                <h:outputText value="#{filtro.tbltipo3.nombre}" />
+                            </p:column> 
+
+                            <p:column headerText="Valor" >
+                                <h:outputText value="#{filtro.valor1}" />
+                            </p:column>        
+
+                            <f:facet name="footer">
+                                <p:commandButton value="Agregar" type="button" onclick="filtroAdd.show()" />                                    
+                                <p:commandButton  value="Editar"  
+                                                  update=":form3:displayEditFiltro" oncomplete="filtroEdit.show()"/>
+                                <p:commandButton  value="Eliminar" action="#{criteriosView.deleteFiltro}" 
+                                                  update=":form:filtros" />
+                            </f:facet>
+
+                        </p:dataTable>  
+                    </div>
+
+                    <div id="inferior"></div>
+                    <div id="piepagina" align="center">
+                    </div>
+
+                </div></div>
+            <p:dialog  header="Crear nuevo filtro" widgetVar="filtroAdd" resizable="false" modal="true">
+
+                <h:panelGrid columns="2" cellpadding="6" >
+
+                    <h:outputLabel  value="Operador lógico" />
+                    <p:selectOneMenu value="#{criteriosView.codOperadorLog}" required="true">
+                        <f:selectItems value="#{criteriosView.operadorLogList}" var="operLogItem"
+                                       itemLabel="#{operLogItem.nombre}" itemValue="#{operLogItem.tipo}"/>
+                    </p:selectOneMenu>
+
+                    <h:outputLabel  value="Nombre variable" />
+                    <p:selectOneMenu value="#{criteriosView.codVariable}" required="true">
+                        <f:selectItems value="#{criteriosView.variableList}" var="variableItem"
+                                       itemLabel="#{variableItem.nombreVariable }" itemValue="#{variableItem.idVariable}"/>
+                    </p:selectOneMenu>
+
+                    <h:outputLabel  value="Operador" />
+                    <p:selectOneMenu value="#{criteriosView.codOperador}" required="true">
+                        <f:selectItems value="#{criteriosView.operadorList}" var="operadorItem"
+                                       itemLabel="#{operadorItem.nombre}" itemValue="#{operadorItem.tipo}"/>
+                    </p:selectOneMenu>                    
+
+
+                    <h:outputLabel for="valor" value="Valor" />
+                    <p:inputText value="#{criteriosView.valor}" id="valor" required="false" label="Valor " />
+
+                    <f:facet name="footer">
+                        <h:commandButton value="Guardar"
+                                         action="#{criteriosView.addFiltro}"  />
+                        <h:commandButton style="margin-left:30px;" value="Cancelar" type="button" onclick="filtroAdd.hide()" />
+                    </f:facet>
+                </h:panelGrid>
+            </p:dialog>
+
+        </h:form>
+
+        <p:dialog header="Editar filtro" widgetVar="filtroEdit" resizable="false" modal="true">
+            <h:form id="form3">
+                <p:growl showDetail="false" />
+                <h:panelGrid id="displayEditFiltro" columns="2" cellpadding="6" >                        
+
+                    <h:outputLabel value="Operador lógico:" />  
+                    <p:inplace label="#{criteriosView.filtroSelected.tbltipo1.nombre}" effectSpeed="fast" event="dblclick">
+                        <p:selectOneMenu style="width: 90px" value="#{criteriosView.codOperadorLogEdit}" required="true">
+                            <f:selectItem itemLabel="Seleccione" itemValue="no" />    
+                            <f:selectItems value="#{criteriosView.operadorLogList}" var="operLogItem"
+                                           itemLabel="#{operLogItem.nombre}" itemValue="#{operLogItem.tipo}"/>
+                        </p:selectOneMenu>  
+                    </p:inplace> 
+
+                    <h:outputLabel value="Operador:" />  
+                    <p:inplace label="#{criteriosView.filtroSelected.tbltipo3.nombre}" effectSpeed="fast" event="dblclick">
+                        <p:selectOneMenu style="width: 90px;" value="#{criteriosView.codOperadorEdit}" required="true">
+                            <f:selectItem itemLabel="Seleccione" itemValue="no" />    
+                            <f:selectItems value="#{criteriosView.operadorList}" var="operadorItem"
+                                           itemLabel="#{operadorItem.nombre}" itemValue="#{operadorItem.tipo}"/>
+                        </p:selectOneMenu> 
+                    </p:inplace>  
+
+                    <h:outputLabel value="Nombre variable:" />  
+                    <p:inplace label="#{criteriosView.filtroSelected.variables.nombreVariable}" effectSpeed="fast" event="dblclick">
+                        <p:selectOneMenu value="#{criteriosView.codVariableEdit}" required="true">
+                            <f:selectItem itemLabel="Seleccione" itemValue="no" />
+                            <f:selectItems value="#{criteriosView.variableList}" var="variableItem"
+                                           itemLabel="#{variableItem.nombreVariable }" itemValue="#{variableItem.idVariable}"/>
+                        </p:selectOneMenu>
+                    </p:inplace> 
+                    
+                    <h:outputLabel for="Valor" value="Valor:" />  
+                    <p:inplace editor="true" emptyLabel="-">  
+                        <p:inputText value="#{criteriosView.filtroSelected.valor1}"
+                                     required="true" requiredMessage="Valor es obligatorio"  />                        
+                    </p:inplace>                    
+
+                    <f:facet name="footer">
+                        <h:commandButton id="filtroEditButton" value="Guardar"
+                                         action="#{criteriosView.filtroEdit}"  />
+                        <h:commandButton style="margin-left:30px;" value="Cancelar" type="button" onclick="filtroEdit.hide()" />
+                    </f:facet>
+                </h:panelGrid>
+            </h:form>  
+
+        </p:dialog>
+
+    </h:body>
+</html>

@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <p:panelGrid columns="2" id ="gridMunicipio" rendered="true"  style="margin-top:20px; font-size: 12px ">
+        <f:facet name="header">
+            <p:row>
+                <p:column colspan="8">Información del suministro</p:column>
+            </p:row>
+        </f:facet>
+        
+          <h:outputText style="font-weight: bold;" value="Nombre" />
+          <h:outputText value="#{sGeograficaView.componente.nombre}" />
+          
+          <h:outputText style="font-weight: bold;" value="Dirección" />
+          <h:outputText value="#{sGeograficaView.componente.direccion}" />
+          
+          <h:outputText style="font-weight: bold;" value="Código cliente" />
+          <h:outputText value="#{sGeograficaView.componente.idCliente}" />
+          
+          <h:outputText style="font-weight: bold;" value="Apoyo" />
+          <h:outputText value="#{sGeograficaView.atrComponente.apoyo}" />
+           
+          <h:outputText style="font-weight: bold;" value="Estado del servicio" />
+          <h:outputText value="#{sGeograficaView.componente.estado1.descripcion}" />
+            
+          <h:outputText style="font-weight: bold;" value="Localización" />
+          <h:outputText value="#{sGeograficaView.componente.tbltipo.nombre}" />
+          
+          <h:outputText style="font-weight: bold;" value="Estrato" />
+          <h:outputText value="#{sGeograficaView.atrComponente.estrato}" />
+      
+          <h:outputText style="font-weight: bold;" value="Consumo Promedio" />
+          <h:outputText value="#{sGeograficaView.atrComponente.consumoPromedio}" />  
+          
+          <h:outputText style="font-weight: bold;" value="Intervencion" />
+          <h:outputText value="#{sGeograficaView.componente.estado.descripcion}" /> 
+          
+        
+
+    </p:panelGrid>
+
+    <br></br>
+    
+        <p:dataTable var="med" value="#{sGeograficaView.listMedida}">
+           <f:facet name="header">
+            Lecturas del suministro
+        </f:facet>
+            <p:column headerText="Periodo">
+                <h:outputText value="#{med.SMedidaPK.periodo}" />
+            </p:column>
+
+            <p:column headerText="Lectura Actual">
+                <h:outputText value="#{med.lecturaActual}" />
+            </p:column>
+
+            <p:column headerText="Consumo">
+                <h:outputText value="#{med.consumoFacturado}" />
+            </p:column>
+
+            <p:column headerText="Dias Facturados">
+                <h:outputText value="#{med.diasFacturados}" />
+            </p:column>
+            <p:column headerText="Fecha Lectura actual">
+                <h:outputText value="#{med.fechaLecturaActual}" />
+            </p:column>
+            <p:column headerText="Tipo Lectura actual">
+                <h:outputText value="#{med.tbltipo1.nombre}" />
+            </p:column>
+            <p:column headerText="Observación">
+                <h:outputText value="#{med.observacion}" />
+            </p:column>
+             <p:column headerText="Anomalia Lectura">
+                <h:outputText value="#{med.tbltipo.nombre }" />
+            </p:column>
+        </p:dataTable>
+    
+        
+
+</html>

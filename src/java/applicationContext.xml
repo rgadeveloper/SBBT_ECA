@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-3.0.xsd
+       http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.0.xsd">
+    
+    <context:component-scan base-package="com.ag"/>
+
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    
+    <!-- 
+    <jee:jndi-lookup id="dataSource" jndi-name="java:jboss/datasources/SBBTDS1"/>
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+    <constructor-arg ref="dataSource"/>
+    </bean>-->
+      
+  <!--***PRODUCCIÓN***-->
+  <!--*******ACTUALIZAR ARCHIVO DE PROPIEDADES conexiónJDBC.properties*******-->  
+  <!--<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+    <property name="driverClassName" value="oracle.jdbc.OracleDriver"/>           
+    <property name="url" value="jdbc:oracle:thin:@10.240.142.172:1521:APLGEN"/>
+    <property name="username" value="SBBTAPLP"/>
+    <property name="password" value="sbbtaplp$"/>
+  </bean>-->
+  
+  <!--***INTEGRACIÓN***-->
+  <!--*******ACTUALIZAR ARCHIVO DE PROPIEDADES conexiónJDBC.properties*******-->     
+  <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+    <property name="driverClassName" value="oracle.jdbc.OracleDriver"/>           
+    <property name="url" value="jdbc:oracle:thin:@10.240.142.172:1521:APLGEN"/>
+    <property name="username" value="SBBTAPLC"/>
+    <property name="password" value="sbbtaplc"/>
+  </bean>
+  
+  <!--***LOCAL***-->
+  <!--*******ACTUALIZAR ARCHIVO DE PROPIEDADES conexiónJDBC.properties*******-->        
+  <!--<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+    <property name="driverClassName" value="oracle.jdbc.OracleDriver"/>            
+    <property name="url" value="jdbc:oracle:thin:@localhost:1521:orcl"/>
+    <property name="username" value="SBBT_ADMINIS"/>
+    <property name="password" value="sbbt_adminis"/>
+  </bean>-->
+  
+  <!--***AMAZON***-->
+  <!--*******ACTUALIZAR ARCHIVO DE PROPIEDADES conexiónJDBC.properties*******-->  
+  <!--<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+    <property name="driverClassName" value="oracle.jdbc.OracleDriver"/>            
+    <property name="url" value="jdbc:oracle:thin:@54.187.129.20:1521:XE"/>
+    <property name="url" value="jdbc:oracle:thin:@localhost:1521:XE"/>
+    <property name="username" value="SIMBAL_ECA"/>
+    <property name="password" value="RGA2014"/>
+ </bean>-->
+      
+  <bean id="hibernateProperties" 
+        class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+      <property name="properties">
+          <props>
+              <prop key="hibernate.hbm2ddl.auto">update</prop>
+              <prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>
+              <prop key="hibernate.query.substitutions">true 'T', false 'F'</prop>
+              <prop key="hibernate.show_sql">false</prop>
+              <prop key="hibernate.c3p0.minPoolSize">2</prop>
+              <prop key="hibernate.c3p0.maxPoolSize">100</prop>
+              <prop key="hibernate.c3p0.timeout">300</prop>
+              <prop key="hibernate.c3p0.max_statement">50</prop>
+              <prop key="hibernate.c3p0.testConnectionOnCheckout">false</prop>
+              <prop key="hibernate.validator.apply_to_ddl">false</prop>
+              <prop key="hibernate.validator.autoregister_listeners">false</prop>
+
+          </props>
+      </property>
+  </bean>
+
+  <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+      <property name="dataSource" ref="dataSource"/>
+      <property name="hibernateProperties">
+          <ref bean="hibernateProperties" />
+      </property>
+      <property name="annotatedClasses">
+        <list>
+          <value>com.ag.model.Usuario</value>
+          <value>com.ag.model.UsuarioPerfil</value>
+          <value>com.ag.model.UsuarioPerfilPK</value>
+          <value>com.ag.model.MenuPerfil</value>
+          <value>com.ag.model.MenuPerfilPK</value>
+          <value>com.ag.model.Menu</value>
+          <value>com.ag.model.Perfil</value>
+          <value>com.ag.model.Funcion</value>
+          <value>com.ag.model.FuncionPerfil</value>
+          <value>com.ag.model.FuncionPerfilPK</value>
+          <value>com.ag.model.Tbltipo</value>
+          <value>com.ag.model.AtrComponente</value>
+          <value>com.ag.model.AtrComponenteMedida</value>
+          <value>com.ag.model.AtrComponenteMedidaPK</value>
+          <value>com.ag.model.BalancesPK</value>
+          <value>com.ag.model.Balances</value>
+          <value>com.ag.model.Campania</value>
+          <value>com.ag.model.CargaExtraPK</value>
+          <value>com.ag.model.CargaExtra</value>
+          <value>com.ag.model.Ciclo</value>
+          <value>com.ag.model.Color</value>
+          <value>com.ag.model.Componente</value>
+          <value>com.ag.model.ComponenteMedida</value>
+          <value>com.ag.model.ComponenteCampania</value>
+          <value>com.ag.model.Criterio</value>
+          <value>com.ag.model.Empresa</value>
+          <value>com.ag.model.Estado</value>
+          <value>com.ag.model.Filtros</value>
+          <value>com.ag.model.Grupo</value>
+
+          <value>com.ag.model.Medida</value>
+          <value>com.ag.model.MedidaPK</value>
+          <value>com.ag.model.Novedades</value>
+          <value>com.ag.model.NovedadesPK</value>
+          <value>com.ag.model.OrdenTrabajo</value>                
+          <value>com.ag.model.Parametro</value>
+          <value>com.ag.model.RangoClasificacion</value>
+          <value>com.ag.model.RelComponente</value>
+          <value>com.ag.model.RelComponenteMedida</value>
+          <value>com.ag.model.RelComponenteMedidaPK</value>
+          <value>com.ag.model.RelComponentePK</value>
+          <value>com.ag.model.RelComponenteUbicacion</value>
+          <value>com.ag.model.RelComponenteUbicacionPK</value>
+          <value>com.ag.model.Tblconsecutivo</value>
+          <value>com.ag.model.TipoComponente</value>
+          <value>com.ag.model.ZonaGeografica</value>
+          <value>com.ag.model.Variables</value>
+
+          <value>com.ag.model.SAtrComponente</value>
+          <value>com.ag.model.SAtrComponenteMedida</value>
+          <value>com.ag.model.SAtrComponenteMedidaPK</value>
+          <value>com.ag.model.SBalances</value>
+          <value>com.ag.model.SBalancesPK</value>
+          <value>com.ag.model.SComponente</value>
+          <value>com.ag.model.SComponenteMedida</value>
+          <value>com.ag.model.SMedida</value>
+          <value>com.ag.model.SMedidaPK</value>
+          <value>com.ag.model.SRelComponente</value>
+          <value>com.ag.model.SRelComponenteMedida</value>
+          <value>com.ag.model.SRelComponenteMedidaPK</value>
+          <value>com.ag.model.SRelComponentePK</value>
+          <value>com.ag.model.SRelComponenteUbicacion</value>
+          <value>com.ag.model.SRelComponenteUbicacionPK</value>
+          <value>com.ag.model.SHistRelComponente</value>
+          <value>com.ag.model.SHistRelComponentePK</value>
+          <value>com.ag.model.SHistRelComponenteUbica</value>
+          <value>com.ag.model.SHistRelComponenteUbicaPK</value>
+          <value>com.ag.model.SCargaExtra</value>
+          <value>com.ag.model.ComponenteCampania</value>
+          <value>com.ag.model.ComponenteCampaniaPK</value>
+          <value>com.ag.model.SVistaAmarres</value> 
+
+          <value>com.ag.model.LogAuditoria</value> 
+          <value>com.ag.model.BalanceEnergia</value> 
+          
+          <value>com.ag.model.EnergiaTotalAreas</value>
+          <value>com.ag.model.EnergiaTotalAreasPK</value>
+
+        </list>
+      </property>
+
+  </bean>
+
+
+    <!--bean id="propertyConfigurer"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+          p:location="/WEB-INF/jdbc.properties" />
+
+<bean id="dataSource"
+  class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+  p:driverClassName="${jdbc.driverClassName}"
+  p:url="${jdbc.url}"
+  p:username="${jdbc.username}"
+  p:password="${jdbc.password}" /-->
+
+  <!-- ADD PERSISTENCE SUPPORT HERE (jpa, hibernate, etc) -->
+
+</beans>

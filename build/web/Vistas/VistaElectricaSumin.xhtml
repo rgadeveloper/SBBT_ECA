@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <p:panelGrid columns="2" id ="gridMunicipio" rendered="true"  style="margin-top:20px; font-size: 12px ">
+        <f:facet name="header">
+            <p:row>
+                <p:column colspan="8">Información del suministro</p:column>
+            </p:row>
+        </f:facet>
+
+        <h:outputText style="font-weight: bold;" value="NIC" />
+        <h:outputText value="#{electricaView.atrComponente.contrato}" />
+
+        <h:outputText style="font-weight: bold;" value="NIS" />
+        <h:outputText value="#{electricaView.componente.idCliente}" />
+
+        <h:outputText style="font-weight: bold;" value="NIF" />
+        <h:outputText value="#{electricaView.atrComponente.nif}" />
+
+        <h:outputText style="font-weight: bold;" value="Nombre cliente" />
+        <h:outputText value="#{electricaView.componente.direccion}" />
+        
+        <h:outputText style="font-weight: bold;" value="Dirección cliente" />
+        <h:outputText value="#{electricaView.componente.nombre}" />
+        
+        <h:outputText style="font-weight: bold;" value="Ruta de lectura" />
+        <h:outputText value="#{electricaView.atrComponente.ciclo.idCiclo}/#{electricaView.atrComponente.ruta}/#{electricaView.atrComponente.aolFin}" />
+
+        <h:outputText style="font-weight: bold;" value="Coordenadas" />
+        <h:outputText value="#{electricaView.componente.coordX} , #{electricaView.componente.coordY}" />
+
+        <h:outputText style="font-weight: bold;" value="Estado de morosidad" />
+        <h:outputText value="#{electricaView.atrComponente.estado1.descripcion}" />
+
+        <h:outputText style="font-weight: bold;" value="Tarifa" />
+        <h:outputText value="#{electricaView.atrComponente.tbltipo1.nombre}" />  
+
+        <h:outputText style="font-weight: bold;" value="Tipo suministro (regulado no regulado)" />
+        <h:outputText value="#{electricaView.atrComponente.tbltipo4.nombre}" /> 
+
+        <h:outputText style="font-weight: bold;" value="Anomalias suministro" />
+        <h:outputText value="#{electricaView.medida.observacion}" /> 
+
+        <h:outputText style="font-weight: bold;" value="Número de medidor" />
+        <h:outputText value="#{electricaView.atrComponente.medidor}" /> 
+
+        <h:outputText style="font-weight: bold;" value="Marca de medidor" />
+        <h:outputText value="#{electricaView.atrComponente.tbltipo6.nombre}" /> 
+
+        <h:outputText style="font-weight: bold;" value="Fecha alta" />
+        <h:outputText value="#{electricaView.atrComponente.fechaInstalacion}" /> 
+
+    </p:panelGrid>
+
+    <br/>
+
+    <p:dataTable style="width: 800px;" var="med" value="#{electricaView.listMedida}">
+        <f:facet name="header">
+            Lecturas del suministro
+        </f:facet>
+        <p:column headerText="Periodo">
+            <h:outputText value="#{med.medidaPK.periodo}" />
+        </p:column>
+
+        <p:column headerText="Lectura actual">
+            <h:outputText value="#{med.lecturaActual}" />
+        </p:column>
+
+        <p:column headerText="Consumo">
+            <h:outputText value="#{med.consumoFacturado}" />
+        </p:column>
+
+        <p:column headerText="Dias facturados">
+            <h:outputText value="#{med.diasFacturados}" />
+        </p:column>
+        <p:column headerText="Fecha lectura actual">
+            <h:outputText value="#{med.fechaLecturaActual}" />
+        </p:column>
+        <p:column headerText="Tipo lectura actual">
+            <h:outputText value="#{med.tbltipo1.nombre}" />
+        </p:column>
+        <p:column headerText="Observación">
+            <h:outputText value="#{med.observacion}" />
+        </p:column>
+        <p:column headerText="Anomalia lectura">
+            <h:outputText value="#{med.tbltipo.nombre }" />
+        </p:column>
+    </p:dataTable>  
+
+</html>

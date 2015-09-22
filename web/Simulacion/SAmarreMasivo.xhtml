@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f ="http://java.sun.com/jsf/core">
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+            <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+            <title>ECA - SBBT</title>
+        </f:facet>
+
+        <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/default.css" />
+        <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/syntaxhighlighter/syntaxhighlighter.css" />
+
+        <style type="text/css">
+            .ui-layout-north {
+                z-index:20 !important;
+                overflow:visible !important;;
+            }
+
+            .ui-layout-north .ui-layout-unit-content {
+                overflow:visible !important;
+            }       
+
+        </style>
+        <h:form id="validarSession">
+            <h:inputHidden  rendered="#{login.validarSession}" value="#{login.validateSession()}" />
+        </h:form>
+    </h:head>    
+
+    <link href="../Styles/estilos.css" rel="stylesheet" type="text/css" />
+    <ui:include src="../sessionTimeOut.xhtml" />
+
+    <h:body>
+        <h:form id="formCarga" enctype="multipart/form-data"> 
+
+            <div id="cuerpo" align="center">
+                <!--<div id="index_r1_c2" ></div>-->
+                <div id="linea"><div align="center" style="position:relative; top:6px; background-image:url(Images/mensaje2.png); background-repeat:no-repeat; background-position:center; height:38px"></div></div>
+                <div id="linea2" align="left" >
+                    <p:menubar  model ="#{templateView.model}" style="font-size: 12px" />
+                </div>
+
+                <div id="pagina">
+
+                    <div id="superior">     
+                    </div>
+                    <div id="medio"> 
+
+                        <p:panel header="Cargar Archivo para Simular Amarres" style="font-size: 13px; width: 500px"> 
+
+                            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+                            <h:panelGrid id="pnlCarga" rendered="#{sFileUpload.estado =='Carga'}" > 
+
+                                <p:row>
+                                    <p:column colspan="1"><p:fileUpload value="#{sFileUpload.file}" mode="simple" update=":formCarga:pnlLog,:formCarga:pnlCarga"/>  </p:column>
+                                    <p:column  colspan="1"><h:commandButton value="Cargar" action="#{sFileUpload.upload('Amarres', login.usuario, 'SAmarreMasivo')}"  />   </p:column>
+                                </p:row>    
+
+                            </h:panelGrid>
+                            <h:panelGrid id="pnlLog" rendered="#{sFileUpload.estado !='Carga'}"> 
+                                <f:facet name="header">
+                                    <p:row>
+                                        <p:column colspan="8">Log de Resultados </p:column>
+                                    </p:row>
+                                </f:facet>
+                                <p:row>
+                                    <p:column  colspan="1">
+                                        <p:editor id="editor" value="#{sFileUpload.mensaje}" width="600" disabled="true"  controls="" /> 
+                                    </p:column>
+                                </p:row> 
+                                <p:row>
+                                    <p:column  colspan="1"><h:commandButton value="Volver" action="#{sFileUpload.volver()}"/>   </p:column>
+                                </p:row>    
+                            </h:panelGrid>
+
+
+                            <h2>Estructura del Archivo a Cargar</h2>
+                            <p>El archivo debe tener la siguiente estructura:</p>
+                            <p>TIPOAMARRE; IDCOMERCIALPADRE; IDCOMERCIALHIJO</p>
+                            <p>El campo ‘TIPOAMARRE’ se refiere al tipo de Amarre o Asociacion para ese registro, estos serán los valores que se referirán al tipo de amarre que se va hacer:</p>
+                            <h3>En Vista Electrica:</h3>
+                            <ul>
+                                <li>Cambiar un Transformador de un Circuito a otro. TIPOAMARRE = 1</li>
+                                <li>Cambiar un Suministro de un Transformador a otro. TIPOAMARRE = 2</li>
+                            </ul>
+
+                            <h3>En Vista Geográfica:</h3>
+                            <ul>
+                                <li>Cambiar un Transformador de un Barrio a otro. TIPOAMARRE = 3</li>
+                                <li>Cambiar un Suministro de un Transformador a otro. TIPOAMARRE = 4</li>
+                            </ul>
+
+
+                        </p:panel>
+
+                    </div>
+
+                    <div id="inferior"></div>
+                    <div id="piepagina" align="center">
+                    </div>
+
+                </div></div>
+
+        </h:form>
+
+    </h:body>
+</html>

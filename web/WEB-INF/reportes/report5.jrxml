@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report3" language="groovy" pageWidth="802" pageHeight="800" orientation="Landscape" columnWidth="802" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="9cb6dadf-f2c7-44ce-9618-b45c8b074ab4">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<style name="table 2">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 4">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 4_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 4_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 4_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Table Dataset 1" uuid="199313e4-329f-4097-9d18-616c20a0a740">
+		<parameter name="p1" class="java.lang.String">
+			<defaultValueExpression><![CDATA["Energìa de entrada"]]></defaultValueExpression>
+		</parameter>
+		<parameter name="p2" class="java.lang.String">
+			<defaultValueExpression><![CDATA["Energìa de salida"]]></defaultValueExpression>
+		</parameter>
+		<parameter name="periodo" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[201403]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[select row_number() over (order by periodo) as rank,periodo, rango_balance, r.descripcion RANGOS, t.nombre TIPOPCI,
+decode(rango_balance, 31,0, sum(nvl(consumo_macros,0)) - sum(nvl(consumo_suministro,0))- sum(nvl(consumo_adicional,0))) perdidas_kw_mes,
+count(b.id_componente) cantidad
+from balances b, rango_clasificacion r, rel_componente_medida r, componente_medida c, tbltipo t
+where b.id_tipo_componente = 3
+and rango_balance = id_rango(+)
+and b.id_componente = r.id_componente
+and r.id_componente_medida = c.id_componente_medida
+and r.periodo_fin = 999912
+and c.tipo_medidor = t.tipo
+and periodo <= $P{periodo}
+and periodo >= $P{periodo} -12
+group by periodo, rango_balance, r.descripcion, t.nombre
+order by periodo, rango_balance]]>
+		</queryString>
+		<field name="RANK" class="java.math.BigDecimal"/>
+		<field name="PERIODO" class="java.math.BigDecimal"/>
+		<field name="RANGO_BALANCE" class="java.math.BigDecimal"/>
+		<field name="RANGOS" class="java.lang.String"/>
+		<field name="TIPOPCI" class="java.lang.String"/>
+		<field name="PERDIDAS_KW_MES" class="java.math.BigDecimal"/>
+		<field name="CANTIDAD" class="java.math.BigDecimal"/>
+	</subDataset>
+	<parameter name="periodo" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[201403]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select row_number() over (order by periodo) as rank,periodo, rango_balance, r.descripcion RANGOS, t.nombre TIPOPCI,
+decode(rango_balance, 31,0, sum(nvl(consumo_macros,0)) - sum(nvl(consumo_suministro,0))- sum(nvl(consumo_adicional,0))) perdidas_kw_mes,
+count(b.id_componente) cantidad
+from balances b, rango_clasificacion r, rel_componente_medida r, componente_medida c, tbltipo t
+where b.id_tipo_componente = 3
+and rango_balance = id_rango(+)
+and b.id_componente = r.id_componente
+and r.id_componente_medida = c.id_componente_medida
+and r.periodo_fin = 999912
+and c.tipo_medidor = t.tipo
+group by periodo, rango_balance, r.descripcion, t.nombre
+order by periodo, rango_balance]]>
+	</queryString>
+	<field name="RANK" class="java.math.BigDecimal"/>
+	<field name="PERIODO" class="java.math.BigDecimal"/>
+	<field name="RANGO_BALANCE" class="java.math.BigDecimal"/>
+	<field name="RANGOS" class="java.lang.String"/>
+	<field name="TIPOPCI" class="java.lang.String"/>
+	<field name="PERDIDAS_KW_MES" class="java.math.BigDecimal"/>
+	<field name="CANTIDAD" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="82" splitType="Stretch">
+			<crosstab>
+				<reportElement uuid="f66fde64-e440-4448-964b-bdb0ca66a1d8" x="0" y="0" width="802" height="82"/>
+				<crosstabDataset>
+					<dataset>
+						<datasetRun subDataset="Table Dataset 1" uuid="a4723a1d-9866-468a-ae5d-291aa561fb4a">
+							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						</datasetRun>
+					</dataset>
+				</crosstabDataset>
+				<crosstabHeaderCell>
+					<cellContents>
+						<staticText>
+							<reportElement uuid="144e9d59-165d-40f6-9687-e93dd5e4a78a" style="Crosstab Data Text" x="0" y="10" width="44" height="10"/>
+							<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+								<pen lineWidth="0.25"/>
+								<topPen lineWidth="0.25"/>
+								<leftPen lineWidth="0.25"/>
+								<bottomPen lineWidth="0.25"/>
+								<rightPen lineWidth="0.25"/>
+							</box>
+							<textElement>
+								<font size="5"/>
+							</textElement>
+							<text><![CDATA[RANGOS]]></text>
+						</staticText>
+						<staticText>
+							<reportElement uuid="85a89052-a444-48bd-b315-21a3d8d2ce4f" style="Crosstab Data Text" x="46" y="9" width="80" height="11"/>
+							<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+								<pen lineWidth="0.25"/>
+								<topPen lineWidth="0.25"/>
+								<leftPen lineWidth="0.25"/>
+								<bottomPen lineWidth="0.25"/>
+								<rightPen lineWidth="0.25"/>
+							</box>
+							<textElement>
+								<font size="5"/>
+							</textElement>
+							<text><![CDATA[TIPO PCI]]></text>
+						</staticText>
+					</cellContents>
+				</crosstabHeaderCell>
+				<rowGroup name="RANGOS" width="44">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{RANGOS}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement uuid="3e3c5567-a19b-415d-a743-86c5ced62b78" style="Crosstab Data Text" x="0" y="0" width="44" height="12"/>
+								<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+									<pen lineWidth="0.25"/>
+									<topPen lineWidth="0.25"/>
+									<leftPen lineWidth="0.25"/>
+									<bottomPen lineWidth="0.25"/>
+									<rightPen lineWidth="0.25"/>
+								</box>
+								<textElement>
+									<font size="6"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{RANGOS}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="TIPOPCI" width="83">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{TIPOPCI}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents backcolor="#F0F8FF" mode="Opaque">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement uuid="6bf76ac9-6c07-436e-8a1c-7f4bc04a54b1" style="Crosstab Data Text" x="0" y="0" width="83" height="12"/>
+								<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+									<pen lineWidth="0.25"/>
+									<topPen lineWidth="0.25"/>
+									<leftPen lineWidth="0.25"/>
+									<bottomPen lineWidth="0.25"/>
+									<rightPen lineWidth="0.25"/>
+								</box>
+								<textElement>
+									<font size="4"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{TIPOPCI}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<columnGroup name="periodo" height="20">
+					<bucket class="java.math.BigDecimal">
+						<bucketExpression><![CDATA[$F{PERIODO}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents>
+							<textField isBlankWhenNull="true">
+								<reportElement uuid="2fcd0428-09b2-4b88-90eb-4e455983ab93" style="Crosstab Data Text" x="0" y="0" width="50" height="10"/>
+								<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+									<pen lineWidth="0.25"/>
+									<topPen lineWidth="0.25"/>
+									<leftPen lineWidth="0.25"/>
+									<bottomPen lineWidth="0.25"/>
+									<rightPen lineWidth="0.25"/>
+								</box>
+								<textElement>
+									<font size="5"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{periodo}]]></textFieldExpression>
+							</textField>
+							<staticText>
+								<reportElement uuid="5dc8f8d3-f8f3-4142-8aab-e3c684da9ae5" style="Crosstab Data Text" x="0" y="10" width="21" height="10"/>
+								<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+									<pen lineWidth="0.25"/>
+									<topPen lineWidth="0.25"/>
+									<leftPen lineWidth="0.25"/>
+									<bottomPen lineWidth="0.25"/>
+									<rightPen lineWidth="0.25"/>
+								</box>
+								<textElement>
+									<font size="5"/>
+								</textElement>
+								<text><![CDATA[Cant.]]></text>
+							</staticText>
+							<staticText>
+								<reportElement uuid="2cab5467-05f1-4ecd-8d68-8fb5e4fa3e2f" style="Crosstab Data Text" x="21" y="10" width="29" height="10"/>
+								<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+									<pen lineWidth="0.25"/>
+									<topPen lineWidth="0.25"/>
+									<leftPen lineWidth="0.25"/>
+									<bottomPen lineWidth="0.25"/>
+									<rightPen lineWidth="0.25"/>
+								</box>
+								<textElement>
+									<font size="5"/>
+								</textElement>
+								<text><![CDATA[Perdi.]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents/>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<measure name="PERIODOMeasure" class="java.math.BigDecimal">
+					<measureExpression><![CDATA[$F{PERIODO}]]></measureExpression>
+				</measure>
+				<measure name="measure1" class="java.lang.Integer">
+					<measureExpression><![CDATA[$F{CANTIDAD}]]></measureExpression>
+				</measure>
+				<measure name="measure2" class="java.math.BigDecimal">
+					<measureExpression><![CDATA[$F{PERDIDAS_KW_MES}]]></measureExpression>
+				</measure>
+				<measure name="measure3" class="java.math.BigDecimal">
+					<measureExpression><![CDATA[$F{RANK}]]></measureExpression>
+				</measure>
+				<crosstabCell width="50" height="12">
+					<cellContents>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement uuid="524f9f27-e3d7-40a3-b134-4daeb56f8415" style="Crosstab Data Text" x="0" y="0" width="21" height="12"/>
+							<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+								<pen lineWidth="0.25"/>
+								<topPen lineWidth="0.25"/>
+								<leftPen lineWidth="0.25"/>
+								<bottomPen lineWidth="0.25"/>
+								<rightPen lineWidth="0.25"/>
+							</box>
+							<textElement>
+								<font size="6"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{measure1}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement uuid="d36d59ce-a5d4-4356-a8b7-48ccf1826653" style="Crosstab Data Text" x="21" y="0" width="29" height="12"/>
+							<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+								<pen lineWidth="0.25"/>
+								<topPen lineWidth="0.25"/>
+								<leftPen lineWidth="0.25"/>
+								<bottomPen lineWidth="0.25"/>
+								<rightPen lineWidth="0.25"/>
+							</box>
+							<textElement>
+								<font size="6"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{measure2}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+			</crosstab>
+		</band>
+	</columnHeader>
+</jasperReport>

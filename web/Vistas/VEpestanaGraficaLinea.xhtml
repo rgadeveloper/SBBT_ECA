@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">    
+
+    <p:lineChart rendered="#{electricaView.mostrarChartLine}" value="#{electricaView.categoryModel}" legendPosition="nw"  
+                 title="Porcentaje de pérdidas Mes/Móvil"  style="height:450px;margin-top:30px;width: 750px;" yaxisLabel="PE%" xaxisLabel="Periodo"/>    
+
+    <!--<c:if test="#{electricaView.idTipCompo == 8 || electricaView.idTipCompo == 11 || electricaView.idTipCompo == 0}">-->
+        <p:lineChart rendered="#{electricaView.mostrarChartLine}" value="#{electricaView.categoryModelEnergia}" legendPosition="nw"  
+                     title="Energía entrada/salida/pérdida"  style="height:450px;margin-top:30px;width: 750px;" yaxisLabel="Energía" xaxisLabel="Periodo"/>    
+
+        <p:lineChart rendered="#{electricaView.mostrarChartLine}" value="#{electricaView.categoryModelClientes}" legendPosition="nw"  
+                     title="Número de clientes"  style="height:450px;margin-top:30px;width: 750px;" yaxisLabel="Número clientes" xaxisLabel="Periodo"/>    
+    <!--</c:if>-->
+    
+</html>

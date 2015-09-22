@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f ="http://java.sun.com/jsf/core">
+  <h:head>
+    <f:facet name="first">
+      <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+      <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+      <title>ECA - SBBT</title>
+    </f:facet>
+
+    <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/default.css" />
+    <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/syntaxhighlighter/syntaxhighlighter.css" />
+
+    <style type="text/css">
+      .ui-layout-north {
+        z-index:20 !important;
+        overflow:visible !important;;
+      }
+
+      .ui-layout-north .ui-layout-unit-content {
+        overflow:visible !important;
+      }
+    </style>
+    <h:form id="validarSession">
+      <h:inputHidden  rendered="#{login.validarSession}" value="#{login.validateSession()}" />
+    </h:form>
+  </h:head>
+
+  <link href="../Styles/estilos.css" rel="stylesheet" type="text/css" />
+  <ui:include src="../sessionTimeOut.xhtml" />
+
+  <h:body>
+    <h:form id="form">
+
+      <div id="cuerpo" align="center">
+        <!--<div id="index_r1_c2" ></div>-->
+        <div id="linea">
+          <div align="center" style="position:relative; top:6px; background-image:url(Images/mensaje2.png); background-repeat:no-repeat; background-position:center; height:38px"></div>
+        </div>
+        <div id="linea2" align="left" >
+          <p:menubar  model ="#{templateView.model}" style="font-size: 12px" />
+        </div>
+
+        <div id="pagina">
+
+          <div id="superior">     
+          </div>
+          <div id="medio" >   
+            <div id="tblparametros" style="width:850px" >
+              <p:dataTable id="parameters" var="parametro" value="#{parametroView.parametros}" 
+                           paginator="true" rows="10" 
+                           paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                           style="font-size: 12px">
+                <f:facet name="header">
+                  PARÁMETROS GENERALES
+                </f:facet>
+
+                <p:column style="width:150px;" width="145" filterStyle="width:100px"  headerText="Codigo" sortBy="#{parametro.idParametro}" filterBy="#{parametro.idParametro}">
+                  <h:outputText value="#{parametro.idParametro}" />
+                </p:column>
+
+                <p:column sortBy="#{parametro.nombre}"  headerText="Nombre" filterBy="#{parametro.nombre}">
+                  <h:outputText value="#{parametro.nombre}" />
+                </p:column>
+
+                <p:column style="width:300px;" width="300" filterStyle="width:280px" sortBy="#{parametro.valor}" headerText="Valor" filterBy="#{parametro.valor}">
+                  <h:outputText value="#{parametro.valor}" />
+                </p:column>
+
+
+                <p:column style="width:40px">
+                  <h:panelGrid columns="3" styleClass="actions" cellpadding="2" >
+                    <p:commandButton id="editButton" update=":form3:displayEdit" oncomplete="parameterEdit.show()" icon="ui-icon-pencil" title="Editar">
+                      <f:setPropertyActionListener value="#{parametro}" target="#{parametroView.parametroSelected}"/>
+                    </p:commandButton>
+                  </h:panelGrid>
+                </p:column> 
+
+                <f:facet name="footer"> 
+                  <p:commandButton value="Agregar" type="button" onclick="parameterAdd.show()" />                                    
+                </f:facet>
+              </p:dataTable>  
+            </div>                               
+          </div>
+
+          <div id="inferior"></div>
+          <div id="piepagina" align="center">
+          </div>
+
+        </div></div>
+
+    </h:form>
+
+    <p:dialog header="Crear nuevopParámetro" widgetVar="parameterAdd" resizable="false" modal="true"> 
+      <h:form id="form2">
+        <p:growl id="growl" showDetail="false" sticky="true" life="60" />
+        <h:panelGrid columns="2" cellpadding="6" >
+          <f:facet name="header">
+            Nuevo parámetro
+          </f:facet>
+
+          <h:outputLabel for="idParametro" value="Código:" />
+          <p:inputText value="#{parametroView.idParametro}"
+                       id="idParametro" required="true" label="Código" requiredMessage="Código del parámetro es obligatorio." />
+
+          <h:outputLabel for="nombre" value="Descripción:" />
+          <p:inputText value="#{parametroView.nombre}"
+                       id="nombreParametro" required="true" label="Descripción" requiredMessage="La descripción es obligatoria."  />
+
+          <h:outputLabel for="valor" value="Valor:" />
+          <p:inputText value="#{parametroView.valor}"
+                       id="valor" required="true" label="Valor" requiredMessage="El valor es obligatorio." />                                                                                        
+
+          <f:facet name="footer">
+            <h:commandButton id="parametroAddButton" value="Guardar"
+                             action="#{parametroView.saveParametro(login.usuario, 'parametros.xhtml')}" />
+            <h:commandButton style="margin-left:30px;" value="Cancelar" type="button" onclick="parameterAdd.hide()" />
+          </f:facet>
+        </h:panelGrid>                    
+
+      </h:form> 
+    </p:dialog>
+
+    <p:dialog header="Editar parámetro" widgetVar="parameterEdit" resizable="false" id="parEdit">
+      <h:form id="form3"> 
+        <h:panelGrid id="displayEdit" columns="2" cellpadding="4" style="margin:0 auto;" >
+          <f:facet name="header">
+            <h:outputText value="Datos del parámetro seleccionado"/>
+          </f:facet>
+
+          <h:outputText value="Código"/>
+          <h:outputText value="#{parametroView.parametroSelected.idParametro}"/>
+
+          <h:outputLabel for="nombre" value="Descripción:" />
+          <p:inplace editor="true">  
+            <p:inputText value="#{parametroView.parametroSelected.nombre}"  
+                         required="true" label="text"/>  
+          </p:inplace>  
+
+          <h:outputLabel for="valor" value="Valor:" />  
+          <p:inplace editor="true">  
+            <p:inputText value="#{parametroView.parametroSelected.valor}"
+                         id="valor" required="false" label="valor" />
+          </p:inplace>                  
+
+          <f:facet name="footer">
+            <h:commandButton id="parametroEditButton" value="Guardar"
+                             action="#{parametroView.editParametro(login.usuario, 'parametros.xhtml')}" actionListener="#{parametroView.msgEditado()}" />
+            <h:commandButton style="margin-left:30px;" value="Cancelar" type="button" onclick="parameterEdit.hide()" />
+          </f:facet>
+
+        </h:panelGrid>                      
+      </h:form>  
+    </p:dialog>
+
+    <p:dialog header="Versión del SBBT" widgetVar="dlgVersion" modal="true" 
+              resizable="false" height="50" closeOnEscape="true" showEffect="explode" hideEffect="bounce" draggable="false">
+      <h:outputText value="#{eventMenuBean.VERSION}" />
+    </p:dialog>
+
+  </h:body>
+</html>

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f ="http://java.sun.com/jsf/core">
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+            <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+            <title>ECA - SBBT</title>
+        </f:facet>
+
+        <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/default.css" />
+        <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/syntaxhighlighter/syntaxhighlighter.css" />
+
+        <style type="text/css">
+            .ui-layout-north {
+                z-index:20 !important;
+                overflow:visible !important;;
+            }
+
+            .ui-layout-north .ui-layout-unit-content {
+                overflow:visible !important;
+            }
+        </style>
+        <h:form id="validarSession">
+            <h:inputHidden  rendered="#{login.validarSession}" value="#{login.validateSession()}" />
+        </h:form>
+    </h:head>
+
+    <link href="../Styles/estilos.css" rel="stylesheet" type="text/css" />
+    <ui:include src="../sessionTimeOut.xhtml" />
+
+    <h:body>
+
+        <h:form id="form" enctype="multipart/form-data" style="font-family: inherit; font-size: 12px;">
+            <p:growl id="msgs" showDetail="true"/>  
+
+            <div id="cuerpo" align="center">
+                <!--<div id="index_r1_c2" ></div>-->
+                <div id="linea"><div align="center" style="position:relative; top:6px; background-image:url(Images/mensaje2.png); background-repeat:no-repeat; background-position:center; height:38px"></div></div>
+                <div id="linea2" align="left" >
+                    <p:menubar model ="#{templateView.model}" style="font-size: 12px" />
+                </div>
+
+                <div id="pagina">
+
+                    <div id="superior">     
+                    </div>
+                    <div id="medio">      
+                        <p:panel id="panel" header="Reporte de clientes" style="width: 800px;margin-bottom:10px;">  
+                            <h:panelGrid columns="2" cellpadding="5">  
+
+                                <h:outputText value="Vista:" />  
+                                <p:selectOneRadio id="vista" value="#{rClienteAtr.vista}" style="padding-right: 30px">  
+                                    <f:selectItems value="#{rClienteAtr.vistas}" />  
+                                    <p:ajax update="tipos,componentes"  
+                                            listener="#{rClienteAtr.actualizarComboTipos}" />
+                                </p:selectOneRadio>   
+
+                                <h:outputText value="Tipo componente:" /> 
+                                <p:selectOneMenu id="tipos" value="#{rClienteAtr.tipo}">  
+                                    <f:selectItem itemLabel="seleccionar opción" itemValue="" />  
+                                    <f:selectItems value="#{rClienteAtr.tipos}" />  
+                                    <p:ajax update="componentes"  
+                                            listener="#{rClienteAtr.actualizarComboComponentes}" />  
+                                </p:selectOneMenu> 
+
+                                <h:outputText value="Nombre:" /> 
+                                <p:selectOneMenu id="componentes" value="#{rClienteAtr.componente}">  
+                                    <f:selectItem itemLabel="seleccionar opción" itemValue="" />  
+                                    <f:selectItems value="#{rClienteAtr.componentes}" />  
+                                </p:selectOneMenu>                                              
+
+                            </h:panelGrid>  
+
+                            <p:separator /> 
+
+                            <h:commandButton value="Buscar" action="#{rClienteAtr.llenarDataTable}" >
+
+                            </h:commandButton>
+
+
+                        </p:panel>
+
+                        <p:dataTable rendered="#{rClienteAtr.mostrarTabla}" id="tblResul" var="cliente" value="#{rClienteAtr.clientesAtr}"
+                                     paginator="true" rows="10" tableStyle="width:auto"
+                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                     style="font-size: 12px">
+
+                            <f:facet name="header">
+                                Histórico 
+                            </f:facet> 
+
+                            <p:column>
+                                <f:facet name="header">  
+                                    <h:outputText value="Id cliente" />  
+                                </f:facet>
+                                <h:outputText value="#{cliente.componente.idCliente}" />
+                            </p:column> 
+
+                            <p:column>  
+                                <f:facet name="header">  
+                                    <h:outputText value="Nombre" />  
+                                </f:facet>  
+                                <h:outputText value="#{cliente.componente.nombre}" /> 
+                            </p:column>
+
+                            <p:column rendered="false">
+                                <f:facet name="header">  
+                                    <h:outputText value="Dirección" />  
+                                </f:facet>
+                                <h:outputText value="#{cliente.componente.direccion}" />
+                            </p:column> 
+
+                            <p:column rendered="false">
+                                <f:facet name="header">  
+                                    <h:outputText value="Coord. X" />  
+                                </f:facet>
+                                <h:outputText value="#{cliente.componente.coordX}" />
+                            </p:column>
+
+                            <p:column rendered="false">
+                                <f:facet name="header">  
+                                    <h:outputText value="Coord. Y" />  
+                                </f:facet>
+                                <h:outputText value="#{cliente.componente.coordY}" />
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header">  
+                                    <h:outputText value="Estado" />  
+                                </f:facet>
+                                <h:outputText value="#{cliente.componente.estado.descripcion}" />
+                            </p:column> 
+
+                            <p:column rendered="false">
+                                <f:facet name="header">  
+                                    <h:outputText value="Carga instalada" />  
+                                </f:facet>
+                                <h:outputText value="#{cliente.cargaInstalada}" />
+                            </p:column> 
+
+                            <p:column>
+                                <f:facet name="header">  
+                                    <h:outputText value="Estrato" />  
+                                </f:facet>
+                                <h:outputText value="#{cliente.estrato}" />
+                            </p:column> 
+
+                            <p:column rendered="false">
+                                <f:facet name="header">  
+                                    <h:outputText value="Fecha instalación" />  
+                                </f:facet>
+                                <h:outputText value="#{cliente.fechaInstalacion}" />
+                            </p:column> 
+
+                            <p:column rendered="false">
+                                <f:facet name="header">  
+                                    <h:outputText value="Medidor" />  
+                                </f:facet>
+                                <h:outputText value="#{cliente.medidor}" />
+                            </p:column> 
+
+                            <p:column rendered="false">
+                                <f:facet name="header">  
+                                    <h:outputText value="Serie" />  
+                                </f:facet>
+                                <h:outputText value="#{cliente.serie}" />
+                            </p:column> 
+
+                            <p:column rendered="false">
+                                <f:facet name="header">  
+                                    <h:outputText value="Ciclo" />  
+                                </f:facet>
+                                <h:outputText value="#{cliente.ciclo.descripcion}" />
+                            </p:column> 
+
+                            <p:column rendered="false">
+                                <f:facet name="header">  
+                                    <h:outputText value="Ramal" />  
+                                </f:facet>
+                                <h:outputText value="#{cliente.ramal}" />
+                            </p:column> 
+
+                            <p:column rendered="false">
+                                <f:facet name="header">  
+                                    <h:outputText value="Tipo categoria" />  
+                                </f:facet>
+                                <h:outputText value="#{cliente.tbltipo.nombre}" />
+                            </p:column> 
+
+                            <p:column rendered="false">
+                                <f:facet name="header">  
+                                    <h:outputText value="Tipo Uso" />  
+                                </f:facet>
+                                <h:outputText value="#{cliente.tbltipo1.nombre}" />
+                            </p:column> 
+
+                            <p:column rendered="false">
+                                <f:facet name="header">  
+                                    <h:outputText value="Tipo conexión" />  
+                                </f:facet>
+                                <h:outputText value="#{cliente.tbltipo2.nombre}" />
+                            </p:column> 
+
+                            <p:column rendered="false">
+                                <f:facet name="header">  
+                                    <h:outputText value="Tipo medidor" />  
+                                </f:facet>
+                                <h:outputText value="#{cliente.tbltipo3.nombre}" />
+                            </p:column> 
+
+                            <p:column rendered="false">
+                                <f:facet name="header">  
+                                    <h:outputText value="Tipo suministro" />  
+                                </f:facet>
+                                <h:outputText value="#{cliente.tbltipo4.nombre}" />
+                            </p:column> 
+
+                            <p:column rendered="false">
+                                <f:facet name="header">  
+                                    <h:outputText value="Tipo red" />  
+                                </f:facet>
+                                <h:outputText value="#{cliente.tbltipo5.nombre}" />
+                            </p:column> 
+
+                            <p:column rendered="false">
+                                <f:facet name="header">  
+                                    <h:outputText value="Tipo marca" />  
+                                </f:facet>
+                                <h:outputText value="#{cliente.tbltipo6.nombre}" />
+                            </p:column> 
+
+                            <p:column rendered="false">
+                                <f:facet name="header">  
+                                    <h:outputText value="Tipo tensión" />  
+                                </f:facet>
+                                <h:outputText value="#{cliente.tbltipo7.nombre}" />
+                            </p:column> 
+
+                            <p:column rendered="false">
+                                <f:facet name="header">  
+                                    <h:outputText value="Estado intervensión" />  
+                                </f:facet>
+                                <h:outputText value="#{cliente.estado1.descripcion}" />
+                            </p:column> 
+
+                            <p:column rendered="false">
+                                <f:facet name="header">  
+                                    <h:outputText value="Estado intervensión" />  
+                                </f:facet>
+                                <h:outputText value="#{cliente.estado1.descripcion}" />
+                            </p:column> 
+
+                            <p:column rendered="false">
+                                <f:facet name="header">  
+                                    <h:outputText value="Ruta" />  
+                                </f:facet>
+                                <h:outputText value="#{cliente.ruta}" />
+                            </p:column> 
+
+                        </p:dataTable>  
+
+                        <h:commandLink rendered="#{rClienteAtr.mostrarTabla}">  
+                            <p:graphicImage value="../resources/images/csv.png" />  
+                            <p:dataExporter type="csv" target="tblResul" fileName="Clientes"/>  
+                        </h:commandLink>  
+
+                        <h:commandLink rendered="#{rClienteAtr.mostrarTabla}">  
+                            <p:graphicImage value="../resources/images/excel.png" />  
+                            <p:dataExporter type="xls" target="tblResul" fileName="Clientes" />  
+                        </h:commandLink> 
+
+                        <h:commandButton rendered="false" image="../resources/images/excel.png" actionListener="#{rClienteAtr.exportar('xlsx')}" /> 
+
+                        <h:commandButton rendered="false" image="../resources/images/pdf.png" actionListener="#{rClienteAtr.exportar('pdf')}" /> 
+
+                    </div>
+
+                    <div id="inferior"></div>
+                    <div id="piepagina" align="center">
+                    </div>
+
+                </div></div>
+
+            <p:dialog widgetVar="wait" closable="false" resizable="false" draggable="false" position="center" modal="true" showHeader="false">
+                <p:ajaxStatus>
+                    <f:facet name="start">
+                        <p:graphicImage value="../resources/images/espera.gif" />
+                    </f:facet>
+                    <f:facet name="complete">
+                        <h:outputText value="" />
+                    </f:facet>
+                </p:ajaxStatus>
+            </p:dialog> 
+
+        </h:form>   
+
+    </h:body>
+</html>
